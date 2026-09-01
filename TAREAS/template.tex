@@ -1,0 +1,70 @@
+\documentclass[12pt]{article}
+\input{config/preamble}
+\addbibresource{bibliography/sample.bib}
+
+\begin{comment}
+    La tarea/manual deberá contener:
+
+    - Portada
+    - Índice o contenido
+    - Desarrollo del trabajo
+    - Fuente Arial 12
+    - Imágenes
+    - Estructura, contenido de la información, redacción y ortografía.
+    - Bibliografía / Referencias electrónicas (Formato APA)
+    - Conclusiones (Personales)
+
+    Se calificará contenido y presentación del trabajo, con un mínimo de 18 hojas y un máximo de 30
+\end{comment}
+
+\begin{document}
+\pagenumbering{roman}
+
+\begin{titlepage}
+  \thispagestyle{empty}
+  \newgeometry{left = 1cm, right = 1cm, top = 1cm, bottom = 2cm}
+
+  \noindent
+  \begin{minipage}[c]{3.5cm}
+    \includegraphics[width=3.5cm]{media/titlepage/Escudo-UNAM.pdf}
+  \end{minipage}\hfill
+  \begin{minipage}[c][3.5cm][c]{\dimexpr\textwidth-7cm\relax}
+    \centering
+    {\large\textbf{Universidad Nacional Autónoma de México}\\[0.6em] 
+    \Large\textbf{Facultad de Ingeniería}\\[0.6em]
+    \large Sistemas Operativos}
+  \end{minipage}\hfill
+  \begin{minipage}[c]{3.5cm}
+    \raggedleft
+    \includegraphics[width=3.5cm]{media/titlepage/FI.png}
+  \end{minipage}
+\centering\huge
+  \vfill
+    Grupo 1 \\
+    Ing. Angel Isidro Mercado
+  \vfill
+    \textbf{Tarea N. Nombre}
+  \vfill\large
+    320304435 - Cabrera Rojas Oscar
+  \vfill
+
+  \noindent\footnotesize \hfill Ciudad Universitaria, CDMX a DD de month del 2026
+\end{titlepage}
+\restoregeometry
+
+\tableofcontents
+
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\section{Fundamentos para el diseño de software}
+
+\subsection{Conceptos generales del diseño}
+
+Previo a la etapa de codificación de un sistema, se encuentra el diseño de software, esta fase fundamental forma una descripción estructurada y técnica del sistema que servirá como...
+
+\nocite{*}
+\printbibliography[heading=bibintoc, title={Referencias}]
+
+\end{document}

@@ -1,0 +1,35 @@
+\usepackage{helvet}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{
+    a4paper,
+    top = 2cm,
+    left = 2cm,
+    right = 2cm,
+    bottom = 3cm
+}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel} % Renombra en automático los elementos a español
+\usepackage{float}  % Etiqueta 'H' (mayus) en figuras (imágenes)
+\usepackage{array}  % Padding en tablas
+\usepackage{tabularx}
+\usepackage{url}    % Etiqueta url en .bib
+\usepackage{booktabs}   % Manejo de caudros (tablas)
+\usepackage[T1]{fontenc}    % Codificación de fuentes
+\usepackage[autostyle, spanish=mexican]{csquotes}       % Paquete para comillas tipográficas
+\usepackage{comment}    % Comentar bloques de líneas mediante begin-end
+\usepackage{multicol}   % Para poner contenido a doble columna
+\usepackage{enumitem}   % Para utilizar [noitemsep, topsep=0pt] en itemize
+\usepackage{amsmath}
+\usepackage{mathabx} % Para testar en math mode
+\usepackage{comment}
+\usepackage{longtable}
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\usepackage[
+  backend=biber,
+  style=apa,
+  sorting=nyt
+]{biblatex}
+\DeclareLanguageMapping{spanish}{spanish-apa}
+\renewcommand{\familydefault}{\sfdefault}
