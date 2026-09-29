@@ -9,7 +9,11 @@
     bottom = 3cm
 }
 \usepackage[utf8]{inputenc}
-\usepackage[spanish]{babel} % Renombra en automático los elementos a español
+\usepackage[spanish,mexico]{babel} % Renombra en automático los elementos a español
+\addto\captionsspanish{
+  \renewcommand{\figurename}{Imagen}
+  \renewcommand{\tablename}{Tabla}
+}
 \usepackage{float}  % Etiqueta 'H' (mayus) en figuras (imágenes)
 \usepackage{array}  % Padding en tablas
 \usepackage{tabularx}
