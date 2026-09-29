@@ -3,3 +3,4 @@
 *.out
 *.toc
 build/*
+compile-report.txt
