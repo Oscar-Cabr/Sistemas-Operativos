@@ -24,20 +24,19 @@ Los troceados de Stallings y Deitel/Deitel llevan el capítulo en el nombre del 
 
 ### Procedimiento
 
+Los chunks pesan de 100 a 600 KB: **nunca se leen completos**, y el `_fulltext/*.txt` (de 2 a 5 MB) jamás se lee, solo sirve para un `grep` global cuando no sabes en qué libro buscar.
+
 1. **Localiza los chunks.** `grep -ril "<término>" ".claude/sources/libros/"` — excluye `_fulltext/`.
-2. **Lee solo el chunk relevante**, nunca el `_fulltext/*.txt` completo (son de 2 a 5 MB cada uno). `_fulltext/` sirve únicamente para un `grep` global rápido cuando no sabes en qué libro buscar.
-3. **Resuelve la página.** Cada chunk lleva marcas `<!-- pág. N -->`. La marca inmediatamente **anterior** al extracto da su página.
-4. **Corrige el desfase.** `N` es la página del **PDF**, no la impresa. Calibra siempre antes de citar: busca en el texto el número de página del encabezado o pie corriente y compáralo con la marca.
+2. **Localiza las líneas.** `grep -n "<término>" "<chunk>"` da los números de línea de cada aparición.
+3. **Lee solo la ventana.** `Read` con `offset` y `limit` (del orden de 60 a 150 líneas) alrededor de la aparición relevante. Amplía la ventana solo si el pasaje lo exige.
+4. **Resuelve la página.** Cada chunk lleva marcas `<!-- pág. N -->`. La marca inmediatamente **anterior** al extracto da su página: `grep -n "<!-- pág\." "<chunk>"` y toma la última con número de línea menor al del extracto.
+5. **Corrige el desfase.** `N` es la página del **PDF**, no la impresa. Calibra siempre antes de citar: busca en el texto el número de página del encabezado o pie corriente y compáralo con la marca.
 
    Ejemplo verificado (Stallings): bajo `<!-- pág. 180 -->` el encabezado dice `4.1 / PROCESSES AND THREADS   179`. Desfase = −1, y de paso el encabezado te da la sección `4.1`. Cita `p.\ 179`, no 180.
 
-5. **Contrasta.** Cuando dos libros difieran en definición, taxonomía o cifras, regístralo: es material valioso para la redacción, no un problema a ocultar.
+6. **Contrasta.** Cuando dos libros difieran en definición, taxonomía o cifras, regístralo: es material valioso para la redacción, no un problema a ocultar.
 
-### Delegación a subagentes
-
-Si hay que barrer **tres o más libros**, lanza un subagente `Explore` por libro, en paralelo, cada uno con el término de búsqueda y la instrucción de devolver solo: extracto textual, libro, sección y página ya corregida. Así los megabytes de texto no entran al contexto principal.
-
-Para una consulta puntual en un capítulo que ya tienes localizado, hazla directamente.
+Si hay que barrer varios libros, recórrelos uno tras otro con este mismo procedimiento y conserva de cada uno solo la tabla de salida: extracto, libro, sección y página ya corregida.
 
 ## Frente 2 — Web confiable
 

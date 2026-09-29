@@ -5,9 +5,9 @@ description: Audita un entregable terminado del curso de Sistemas Operativos ant
 
 # Auditoría previa a la entrega
 
-Revisión de solo lectura sobre el `.tex` completo y su `.bib`. **No corrijas sobre la marcha**: reporta hallazgos con ubicación y espera instrucción. Solo aplica correcciones si el usuario lo pide.
+Revisión de solo lectura sobre el `.tex` completo y su `.bib`, contra las convenciones de `CLAUDE.md`. **No corrijas sobre la marcha**: reporta hallazgos con ubicación y espera instrucción. Solo aplica correcciones si el usuario lo pide.
 
-Si el documento es extenso, delega la auditoría a un subagente para no cargar todo el texto al contexto principal.
+Si el documento es extenso, audítalo por partes: lee una sección a la vez con `Read` (`offset`/`limit`) y usa `grep -n` para las verificaciones que abarcan todo el documento (primeras apariciones, siglas, comillas, etiquetas, citas).
 
 ## Lista de verificación
 
@@ -27,7 +27,9 @@ Si el documento es extenso, delega la auditoría a un subagente para no cargar t
 - [ ] Todas las `\label{}` están en `camelCase`.
 - [ ] Ninguna etiqueta alude al origen, autor o número de figura de la fuente.
 - [ ] Toda `\ref{}` resuelve a una etiqueta existente.
-- [ ] Toda figura con `\label` se menciona en el cuerpo con `\ref{}`. Ninguna figura huérfana.
+- [ ] Toda figura con `\label` se menciona en el cuerpo con `Img.~\ref{}`. Ninguna figura huérfana.
+- [ ] Toda figura replica el formato de la figura de ejemplo de la plantilla y lleva la cita de su fuente en el `\caption`.
+- [ ] No queda contenido de ejemplo de la plantilla (sección de ejemplo).
 
 ### Citas y trazabilidad
 
@@ -36,7 +38,7 @@ Si el documento es extenso, delega la auditoría a un subagente para no cargar t
 - [ ] Las páginas citadas son las **impresas**, no las del PDF. Verifica por muestreo contra los chunks de `.claude/sources/libros/`.
 - [ ] `[véase]` aparece únicamente en remisiones cruzadas o lecturas complementarias, nunca como respaldo directo.
 - [ ] Cero `Citation ... undefined` en el log.
-- [ ] La `.bib` contiene **exclusivamente** fuentes de este entregable: con `\nocite{*}`, cualquier entrada sobrante se imprime sin haber sido citada. Contrasta las claves de la `.bib` con las efectivamente citadas en el `.tex`.
+- [ ] La `.bib` del entregable (`bibliography/[t|p]<NN>.bib`) contiene **exclusivamente** fuentes citadas en él: con `\nocite{*}`, cualquier entrada sobrante se imprime sin haber sido citada. Contrasta las claves de la `.bib` con las efectivamente citadas en el `.tex` (procedimiento en `registrar-fuente`).
 
 ### Estructura y requisitos del profesor
 
@@ -46,13 +48,15 @@ Si el documento es extenso, delega la auditoría a un subagente para no cargar t
 
 ### Media
 
-- [ ] Cada `\includegraphics` del `.tex` tiene su fila en `media-manifest.md`.
+- [ ] **Ningún placeholder:** `grep -n "example_figure\|% PENDIENTE" <fuente>.tex` no devuelve nada. Cada coincidencia es **bloqueante**: antes de reportarla, aplica la colocación posterior de `registrar-media` por si el usuario ya colocó el archivo.
+- [ ] Cada `\includegraphics` del `.tex` tiene su fila en `media-manifest.md`, y ninguna fila del entregable sigue `pendiente`.
 - [ ] Los estados `pendiente` / `colocada` reflejan la realidad del disco (verifícalo con `ls`).
+- [ ] Ninguna imagen accesible en una fuente web quedó como `pendiente` sin motivo (descarga fallida o con autenticación).
 - [ ] Se le entrega al usuario la lista final de imágenes por colocar.
 
 ### Compilación
 
-- [ ] Invoca `compilar-entregable` y confirma: compilación limpia, páginas dentro del rango 18–40, sin advertencias relevantes más allá de las imágenes pendientes.
+- [ ] Invoca `compilar-entregable` y confirma: compilación limpia, PDF en `ENTREGABLES/` con páginas dentro del rango de `CLAUDE.md`, sin advertencias relevantes más allá de las imágenes pendientes.
 
 ## Reporte
 
@@ -62,6 +66,7 @@ Agrupa por severidad y da ubicación exacta (`archivo:línea`):
 BLOQUEANTES (impiden entregar)
   TAREAS/03_....tex:142  Cita undefined: \parencite{tanenbaum2015} no está en la .bib
   Extensión: 16 páginas, por debajo del mínimo de 18
+  TAREAS/03_....tex:77   Placeholder: fig:diagramaPlanificador sigue sobre media/example_figure.png
 
 NORMATIVOS
   TAREAS/03_....tex:88   «los PCBs» → «los PCB»

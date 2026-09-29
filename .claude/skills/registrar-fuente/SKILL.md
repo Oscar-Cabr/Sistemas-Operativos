@@ -5,25 +5,31 @@ description: Da de alta una fuente en el archivo .bib del entregable con el tipo
 
 # Alta de fuente bibliográfica
 
-## Regla crítica: una `.bib` por entregable, con `\nocite{*}`
+La política bibliográfica (una `.bib` por entregable, `\nocite{*}`, `bibliography/` como acervo) está en `CLAUDE.md`. Esta skill es el procedimiento.
 
-Cada entregable tiene su propia `bibliography/<NN>_<titulo>.bib` y el template usa `\nocite{*}`, que **imprime todas las entradas del archivo, se citen o no**.
-
-Consecuencia: la `.bib` de un entregable debe contener **exclusivamente** las fuentes usadas en ese entregable. Una entrada de más aparece en las Referencias sin respaldo en el texto. Nunca copies una `.bib` completa de otro trabajo.
+Archivo del entregable: `bibliography/t<NN>.bib` (tarea) o `bibliography/p<NN>.bib` (proyecto). Nunca copies una `.bib` completa de otro trabajo.
 
 ## Antes de agregar
 
-1. `grep -i "<título o autor>" bibliography/*.bib`
-2. Si la fuente **ya existe en otro entregable**, copia esa entrada tal cual, con **la misma clave**. La consistencia de claves entre trabajos es deliberada.
+1. `grep -i "<título o autor>" bibliography/[tp][0-9]*.bib` (los `[t|p]sample.bib` no son acervo).
+2. Si la fuente **ya existe en otro entregable**, copia esa entrada tal cual, con **la misma clave**.
 3. Si ya existe en la `.bib` de este entregable, no hagas nada: reutiliza la clave.
 
 ## Claves
 
 Minúsculas, sin acentos: `<apellido><año><palabraTítulo>` para personas, `<siglaInstitución><año>` para organismos. Si dos entradas colisionan, sufija `a`, `b`.
 
-## Árbol de decisión
+## Tipo de entrada
 
-Aplícalo en orden y detente en la primera coincidencia:
+| Fuente | Tipo | Campos |
+| --- | --- | --- |
+| Libro | `@book` | autor, título, año, edición, editorial |
+| Sitio institucional o gubernamental | `@online` | autor (persona o institución entre llaves dobles `{{...}}`), título, año (o `n.d.`), url, urldate |
+| Artículo de revista / conferencia | `@article` / `@inproceedings` | autor, título, año, `journaltitle` / `booktitle`, volumen y páginas si aplica, DOI si existe |
+| Estándar o RFC | `@techreport` | autor (organismo: IETF, IEEE, ISO), título, año, `number` (p. ej., `RFC 9293`), `institution` |
+| Documentación oficial de software | `@online` | `author` = nombre del proyecto entre llaves dobles; `version` si es relevante |
+
+Árbol de decisión; aplícalo en orden y detente en la primera coincidencia:
 
 1. ¿Tiene DOI o se publicó en revista o congreso con arbitraje? → `@article` / `@inproceedings`
 2. ¿Es un estándar formal o RFC con número de documento oficial? → `@techreport`
@@ -139,6 +145,15 @@ Copia y pega. Los datos están tomados de las páginas de créditos de los propi
 }
 ```
 
-## Después de agregar
+## Retiro de fuentes
+
+Con `\nocite{*}`, una entrada que ya no se cita se imprime igual en Referencias. Tras cualquier edición que elimine citas, contrasta las claves de la `.bib` con las citadas en el `.tex` (y en sus `\input`, si está fragmentado) y elimina en el mismo turno las que sobren:
+
+```bash
+grep -oP '^@\w+\{\K[^,]+' bibliography/<t|p><NN>.bib      # claves registradas
+grep -oP '\\(paren|text)?cite(\[[^]]*\])*\{\K[^}]+' <archivo>.tex | tr ',' '\n' | sort -u   # claves citadas
+```
+
+## Después de agregar o retirar
 
 Invoca `compilar-entregable`. Un `.bib` malformado o una clave duplicada solo se detectan al correr `biber`; revisa que no aparezcan avisos de entrada repetida ni de campo desconocido.
