@@ -26,14 +26,17 @@ Lee con `read_file` el `Makefile`, el contenido de `config/` y el `template.tex`
 
 ## Paso 2 — Derivar identificadores
 
-| Elemento | Tarea | Proyecto | Ejemplo (tarea 3) |
-| --- | --- | --- | --- |
-| Archivo maestro | `TAREAS/<NN>_<Titulo_Snake>.tex` | `PROYECTOS/<NN>_<Titulo_Snake>.tex` | `TAREAS/03_Gestion_De_Procesos.tex` |
-| Bibliografía | `bibliography/t<NN>.bib` | `bibliography/p<NN>.bib` | `bibliography/t03.bib` |
-| Media | `media/t<NN>/` | `media/p<NN>/` | `media/t03/` |
-| PDF compilado | `ENTREGABLES/TAREAS/T<NN>_<Titulo_Snake>_CabreraRojasOscar.pdf` | `ENTREGABLES/PROYECTOS/P<NN>_<Titulo_Snake>_CabreraRojasOscar.pdf` | `ENTREGABLES/TAREAS/T03_Gestion_De_Procesos_CabreraRojasOscar.pdf` |
+| Elemento | Tarea con número | Proyecto con número | Entregable sin número (Tarea / Proyecto) | Ejemplo sin número (Tarea) |
+| --- | --- | --- | --- | --- |
+| Archivo maestro | `TAREAS/<NN>_<Titulo_Snake>.tex` | `PROYECTOS/<NN>_<Titulo_Snake>.tex` | `<TIPO>/<Titulo_Snake>.tex` | `TAREAS/Resumen_Clase_Sistemas_Operativos_Tema_1.tex` |
+| Bibliografía | `bibliography/t<NN>.bib` | `bibliography/p<NN>.bib` | `bibliography/<Titulo_Snake>.bib` | `bibliography/Resumen_Clase_Sistemas_Operativos_Tema_1.bib` |
+| Media | `media/t<NN>/` | `media/p<NN>/` | `media/<Titulo_Snake>/` | `media/Resumen_Clase_Sistemas_Operativos_Tema_1/` |
+| PDF compilado | `ENTREGABLES/TAREAS/T<NN>_<Titulo_Snake>_CabreraRojasOscar.pdf` | `ENTREGABLES/PROYECTOS/P<NN>_<Titulo_Snake>_CabreraRojasOscar.pdf` | `ENTREGABLES/<TIPO>/<T|P>_<Titulo_Snake>_CabreraRojasOscar.pdf` | `ENTREGABLES/TAREAS/T_Resumen_Clase_Sistemas_Operativos_Tema_1_CabreraRojasOscar.pdf` |
 
-Antes de crear nada, verifica que el número no esté ya en uso para ese tipo (archivo maestro, `.bib` y carpeta de media). Si colisiona, detente y pregunta.
+- En entregables **sin número**, se suprime el prefijo numérico en el `.tex`, `.bib` y directorio de media, iniciando directamente con el título en SnakeCase.
+- En el PDF compilado de entregables **sin número**, se conserva la letra diferenciadora seguida de guion bajo: `T_` para tareas o `P_` para proyectos, respetando invariablemente el sufijo de autoría `_CabreraRojasOscar.pdf`.
+
+Antes de crear nada, verifica que el identificador no esté ya en uso para ese tipo (archivo maestro, `.bib` y carpeta de media). Si colisiona, detente y pregunta.
 
 ## Paso 3 — Crear el esqueleto
 

@@ -64,17 +64,18 @@ Los libros de `.agents/sources/libros/` son **fuente confiable directa**: no req
 
 ### Convención de nombres por entregable
 
-| Artefacto | Tarea | Proyecto |
-| --- | --- | --- |
-| Fuente LaTeX | `TAREAS/<NN>_<Titulo_Snake>.tex` | `PROYECTOS/<NN>_<Titulo_Snake>.tex` |
-| Bibliografía | `bibliography/t<NN>.bib` | `bibliography/p<NN>.bib` |
-| Media | `media/t<NN>/<tag>.<ext>` | `media/p<NN>/<tag>.<ext>` |
-| PDF compilado | `ENTREGABLES/TAREAS/T<NN>_<Titulo_Snake>_CabreraRojasOscar.pdf` | `ENTREGABLES/PROYECTOS/P<NN>_<Titulo_Snake>_CabreraRojasOscar.pdf` |
+| Artefacto | Tarea con número | Proyecto con número | Entregable sin número (Tarea / Proyecto) |
+| --- | --- | --- | --- |
+| Fuente LaTeX | `TAREAS/<NN>_<Titulo_Snake>.tex` | `PROYECTOS/<NN>_<Titulo_Snake>.tex` | `<TIPO>/<Titulo_Snake>.tex` |
+| Bibliografía | `bibliography/t<NN>.bib` | `bibliography/p<NN>.bib` | `bibliography/<Titulo_Snake>.bib` |
+| Media | `media/t<NN>/<tag>.<ext>` | `media/p<NN>/<tag>.<ext>` | `media/<Titulo_Snake>/<tag>.<ext>` |
+| PDF compilado | `ENTREGABLES/TAREAS/T<NN>_<Titulo_Snake>_CabreraRojasOscar.pdf` | `ENTREGABLES/PROYECTOS/P<NN>_<Titulo_Snake>_CabreraRojasOscar.pdf` | `ENTREGABLES/<TIPO>/<T|P>_<Titulo_Snake>_CabreraRojasOscar.pdf` |
 
 - `<NN>`: número de trabajo a dos dígitos, con cero a la izquierda si aplica.
 - `<Titulo_Snake>`: iniciales mayúsculas y guiones bajos como separador, sin acentos ni signos, conforme a los existentes (`00_Registro_EDUCAFI`).
-- Formato reglamentario del entregable: `<T/P><#>_<NombreEntregable>_CabreraRojasOscar.pdf`, donde `<T/P>` es `T` para tareas y `P` para proyectos, y el sufijo fijo de autoría es `_CabreraRojasOscar.pdf`.
-- El prefijo `t`/`p` del `.bib` es obligatorio: sin él, una tarea y un proyecto con el mismo número colisionarían en `bibliography/`.
+- **Entregables sin número:** Suprimen el número en el prefijo. En el archivo fuente `.tex` inician directamente con el título (`<Titulo_Snake>.tex`). En el PDF compilado conservan la letra diferenciadora con guion bajo (`T_` para tareas o `P_` para proyectos), seguida del título en SnakeCase y el sufijo fijo de autoría: `<T|P>_<Titulo_Snake>_CabreraRojasOscar.pdf`.
+- Formato reglamentario del entregable con número: `<T/P><#>_<NombreEntregable>_CabreraRojasOscar.pdf`, donde `<T/P>` es `T` para tareas y `P` para proyectos, y el sufijo fijo de autoría es `_CabreraRojasOscar.pdf`.
+- El prefijo `t`/`p` del `.bib` es obligatorio en entregables numerados: sin él, una tarea y un proyecto con el mismo número colisionarían en `bibliography/`. En entregables sin número, el `.bib` lleva el nombre del título: `bibliography/<Titulo_Snake>.bib`.
 - Esta convención es independiente del camelCase de los `tags` de media.
 
 ### Derivación de un entregable nuevo
@@ -116,8 +117,8 @@ Cada paso tiene una skill en `.agents/skills/`. No improvises el procedimiento: 
 
 - **Solo mediante el Makefile de la raíz.** No se invoca `latexmk`, `pdflatex` ni `biber` directamente, ni se inventan comandos de compilación.
 - **Variables de cabecera.** Se modifican únicamente las dos primeras variables del Makefile, para dirigir qué entregable se compila y dónde queda el PDF:
-  - `FILE`: nombre del entregable sin extensión ni ruta (p. ej., `00_Registro_EDUCAFI`, `01_Sistemas_Operativos`).
-  - `OUTPUT`: `ENTREGABLES/TAREAS/T$(FILE)_CabreraRojasOscar` para una tarea, `ENTREGABLES/PROYECTOS/P$(FILE)_CabreraRojasOscar` para un proyecto.
+  - `FILE`: nombre del entregable sin extensión ni ruta (p. ej., `00_Registro_EDUCAFI`, `01_Sistemas_Operativos`, `Resumen_Clase_Sistemas_Operativos_Tema_1`).
+  - `OUTPUT`: `ENTREGABLES/TAREAS/T$(FILE)_CabreraRojasOscar` (o `ENTREGABLES/PROYECTOS/P$(FILE)_CabreraRojasOscar`) para entregables con número; `ENTREGABLES/TAREAS/T_$(FILE)_CabreraRojasOscar` (o `ENTREGABLES/PROYECTOS/P_$(FILE)_CabreraRojasOscar`) para entregables sin número.
 
   Ninguna otra línea del Makefile se modifica. Antes de cada compilación se verifica que ambas variables apuntan al entregable en curso y al directorio de salida de su tipo.
 - La salida intermedia va a `build/` y los PDF finales a `ENTREGABLES/TAREAS/` o `ENTREGABLES/PROYECTOS/`. En ninguno se escribe manualmente; se consultan para leer el log y contar páginas.

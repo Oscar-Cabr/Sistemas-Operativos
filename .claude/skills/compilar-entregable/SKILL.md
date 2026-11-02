@@ -11,12 +11,12 @@ Las reglas de compilación (solo Makefile, solo variables de cabecera, nada escr
 
 Lee el `Makefile` vigente y ajusta **solo** sus dos primeras variables:
 
-| Variable | Tarea | Proyecto |
-| --- | --- | --- |
-| `FILE` | `<NN>_<Titulo_Snake>` (sin ruta ni extensión) | `<NN>_<Titulo_Snake>` |
-| `OUTPUT` | `ENTREGABLES/TAREAS/T$(FILE)_CabreraRojasOscar` | `ENTREGABLES/PROYECTOS/P$(FILE)_CabreraRojasOscar` |
+| Variable | Tarea con número | Proyecto con número | Entregable sin número (Tarea / Proyecto) |
+| --- | --- | --- | --- |
+| `FILE` | `<NN>_<Titulo_Snake>` | `<NN>_<Titulo_Snake>` | `<Titulo_Snake>` |
+| `OUTPUT` | `ENTREGABLES/TAREAS/T$(FILE)_CabreraRojasOscar` | `ENTREGABLES/PROYECTOS/P$(FILE)_CabreraRojasOscar` | `ENTREGABLES/<TIPO>/<T|P>_$(FILE)_CabreraRojasOscar` |
 
-Verifica que ambas apuntan al entregable en curso y al directorio de su tipo. El Makefile deduce de `OUTPUT` si el fuente está en `TAREAS/` o `PROYECTOS/`, y su target `check` rechaza una salida mal formada o un `.tex` inexistente. Si falla por otra causa, **detente y avísale al usuario**: adaptar el Makefile no es tarea de Claude.
+Verifica que ambas apuntan al entregable en curso y al directorio de su tipo. En entregables sin número, `OUTPUT` conserva obligatoriamente la letra diferenciadora con guion bajo (`T_` o `P_`) y el sufijo fijo de autoría `_CabreraRojasOscar`. El Makefile deduce de `OUTPUT` si el fuente está en `TAREAS/` o `PROYECTOS/`, y su target `check` rechaza una salida mal formada o un `.tex` inexistente. Si falla por otra causa, **detente y avísale al usuario**: adaptar el Makefile no es tarea de Claude.
 
 ## 2. Compilar
 
