@@ -1,5 +1,5 @@
-FILE    = template
-OUTPUT  = ENTREGABLES/PROYECTOS/$(FILE)
+FILE    = 01_Sistemas_Operativos
+OUTPUT  = ENTREGABLES/TAREAS/T$(FILE)_CabreraRojasOscar
 OUTDIR  = build
 TYPE    = $(notdir $(patsubst %/,%,$(dir $(OUTPUT))))
 SRC     = $(TYPE)/$(FILE).tex
@@ -15,9 +15,12 @@ all: pdf view
 check:
 	@case "$(dir $(OUTPUT))" in \
 	  ENTREGABLES/TAREAS/|ENTREGABLES/PROYECTOS/) ;; \
-	  *) echo "OUTPUT debe ser ENTREGABLES/TAREAS/\$$(FILE) o ENTREGABLES/PROYECTOS/\$$(FILE); vale '$(OUTPUT)'" >&2; exit 2 ;; \
+	  *) echo "OUTPUT debe ser ENTREGABLES/TAREAS/... o ENTREGABLES/PROYECTOS/...; vale '$(OUTPUT)'" >&2; exit 2 ;; \
 	esac
-	@test "$(notdir $(OUTPUT))" = "$(FILE)" || { echo "OUTPUT no termina en \$$(FILE): '$(OUTPUT)'" >&2; exit 2; }
+	@case "$(notdir $(OUTPUT))" in \
+	  T$(FILE)_CabreraRojasOscar|P$(FILE)_CabreraRojasOscar|$(FILE)) ;; \
+	  *) echo "OUTPUT debe coincidir con T\$$(FILE)_CabreraRojasOscar o P\$$(FILE)_CabreraRojasOscar: '$(OUTPUT)'" >&2; exit 2 ;; \
+	esac
 	@test -f "$(SRC)" || { echo "No existe $(SRC)" >&2; exit 2; }
 
 pdf: check
