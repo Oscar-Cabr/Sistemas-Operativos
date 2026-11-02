@@ -1,5 +1,5 @@
-FILE    = 01_Sistemas_Operativos
-OUTPUT  = ENTREGABLES/TAREAS/T$(FILE)_CabreraRojasOscar
+FILE    = Creacion_Curriculum_Vitae
+OUTPUT  = ENTREGABLES/TAREAS/T_$(FILE)_CabreraRojasOscar
 OUTDIR  = build
 TYPE    = $(notdir $(patsubst %/,%,$(dir $(OUTPUT))))
 SRC     = $(TYPE)/$(FILE).tex
@@ -18,7 +18,7 @@ check:
 	  *) echo "OUTPUT debe ser ENTREGABLES/TAREAS/... o ENTREGABLES/PROYECTOS/...; vale '$(OUTPUT)'" >&2; exit 2 ;; \
 	esac
 	@case "$(notdir $(OUTPUT))" in \
-	  T$(FILE)_CabreraRojasOscar|P$(FILE)_CabreraRojasOscar|$(FILE)) ;; \
+	  T*$(FILE)_CabreraRojasOscar|P*$(FILE)_CabreraRojasOscar|$(FILE)) ;; \
 	  *) echo "OUTPUT debe coincidir con T\$$(FILE)_CabreraRojasOscar o P\$$(FILE)_CabreraRojasOscar: '$(OUTPUT)'" >&2; exit 2 ;; \
 	esac
 	@test -f "$(SRC)" || { echo "No existe $(SRC)" >&2; exit 2; }
