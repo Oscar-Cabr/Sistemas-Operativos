@@ -79,6 +79,15 @@ Ejemplo
     \end{localsubgroup}
 \end{localsubgroup} \\
 
+Sigue un bloque de comandos en entorno de terminal:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+g++-13 -Wall -o solucion.exe solucion.cpp \\
+g++ -std=c++20 -Wall -o main a.cpp \\
+./solucion.exe $<$ input.txt $>$ output.txt
+\end{mdframed}
+
 \nocite{*}
 \printbibliography[heading=bibintoc, title={Referencias}]
 
