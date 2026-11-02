@@ -1,0 +1,1201 @@
+\documentclass[12pt]{article}
+\input{config/preamble}
+\addbibresource{bibliography/instalacion_linux.bib}
+
+\begin{comment}
+INDICACIONES DEL PROFESOR:
+Fecha de entrega: 06 de septiembre de 2026
+Título: Instalación de sistema operativo Linux
+Número: 1
+Tipo: Proyecto
+
+Instrucciones del profesor:
+
+Objetivo. El alumno aprender a realizar una instalación sistema operativos Linux.
+* Investigar método de instalación de un sistema Operativo Linux, en una partición.
+* Investigar con que programa se pueden hacer particiones en un disco duro. 
+* Aprender a realizar particiones para instalación de mas de un sistemas operativos , en un equipo pc, laptop.
+*La instalación debe considerar tener Windows y Linux en un mismo equipo.
+*Documentación técnica del proceso de instalación , este documento es  el manual de usuario para poder realizar una instalación de Linux en un equipo .
+* Importante Indicar especificaciones técnica para poder instalar el Sistema Operativo , así como la definición de particiones, mostrar pantallas de la instalación y el paso a paso.
+* Al finalizar , el alumno deberá ser capaz de comprender el proceso de instalación y configuración de un sistema operativo Linux , con diferentes particiones.
+*Subir documento , de forma individual. Cumplir los requisitos de documentación.
+
+ACLARACIÓN DEL ALUMNO / ENTORNO:
+El documento es un manual técnico. Se omite la inclusión de capturas de pantalla de la instalación conforme a la instrucción directa del usuario ("El entregable no tendrá imágenes").
+
+RESTRICCIÓN DE EXTENSIÓN:
+Régimen normativo del repositorio (18 a 40 páginas, objetivo 27).
+
+ÍNDICE APROBADO:
+1. Fundamentos de almacenamiento y particionamiento de discos [~4.0 págs.]
+   1.1 Geometría de almacenamiento secundario y direccionamiento de bloques (CHS a LBA) [~1.0 pág.]
+   1.2 Esquemas de tablas de particiones: MBR frente a GPT [~1.5 págs.]
+   1.3 Tipologías de particiones y puntos de montaje en Linux (/boot, /efi, /, /home, swap) [~1.5 págs.]
+2. Arquitectura de arranque y coexistencia de sistemas operativos [~4.5 págs.]
+   2.1 Interfaces de firmware: BIOS heredado y UEFI [~1.5 págs.]
+   2.2 Mecanismos de arranque múltiple: Windows Boot Manager y GNU GRUB [~1.5 págs.]
+   2.3 Factores críticos de coexistencia: Secure Boot, Fast Startup e hibernación NTFS [~1.5 págs.]
+3. Requerimientos de hardware y preparación del entorno [~3.5 págs.]
+   3.1 Especificaciones técnicas mínimas y arquitectura de soporte en Arch Linux [~1.0 pág.]
+   3.2 Diagnóstico, verificación de compatibilidad e integridad criptográfica de la ISO (PGP/SHA256) [~1.0 pág.]
+   3.3 Estrategias de respaldo y mitigación de riesgos de pérdida de datos [~1.5 págs.]
+4. Herramientas de particionamiento y gestión de almacenamiento [~4.5 págs.]
+   4.1 Herramientas nativas del entorno Windows (Administrador de discos y DiskPart) [~1.0 pág.]
+   4.2 Utilidades de línea de comandos en Linux (fdisk, gdisk y parted) [~2.0 págs.]
+   4.3 Entornos gráficos y herramientas en vivo (GParted) [~1.5 págs.]
+5. Protocolo técnico de instalación y configuración paso a paso [~5.5 págs.]
+   5.1 Generación del medio de arranque y verificación del modo de inicio UEFI [~1.0 pág.]
+   5.2 Particionamiento manual y formateo de sistemas de archivos (mkfs.ext4, mkswap, mkfs.fat) [~1.0 pág.]
+   5.3 Jerarquía de montaje en /mnt y despliegue del sistema base (pacstrap) [~1.0 pág.]
+   5.4 Configuración del entorno en chroot (localización, red, cuentas y generación de initramfs) [~1.5 págs.]
+   5.5 Instalación de GNU GRUB con soporte para Windows Boot Manager (os-prober) [~1.0 pág.]
+6. Postinstalación, configuración del sistema y resolución de fallos [~3.5 págs.]
+   6.1 Gestión de paquetes con Pacman y modularidad en la configuración del entorno [~1.0 pág.]
+   6.2 Ajuste del cargador de arranque y sincronización de reloj de hardware (RTC en UTC) [~1.5 págs.]
+   6.3 Diagnóstico y resolución de incidencias habituales en arranque dual [~1.0 pág.]
+7. Conclusiones personales [~1.5 págs.]
+Total estimado: ~27.0 págs.
+\end{comment}
+
+\begin{document}
+\pagenumbering{roman}
+
+\begin{titlepage}
+  \thispagestyle{empty}
+  \newgeometry{left = 1cm, right = 1cm, top = 1cm, bottom = 2cm}
+
+  \noindent
+  \begin{minipage}[c]{3.5cm}
+    \includegraphics[width=3.5cm]{media/titlepage/Escudo-UNAM.pdf}
+  \end{minipage}\hfill
+  \begin{minipage}[c][3.5cm][c]{\dimexpr\textwidth-7cm\relax}
+    \centering
+    {\large\textbf{Universidad Nacional Autónoma de México}\\[0.6em] 
+    \Large\textbf{Facultad de Ingeniería}\\[0.6em]
+    \large Sistemas Operativos}
+  \end{minipage}\hfill
+  \begin{minipage}[c]{3.5cm}
+    \raggedleft
+    \includegraphics[width=3.5cm]{media/titlepage/FI.png}
+  \end{minipage}
+\centering\huge
+  \vfill
+    Grupo 1 \\
+    Ing. Angel Isidro Mercado
+  \vfill
+    \textbf{Proyecto: Instalación de sistema operativo Linux}
+  \vfill\large
+    320304435 - Cabrera Rojas Oscar
+  \vfill
+
+  \noindent\footnotesize \hfill Ciudad Universitaria, CDMX a 06 de septiembre del 2026
+\end{titlepage}
+\restoregeometry
+
+\tableofcontents
+
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\section{Fundamentos de almacenamiento y particionamiento de discos}
+\label{sec:fundamentosAlmacenamiento}
+
+La correcta instalación, configuración y coexistencia armónica de múltiples sistemas operativos en una misma estación de cómputo descansa sobre la comprensión rigurosa de las capas inferiores del subsistema de almacenamiento secundario. Lejos de constituir un simple receptáculo homogéneo de bytes, una unidad de almacenamiento masivo —ya sea electromecánica o basada en memoria de estado sólido— requiere una jerarquía estricta de estructuración que abarca desde la traducción física de señales y bloques hasta la definición de tablas de particiones y la organización lógica de árboles de archivos en el sistema operativo \parencite[\S 11.5, pp.\ 521--523]{stallings2018operating}.
+
+\subsection{Geometría de almacenamiento secundario y direccionamiento de bloques}
+\label{sec:geometriaAlmacenamiento}
+
+Históricamente, los discos duros magnéticos estructuraban su capacidad de almacenamiento a partir de una geometría física basada en platos circulares cubiertos de material magnetizable. Como describen \textcite[\S 11.5, pp.\ 521--523]{stallings2018operating}, cada plato dispone de una o dos superficies de grabación leídas y escritas por cabezales electromagnéticos suspendidos microscópicamente sobre ellas. La superficie se subdivide concéntricamente en pistas (\textit{tracks}), y el conjunto vertical de pistas situadas en el mismo radio a través de todos los platos conforma un cilindro (\textit{cylinder}). Cada pista se segmenta a su vez en arcos denominados sectores (\textit{sectors}), los cuales constituyen la unidad indivisible más pequeña de transferencia atómica en el medio físico.
+
+Para que el controlador del disco y el sistema de entrada/salida (E/S) puedan operar sobre el soporte, el disco debe someterse a un formateo físico o de bajo nivel \parencite[\S 12.5.1, pp.\ 418--419]{silberschatz2006fundamentos}. Durante este procedimiento, el fabricante delimita los sectores inscribiendo en cada uno una cabecera con información de sincronización y número de sector, un área de datos de carga útil y una cola con códigos de corrección de errores (\textit{error-correcting code}, ECC). El algoritmo de ECC recalcula periódicamente los polinomios verificadores tras cada lectura, lo que permite detectar corrupciones de bits y recuperar errores transitorios antes de que se propaguen a las capas superiores del sistema operativo. Aunque durante décadas el tamaño estándar de la carga útil del sector físico fue fijado en 512 bytes, las unidades modernas adoptan el estándar de formato avanzado (\textit{Advanced Format}, AF), incrementando el tamaño físico del sector a 4096 bytes (4~KiB). Esta ampliación reduce drásticamente el espacio muerto consumido por cabeceras y colas repetitivas, y eleva la eficiencia de los algoritmos de detección y corrección de errores. Para preservar la compatibilidad con plataformas heredadas, los controladores de almacenamiento ofrecen emulación de 512 bytes (formato 512e), mientras que los sistemas nativos operan directamente con direccionamiento de 4~KiB nativo (4Kn).
+
+En las primeras arquitecturas de computadoras personales, el acceso a los sectores demandaba la especificación directa de sus coordenadas espaciales mediante la terna de cilindro, cabezal y sector (CHS, \textit{Cylinder-Head-Sector}). En este esquema, el sistema operativo o el firmware del sistema básico de entrada/salida (\textit{Basic Input/Output System}, BIOS) instruía al controlador mediante llamadas a la interrupción INT 13h, especificando con exactitud tridimensional qué cabezal activar y sobre cuál cilindro y sector posicionarse \parencite[\S 7.4, pp.\ 377--378]{carretero2001sistemas}. No obstante, el esquema CHS arrastraba limitaciones intrínsecas impuestas por la combinación de las restricciones de los registros de la controladora IDE/ATA y las estructuras de parámetros de disco de la BIOS tradicional. Los registros originales reservaban:
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item 10 bits para el número de cilindro, limitando el recorrido a $2^{10} = 1024$ cilindros (numerados del 0 al 1023).
+    \item 4 bits en la interfaz ATA (ampliados a 8 bits en la BIOS mediante traducción) para el cabezal, permitiendo hasta $2^4 = 16$ cabezales físicos (o 256 en llamadas de BIOS).
+    \item 6 bits para el sector por pista, con la particularidad de que los sectores se numeran a partir de 1, admitiendo un máximo de $2^6 - 1 = 63$ sectores.
+\end{itemize}
+
+El producto combinatorio de estas restricciones fijó una severa barrera histórica de almacenamiento:
+\begin{equation}
+    \text{Capacidad}_{\text{máx CHS-BIOS}} = 1024 \times 16 \times 63 \times 512\text{ bytes} \approx 528.48\text{ MB} \quad (504\text{ MiB})
+\end{equation}
+Incluso tras implementar esquemas de traducción asistida de geometría mediante software y controladores mejorados (Enhanced BIOS), el límite superior de CHS no pudo extenderse más allá de los $8.4\text{ GB}$ ($1024 \times 256 \times 63 \times 512\text{ bytes}$).
+
+Para superar definitivamente estas restricciones mecánicas y desacoplar el diseño lógico del software de las contingencias de fabricación de los discos, se estandarizó el direccionamiento de bloques lógicos (LBA, \textit{Logical Block Addressing}). Bajo LBA, el disco completo es abstraído ante el sistema operativo como una matriz lineal unidimensional de bloques homogéneos, numerados secuencialmente desde el índice $0$ hasta $N-1$, donde $N$ representa el número total de sectores disponibles en la unidad \parencite[\S 12.1, p.\ 409]{silberschatz2006fundamentos}. El sector 0 corresponde lógicamente al primer sector de la primera pista del primer cilindro exterior, avanzando de manera continua sin que el sistema operativo deba calcular pasos de pista o conmutaciones de cabezal. La conversión interna entre el índice LBA solicitado y las coordenadas físicas reales queda delegada de forma transparente al microcontrolador integrado en la unidad de almacenamiento.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Evolución histórica de los esquemas de direccionamiento de almacenamiento.}
+\label{tab:comparativaDireccionamiento}
+\begin{tabularx}{\textwidth}{@{} l c c c >{\centering\arraybackslash}p{2.3cm} X @{}}
+\toprule
+\textbf{Esquema} & \textbf{Bits} & \textbf{Sectores} & \textbf{Sector} & \textbf{Capacidad máx.} & \textbf{Contexto tecnológico} \\
+\midrule
+CHS estándar & 24 & 1\,032\,192 & 512 B & 504 MiB & BIOS heredado e interfaces IDE primigenias. \\
+CHS asistido & 28 & 16\,515\,072 & 512 B & 8.41 GB & Traducción de geometría (EBIOS / ATA-1). \\
+LBA28 & 28 & $2^{28}$ & 512 B & 137.44 GB \par (128 GiB) & Norma ATA-1 a ATA-5; barrera de los 137 GB. \\
+LBA48 & 48 & $2^{48}$ & 512 B & 144.11 PB \par (128 PiB) & Norma ATA-6 / SATA / SAS; estándar extendido. \\
+LBA48 (4Kn) & 48 & $2^{48}$ & 4096 B & 1.15 EB \par (1 ZiB) & Formato avanzado nativo para unidades masivas. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+La transición a LBA no solo resolvió las restricciones de escala en discos mecánicos, sino que sentó las bases para la integración de las unidades de estado sólido (\textit{Solid-State Drive}, SSD) y los dispositivos basados en el protocolo de memoria no volátil exprés (\textit{Non-Volatile Memory Express}, NVMe). En los medios de estado sólido, no existen superficies giratorias ni cabezales mecánicos; el almacenamiento descansa en celdas de memoria flash NAND organizadas en matrices de páginas (típicamente de 4~KiB a 16~KiB) y bloques de borrado (de 2~MiB a 8~MiB). El controlador del SSD incorpora una capa de traducción de memoria flash (\textit{Flash Translation Layer}, FTL), la cual expone hacia el sistema operativo la interfaz clásica de bloques LBA de 512 o 4096 bytes, mientras administra dinámicamente el desgaste de celdas (\textit{wear leveling}), la recolección de basura y la reubicación de bloques lógicos.
+
+Este desacoplamiento impone un requisito crítico de diseño en la fase de particionamiento: la alineación de sectores. Si una partición inicia en un sector LBA no divisible entre el tamaño del bloque físico de la memoria flash o del sector 4Kn, cada operación de lectura o escritura de un bloque del sistema de archivos se desalinea, forzando al controlador a acceder a dos bloques físicos contiguos para completar una única operación lógica. Este fenómeno, denominado amplificación de escritura, degrada sustancialmente el rendimiento de entrada/salida y reduce la vida útil de los circuitos integrados de la unidad. Por esta razón, las herramientas contemporáneas de particionamiento estandarizan la alineación forzada de cualquier partición en fronteras de 1~MiB (exactamente en el LBA 2048 para sectores de 512 bytes, puesto que $2048 \times 512\text{ bytes} = 1\,048\,576\text{ bytes} = 1\text{ MiB}$), garantizando divisibilidad exacta con cualquier tamaño común de página física o bloque de borrado.
+
+\subsection{Esquemas de tablas de particiones: MBR frente a GPT}
+\label{sec:esquemasParticiones}
+
+El particionamiento es el proceso de segmentación de la matriz global de bloques LBA de un medio de almacenamiento en subconjuntos contiguos de sectores lógicamente aislados, a los cuales el sistema operativo trata como si fuesen unidades físicas independientes \parencite[\S 12.5.1, pp.\ 418--419]{silberschatz2006fundamentos}. Cada partición delimita un espacio continuo delimitado por un sector de inicio y un sector de término, dentro del cual se puede implantar un sistema de archivos independiente, un área de memoria virtual o una estructura de arranque \parencite[\S 7.4, pp.\ 377--378]{carretero2001sistemas}. La definición, orden y atributos de estas regiones se almacenan en una estructura denominada tabla de particiones. En la computación contemporánea coexisten dos esquemas fundamentales: el registro de arranque maestro (MBR, \textit{Master Boot Record}) y la tabla de particiones GUID (GPT, \textit{GUID Partition Table}).
+
+\subsubsection{Arquitectura y limitaciones del registro de arranque maestro (MBR)}
+
+Diseñado a inicios de la década de 1980 por IBM y Microsoft para las computadoras personales PC-XT, el esquema MBR ubica su estructura exclusivamente en el primer sector absoluto del disco (LBA 0), abarcando exactamente 512 bytes. La composición interna de este sector se divide en tres campos fundamentales:
+\begin{enumerate}[noitemsep, topsep=2pt]
+    \item \textbf{Código de arranque primario (446 bytes):} Rutina en código máquina que el firmware BIOS carga en memoria principal (típicamente en la dirección física \texttt{0x7C00}) para iniciar la primera etapa del cargador de arranque (\textit{bootloader}).
+    \item \textbf{Tabla de particiones primarias (64 bytes):} Estructura formada por cuatro entradas contiguas de 16 bytes cada una. Cada entrada describe el estado de activación (booteable o no), el cilindro-cabezal-sector de inicio, el tipo de sistema de archivos (código hexadecimal de 1 byte), las coordenadas CHS de fin, el LBA inicial y el número total de sectores que integran la partición.
+    \item \textbf{Firma mágica de arranque (2 bytes):} La secuencia hexadecimal \texttt{0x55AA} en los desplazamientos 510 y 511, empleada por el BIOS para certificar que el sector contiene código de arranque válido.
+\end{enumerate}
+
+Debido a que la tabla dedica exactamente 16 bytes a cada registro y solo cuenta con 64 bytes disponibles, el MBR impone la restricción estricta de albergar únicamente hasta cuatro particiones denominadas primarias. Para eludir esta restricción sin modificar la estructura del sector 0, la industria introdujo el concepto de partición extendida. Una partición extendida es un tipo especial de partición primaria (identificada con el código \texttt{0x05} o \texttt{0x0F}) que actúa como un contenedor secundario. Dentro de la partición extendida se encadenan registros de arranque extendidos (EBR, \textit{Extended Boot Record}) organizados en una lista enlazada simple, donde cada EBR describe una subpartición denominada lógica y apunta al sector donde reside el siguiente EBR de la cadena \parencite[\S 7.4, pp.\ 377--378]{carretero2001sistemas}.
+
+No obstante, la debilidad más insalvable del esquema MBR radica en el tamaño de los campos destinados a registrar las direcciones de sector. Tanto el campo de sector de inicio como el de conteo de sectores disponen de una longitud de solo 32 bits ($4\text{ bytes}$). Con 32 bits, el valor numérico más alto direccionable es $2^{32} = 4\,294\,967\,296$ sectores. Considerando el tamaño estándar de sector de 512 bytes, la capacidad máxima total direccionable por una tabla MBR es:
+\begin{equation}
+    \text{Capacidad}_{\text{máx MBR}} = 2^{32} \times 512\text{ bytes} = 2\,199\,023\,255\,552\text{ bytes} \approx 2.199\text{ TB} \quad (2.00\text{ TiB})
+\end{equation}
+Cualquier sector situado más allá del límite de los 2~TiB resulta matemáticamente invisible e inalcanzable para una tabla de particiones MBR. Asimismo, el MBR carece por completo de redundancia: si el sector LBA 0 sufre daño físico o corrupción por escritura errónea, la totalidad de la información sobre las particiones se pierde de manera catastrófica. Tampoco implementa sumas de verificación ni códigos de detección de errores sobre sus propios metadatos, lo que impide al sistema verificar si las entradas han sido alteradas o dañadas.
+
+\subsubsection{Arquitectura y ventajas de la tabla de particiones GUID (GPT)}
+
+Como parte integrante de la especificación de la interfaz de firmware extensible unificada (UEFI, \textit{Unified Extensible Firmware Interface}), se desarrolló el estándar de tabla de particiones GUID (GPT), diseñado para erradicar las vulnerabilidades del MBR y responder a las exigencias de almacenamiento de la computación contemporánea \parencite{uefi2024specification}.
+
+\begin{figure}[H]
+\centering
+\resizebox{0.95\textwidth}{!}{%
+\begin{localsubgroup}
+    Estructura de disco GPT
+    \begin{localsubgroup}
+        Zona inicial del disco
+        \begin{localsubgroup}
+            - LBA 0: Protective MBR (PMBR con partición tipo 0xEE) \\
+            - LBA 1: Cabecera GPT primaria (firma EFI PART, CRC32, GUID) \\
+            - LBA 2--33: Arreglo de 128 entradas de partición (128 bytes c/u)
+        \end{localsubgroup} \\[1.2em]
+
+        Zona de datos de usuario
+        \begin{localsubgroup}
+            - LBA 34 a N-34: Espacio útil para particiones alineadas a 1 MiB \\
+            - Contenedor de sistemas de archivos y puntos de montaje
+        \end{localsubgroup} \\[1.2em]
+
+        Zona final de respaldo
+        \begin{localsubgroup}
+            - LBA N-33 a N-2: Copia secundaria del arreglo de particiones \\
+            - LBA N-1: Cabecera GPT de respaldo (redundancia y recuperación)
+        \end{localsubgroup}
+    \end{localsubgroup}
+\end{localsubgroup}%
+}
+\caption{Disposición estructural de sectores lógicos en un esquema GPT bajo norma UEFI.}
+\label{fig:estructuraGptUefi}
+\end{figure}
+
+A diferencia del MBR, la arquitectura GPT se despliega de forma estructurada a lo largo de los extremos del medio de almacenamiento, reservando bloques específicos para salvaguardar la integridad de los datos (Imagen~\ref{fig:estructuraGptUefi}):
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item \textbf{MBR de protección (LBA 0):} Para garantizar interoperabilidad y protección frente a utilidades de disco heredadas, el sector LBA 0 aloja un MBR de protección (\textit{Protective MBR}, PMBR). Este sector contiene una tabla de particiones con una única entrada ficticia de tipo \texttt{0xEE} que declara ocupar la totalidad de la unidad (o hasta el límite de 2~TiB). Si una utilidad anticuada que desconoce GPT inspecciona el disco, interpreta que este se encuentra totalmente asignado a un volumen desconocido y rehúsa sobreescribir la estructura, previniendo la destrucción accidental de los metadatos \parencite{uefi2024specification}.
+    \item \textbf{Cabecera GPT primaria (LBA 1):} Ubicada inmediatamente después del PMBR, define los parámetros operativos de la tabla. Almacena la firma mágica \texttt{EFI PART} (en hexadecimal \texttt{0x5452415020494645}), la versión de revisión de la especificación, el tamaño de la cabecera (típicamente 92 bytes), un identificador único global (GUID) del disco, el LBA actual de la cabecera (LBA 1), el LBA donde reside la cabecera de respaldo (LBA $N-1$), el rango de bloques utilizables para datos de usuario (\texttt{FirstUsableLBA} usualmente fijado en LBA 34, y \texttt{LastUsableLBA} en LBA $N-34$), el sector de inicio del arreglo de entradas de partición (LBA 2), el número de entradas reservadas (estandarizado en 128 entradas) y el tamaño de cada entrada (128 bytes). Fundamentalmente, la cabecera incorpora una suma de comprobación de redundancia cíclica de 32 bits (CRC32) de la propia cabecera y otra CRC32 del arreglo completo de particiones. Si ocurre corrupción de bits, el firmware detecta la alteración antes de iniciar cualquier subsistema.
+    \item \textbf{Arreglo de entradas de partición primaria (LBA 2 al 33):} Ocupa 32 sectores consecutivos de 512 bytes ($32 \times 512 = 16\,384\text{ bytes} = 16\text{ KiB}$). Aloja 128 registros individuales de partición de 128 bytes cada uno. Cada entrada incluye:
+    \begin{itemize}[noitemsep]
+        \item GUID de tipo de partición (16 bytes): define el propósito formal del volumen de manera universalmente inequívoca.
+        \item GUID único de partición (\textit{Unique Partition GUID} o PARTUUID, 16 bytes): identificador aleatorio asignado de manera irrepetible a la partición específica.
+        \item LBA de inicio y LBA de fin (8 bytes cada uno, enteros de 64 bits): permite referenciar sectores hasta $2^{64}$.
+        \item Atributos de partición (8 bytes): banderas de 64 bits para marcar atributos como volumen de solo lectura, oculto o de arranque del sistema.
+        \item Nombre de la partición (72 bytes): cadena de hasta 36 caracteres codificada en UTF-16LE, permitiendo etiquetar los volúmenes directamente en la tabla.
+    \end{itemize}
+    \item \textbf{Estructura de respaldo secundaria (LBA $N-33$ al $N-1$):} En el extremo final de la unidad se duplica íntegramente la estructura: los sectores LBA $N-33$ a $N-2$ albergan la copia de seguridad del arreglo de entradas de partición, y el sector LBA $N-1$ almacena la cabecera GPT de respaldo. Si la cabecera primaria se corrompe o sufre una escritura incompleta por un fallo eléctrico, el firmware UEFI o utilidades como \texttt{gdisk} restauran automáticamente el estado consistente empleando la copia secundaria.
+\end{itemize}
+
+Gracias al uso de enteros de 64 bits para el direccionamiento LBA, el límite teórico de tamaño de partición y de disco en GPT asciende a $2^{64} \times 512\text{ bytes} = 9.44\text{ ZB}$ ($8\text{ ZiB}$, es decir, más de nueve mil millones de terabytes). La Tabla~\ref{tab:comparativaMbrGpt} sintetiza las diferencias operativas y estructurales entre ambos esquemas.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Comparación técnica exhaustiva entre los esquemas de particionamiento MBR y GPT.}
+\label{tab:comparativaMbrGpt}
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+\textbf{Criterio técnico} & \textbf{Registro de arranque maestro (MBR)} & \textbf{Tabla de particiones GUID (GPT)} \\
+\midrule
+Especificación de origen & IBM PC-XT / MS-DOS (1983) & Especificación UEFI (Intel / UEFI Forum) \\
+Ubicación de metadatos & Exclusivamente en LBA 0 (512 bytes) & LBA 0 a 33 (primaria) y LBA $N-33$ a $N-1$ (respaldo) \\
+Particiones primarias & Máximo 4 (o 3 primarias y 1 extendida) & 128 de forma estándar (ampliable si se requiere) \\
+Particiones lógicas & Requiere encadenamiento de EBR & No aplica; todas las particiones son nativas \\
+Capacidad máxima & $2^{32} \times 512\text{ B} = 2.19\text{ TB}$ (2.00 TiB) & $2^{64} \times 512\text{ B} \approx 9.44\text{ ZB}$ (8 ZiB) \\
+Campos de direccionamiento & Enteros sin signo de 32 bits & Enteros sin signo de 64 bits \\
+Redundancia estructural & Nula; punto único de fallo absoluto & Cabecera y tabla duplicadas al final del disco \\
+Verificación de integridad & Ninguna (salvo firma fija \texttt{0x55AA}) & Sumas de comprobación CRC32 en cabecera y tabla \\
+Identificación de tipos & Código hexadecimal de 1 byte (0--255) & GUID universalmente único de 128 bits (16 bytes) \\
+Identificación de volumen & Firmas de disco de 32 bits no estándar & PARTUUID único de 128 bits por partición \\
+Compatibilidad de firmware & BIOS tradicional y UEFI bajo módulo CSM & Nativo en UEFI; requiere configuración híbrida en BIOS \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Tipologías de particiones y puntos de montaje en Linux}
+\label{sec:tipologiasParticiones}
+
+A diferencia de los entornos operativos de la familia Windows NT, los cuales organizan el espacio de almacenamiento asignando a cada volumen formateado una letra de unidad independiente (\texttt{C:}, \texttt{D:}, \texttt{E:}) ligada a un espacio de nombres local, los sistemas basados en UNIX y Linux estructuran la totalidad de sus recursos bajo un árbol jerárquico unificado que nace de un único directorio raíz denominado \texttt{/} \parencite{fhs2015specification}. 
+
+Para que los bloques de una partición física de almacenamiento resulten accesibles a los procesos y usuarios, el sistema operativo implementa el mecanismo de montaje mediante el sistema de archivos virtual (\textit{Virtual File System}, VFS) del núcleo \parencite[\S 11.9.3, pp.\ 398--399]{silberschatz2006fundamentos}. El montaje consiste en vincular el superbloque y la raíz de inodos de un sistema de archivos contenido en una partición determinada a un directorio existente en el árbol jerárquico, denominado punto de montaje (\textit{mount point}). Una vez montada la partición, cualquier operación de lectura o escritura dirigida a dicho directorio o sus subdirectorios se redirige de forma transparente por el VFS hacia el controlador del sistema de archivos residente en el dispositivo correspondiente.
+
+En una instalación técnica avanzada orientada al arranque dual de Arch Linux junto a Windows sobre plataformas modernas UEFI/GPT, el diseño del esquema de almacenamiento exige definir con precisión las siguientes tipologías de partición y puntos de montaje \parencite{arch2024install}:
+
+\subsubsection{Partición del sistema EFI (ESP)}
+
+La partición del sistema EFI (\textit{EFI System Partition}, ESP) es un volumen mandatorio estandarizado por la especificación UEFI que actúa como puente de comunicación entre el firmware de la placa base y los gestores de arranque de los diferentes sistemas operativos instalados \parencite{uefi2024specification}. En una tabla GPT se identifica con el GUID \texttt{C12A7328-F81F-11D2-BA4B-00A0C93EC93B} (código mnemotécnico \texttt{EF00} en utilidades como \texttt{gdisk}). 
+
+El firmware UEFI contiene controladores nativos de lectura para el sistema de archivos FAT en sus variantes FAT12, FAT16 y FAT32, siendo este último el formato estandarizado para discos duros fijos (\texttt{mkfs.fat -F 32}). En la ESP residen exclusivamente archivos ejecutables con formato PE32+ (\textit{Portable Executable}) con extensión \texttt{.efi}, organizados bajo el subdirectorio \texttt{/EFI/}:
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item En equipos donde Windows ya se encuentra preinstalado de fábrica, el instalador de Microsoft crea una ESP (típicamente de 100~MiB a 260~MiB) que aloja el binario \texttt{/EFI/Microsoft/Boot/bootmgfw.efi} correspondiente a Windows Boot Manager.
+    \item Para configurar el arranque dual sin alterar la integridad del entorno Windows, la instalación de Arch Linux debe reutilizar dicha partición compartida o asegurar que posea suficiente espacio para albergar los cargadores correspondientes (tales como GNU GRUB en \texttt{/EFI/GRUB/grubx64.efi} o \textit{systemd-boot}). En instalaciones nuevas donde se diseña la partición desde cero, se recomienda dimensionar la ESP entre 512~MiB y 1~GiB para admitir la colocación directa de imágenes de núcleo Linux si se opta por arranque directo mediante \textit{EFISTUB}.
+    \item En Arch Linux, los puntos de montaje canónicos recomendados son \texttt{/efi} (preferido cuando se busca mantener la ESP estrictamente para binarios EFI de arranque y montar \texttt{/boot} en la partición raíz) o \texttt{/boot} (habitual cuando se requiere que los núcleos y las imágenes de memoria inicial residan directamente en el espacio accesible por el firmware).
+\end{itemize}
+
+\subsubsection{Partición o directorio de arranque (\texttt{/boot})}
+
+El directorio \texttt{/boot} alberga los elementos estáticos indispensables para inicializar la ejecución del sistema operativo:
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item La imagen comprimida y ejecutable del núcleo Linux (\texttt{vmlinuz-linux}).
+    \item El archivo del sistema de archivos temporal en memoria RAM (\textit{initial RAM filesystem}, \texttt{initramfs-linux.img} y su contraparte de contingencia \texttt{initramfs-linux-fallback.img}), el cual provee al núcleo de los módulos de controladores (almacenamiento, cifrado, sistemas de archivos raíz) necesarios antes de poder montar el volumen raíz definitivo.
+    \item Las imágenes de microcódigo de la CPU (\texttt{intel-ucode.img} o \texttt{amd-ucode.img}) para aplicar correcciones de estabilidad y seguridad al procesador en las fases iniciales del arranque.
+    \item Los archivos de configuración, temas y módulos dinámicos del gestor de arranque GNU GRUB (\texttt{/boot/grub/}).
+\end{itemize}
+En instalaciones sobre sistemas de archivos raíz estándar como ext4, \texttt{/boot} suele mantenerse simplemente como un subdirectorio ordinario dentro de la partición raíz \texttt{/}, simplificando la gestión de espacio libre. No obstante, si se utiliza cifrado de disco completo (LUKS) o sistemas de archivos con compresión y características avanzadas de instantáneas que el gestor de arranque no pueda descifrar directamente, se justifica plenamente segregar \texttt{/boot} en una partición primaria independiente formateada en ext4 con un tamaño típico de 1~GiB a 2~GiB.
+
+\subsubsection{Partición raíz (\texttt{/})}
+
+La partición raíz es el nodo cardinal del sistema operativo. Alberga la totalidad de la estructura del sistema conforme al estándar FHS \parencite{fhs2015specification}: los binarios esenciales de usuario y de administración del sistema (\texttt{/usr/bin}), las bibliotecas compartidas del sistema (\texttt{/usr/lib}), los archivos de configuración estática del equipo (\texttt{/etc}), el subsistema de paquetes y variables de estado (\texttt{/var}) y los puntos de generación de sistemas de archivos virtuales dinámicos del núcleo (\texttt{/proc}, \texttt{/sys}, \texttt{/dev}).
+
+En la tabla de particiones GPT para arquitecturas de 64 bits (x86\_64), el volumen raíz se identifica de forma estandarizada mediante el GUID \texttt{4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709} (código \texttt{8304} o el genérico de datos Linux \texttt{8300} en utilidades de particionado). El sistema de archivos predilecto por excelencia para la partición raíz en Arch Linux es ext4 (\textit{Fourth Extended Filesystem}), debido a su probada estabilidad, diseño con registro en diario (\textit{journaling}), eficiente asignación multirbloque y tolerancia a cortes de suministro eléctrico. En escenarios de ingeniería con requerimientos de instantáneas (\textit{snapshots}) a nivel de bloques y compresión transparente sobre la marcha, se adopta con frecuencia Btrfs. Para una instalación equilibrada que contemple el sistema base, entornos de desarrollo, compiladores, cabeceras del núcleo y herramientas de administración, el dimensionamiento de la partición raíz debe situarse entre un mínimo de 30~GiB y 60~GiB cuando los datos de usuario se segregan, o el remanente total del espacio asignado a Linux en caso de esquema monovolumen.
+
+\subsubsection{Partición de datos de usuario (\texttt{/home})}
+
+El directorio \texttt{/home} hospeda los directorios personales de cada cuenta de usuario registrada en el sistema operativo, dentro de los cuales se resguardan no solo los documentos, proyectos y descargas del usuario, sino también los archivos de configuración local específicos de cada aplicación y entorno de escritorio (comúnmente denominados \textit{dotfiles}, situados en \texttt{\~{}/.config/}, \texttt{\~{}/.local/}, \texttt{\~{}/.bashrc}).
+
+En la arquitectura de sistemas informáticos, segregar \texttt{/home} en una partición independiente (GUID \texttt{933AC7E2-D2A2-4B10-802A-226C2C40F627}, código \texttt{8302}) aporta ventajas operativas determinantes:
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item \textbf{Inmunidad ante reinstalaciones y migraciones:} Permite formatear, reparar o actualizar la partición raíz \texttt{/} de forma destructiva sin comprometer la integridad ni la configuración de los perfiles de usuario.
+    \item \textbf{Aislamiento de cuotas y espacio:} Evita que un llenado accidental de archivos personales o descargas masivas agote los bloques disponibles para el sistema, lo cual causaría el bloqueo de demonios y servicios críticos del sistema operativo en \texttt{/var} o \texttt{/tmp}.
+    \item \textbf{Políticas de montaje específicas:} Habilita el montaje con opciones restrictivas de seguridad, tales como \texttt{nodev} (impedir la creación de dispositivos de caracteres o bloques en el directorio personal) o \texttt{nosuid} (inhabilitar la ejecución de binarios con banderas de cambio de identificador de usuario \textit{SetUID}).
+\end{itemize}
+
+\subsubsection{Espacio y mecanismos de intercambio (\textit{swap})}
+
+El subsistema de memoria virtual de Linux requiere un mecanismo para gestionar el desbordamiento de la memoria física principal (RAM) mediante la técnica de intercambio de páginas (\textit{paging/swapping}) \parencite[\S 12.6, pp.\ 421--423]{silberschatz2006fundamentos}. Cuando el consumo de memoria supera la capacidad instalada, o cuando el núcleo identifica páginas de memoria asignadas a procesos inactivos que no han sido referenciadas en períodos prolongados, el demonio gestor de memoria virtual (\textit{kswapd}) extrae dichas páginas y las transfiere al espacio de intercambio, liberando marcos de página físicos para la memoria activa y las cachés de lectura/escritura de archivos.
+
+El espacio de intercambio en Linux puede materializarse mediante dos mecanismos equivalentes:
+\begin{enumerate}[noitemsep, topsep=2pt]
+    \item \textbf{Partición de intercambio dedicada (\textit{swap partition}):} Una partición formateada a bajo nivel con la utilidad \texttt{mkswap} (GUID GPT \texttt{0657FD6D-A4AB-43C4-84E5-0933C84B4F4F}, código \texttt{8200}). Al ser un volumen crudo sin capas intermedias de sistemas de archivos, ofrece un direccionamiento secuencial directo y rendimiento óptimo.
+    \item \textbf{Archivo de intercambio (\textit{swapfile}):} Un archivo estático preasignado y contiguo ubicado dentro de un sistema de archivos regular (como ext4 o Btrfs) inicializado con \texttt{mkswap}. Provee una flexibilidad superior, puesto que permite ajustar dinámicamente su tamaño o reubicarlo sin modificar la tabla de particiones del disco.
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Esquema integral de particionamiento sugerido para arranque dual con Arch Linux en UEFI/GPT.}
+\label{tab:esquemaParticionamientoDualBoot}
+\begin{tabularx}{\textwidth}{p{3.2cm} p{2.2cm} c p{2.0cm} X}
+\toprule
+\textbf{Partición} & \textbf{Punto de montaje} & \textbf{Tipo FS} & \textbf{Tamaño} & \textbf{Función técnica y notas} \\
+\midrule
+ESP (Windows / Linux) & \texttt{/efi} o \texttt{/boot} & FAT32 & 260--1024 MiB & Almacén de binarios \texttt{.efi}; se comparte la ESP existente de Windows (\texttt{EF00}). \\
+MSR (Microsoft) & Ninguno & Crudo & 16 MiB & Partición reservada de Microsoft; no tocar (\texttt{0C01}). \\
+Windows (C:) & Ninguno & NTFS & Variable & Sistema operativo Windows y datos (\texttt{0700}). \\
+Windows Recovery & Ninguno & NTFS & 500--1000 MiB & Entorno de recuperación WinRE de fábrica (\texttt{2700}). \\
+\midrule
+Linux Swap & \texttt{[SWAP]} & Swap & 4--16 GiB & Paginación y soporte de hibernación ACPI S4 (\texttt{8200}). \\
+Linux Root & \texttt{/} & ext4 / Btrfs & 40--80 GiB & Raíz del sistema operativo, binarios y librerías (\texttt{8304}). \\
+Linux Home & \texttt{/home} & ext4 / Btrfs & Remanente & Datos personales, proyectos y configuraciones (\texttt{8302}). \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Un factor decisivo en la arquitectura de un equipo portátil o estación de trabajo es la compatibilidad con el estado de hibernación (suspensión a disco o estado ACPI S4). Durante la hibernación, el núcleo Linux guarda una imagen completa del estado de la memoria RAM y de los registros del procesador en el dispositivo de intercambio antes de desenergizar el hardware. Por consiguiente, si se requiere soporte de hibernación, el tamaño del espacio de intercambio debe ser al menos equivalente o ligeramente superior a la capacidad total de memoria RAM física del equipo ($1\times$ a $1.5\times$ la RAM), asegurando que toda la memoria volátil pueda ser volcada en el medio no volátil sin truncamiento. Si no se contempla la hibernación, una asignación de 2~GiB a 4~GiB suele resultar suficiente para amortiguar picos de carga en estaciones con 16~GiB o más de RAM.
+
+\section{Arquitectura de arranque y coexistencia de sistemas operativos}
+\label{sec:arquitecturaArranque}
+
+El arranque de un equipo de cómputo moderno constituye una de las secuencias más críticas y rigurosas de la ingeniería de software y hardware. Lejos de ser una transición instantánea entre la alimentación eléctrica y la disponibilidad del entorno interactivo, el arranque involucra una cadena estricta de transferencias de control entre circuitos integrados de memoria no volátil, firmware de bajo nivel, cargadores intermedios y el núcleo del sistema operativo \parencite[\S 2.4.3, pp.\ 76--77]{deitel2004operating}. Cuando dos plataformas concebidas bajo paradigmas dispares —como Microsoft Windows y Arch Linux— coexisten sobre una misma máquina física, la estabilidad global del sistema depende enteramente de la articulación precisa de estos eslabones.
+
+\subsection{Interfaces de firmware: BIOS heredado y UEFI}
+\label{sec:interfacesFirmware}
+
+Al presionar el botón de encendido de la computadora, la fuente de alimentación estabiliza las líneas de tensión continua y envía la señal \textit{Power Good} a la placa base. Esta señal libera la línea de reinicio de la CPU, forzando al procesador a inicializar sus registros en un estado predeterminado y a ejecutar la instrucción ubicada en el vector de reinicio (\textit{reset vector}), típicamente en la dirección de memoria física \texttt{0xFFFFFFF0} mapeada a la memoria de solo lectura (\textit{Read-Only Memory}, ROM) o memoria flash del firmware \parencite[\S 12.5.2, pp.\ 419--420]{silberschatz2006fundamentos}. A partir de este instante, el firmware asume la ejecución del autodiagnóstico al encendido (\textit{Power-On Self-Test}, POST), verificando la integridad de la memoria principal, inicializando los buses del sistema (PCI Express, USB, SATA y NVMe) y preparando los dispositivos para la fase de carga.
+
+Durante tres décadas, esta responsabilidad recayó en el sistema básico de entrada/salida tradicional (BIOS heredado o \textit{Legacy BIOS}). Diseñado a finales de la década de 1970 para microprocesadores Intel 8086/8088 de 16 bits, el BIOS heredado arrastra compromisos arquitectónicos restrictivos:
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item \textbf{Modo real de 16 bits:} La CPU opera bajo el modelo de segmentación de 16 bits, con acceso directo restringido exclusivamente al primer megabyte de memoria física (el cual se subdivide en 640~KiB de memoria convencional utilizable y 384~KiB de memoria superior reservada para vídeo y periféricos).
+    \item \textbf{Interrupciones por software:} La comunicación entre el código de arranque y los dispositivos físicos se gestiona mediante vectores de interrupción fijos (tales como la INT 10h para primitivas de vídeo y la INT 13h para acceso a discos). Estas rutinas carecen de soporte nativo para buses serie modernos y adolecen de un rendimiento sumamente limitado al depender de llamadas síncronas bloqueantes.
+    \item \textbf{Carga ciega de sector MBR:} Para iniciar un sistema operativo, el BIOS no interpreta sistemas de archivos ni comprende particiones. Se limita a escanear los dispositivos según el orden de arranque configurado, leer ciegamente los 512 bytes del sector LBA 0 (el MBR) del primer dispositivo booteable, depositarlos en la dirección física fija \texttt{0x0000:0x7C00} y saltar a dicha dirección para ceder el control \parencite[\S 7.4, pp.\ 377--378]{carretero2001sistemas}. Dado que 446 bytes resultan insuficientes para inicializar un núcleo moderno, los cargadores se veían forzados a implementar complejas etapas intermedias encadenadas en sectores ocultos no particionados.
+\end{itemize}
+
+Para erradicar de raíz estas limitaciones de escalabilidad y seguridad, un consorcio de líderes tecnológicos estandarizó la interfaz de firmware extensible unificada (UEFI) \parencite{uefi2024specification}. UEFI no es una mera evolución incremental del BIOS, sino un entorno operativo completo y modular de bajo nivel, dotado de controladores de dispositivo, pila de protocolos de red, intérprete de comandos y una arquitectura desacoplada de la CPU (Imagen~\ref{fig:cuadroArquitecturaUefi}).
+
+\begin{figure}[H]
+\centering
+\resizebox{0.95\textwidth}{!}{%
+\begin{localsubgroup}
+    Arquitectura del firmware UEFI
+    \begin{localsubgroup}
+        Servicios de tiempo de arranque (Boot Services)
+        \begin{localsubgroup}
+            - Asignación dinámica de memoria y descriptores de página \\
+            - Controladores nativos de disco y sistemas de archivos FAT \\
+            - Protocolo de carga y verificación criptográfica PE/COFF \\
+            - Se destruyen y liberan mediante la llamada ExitBootServices()
+        \end{localsubgroup} \\[1.2em]
+        Servicios de tiempo de ejecución (Runtime Services)
+        \begin{localsubgroup}
+            - Acceso y gestión persistente de variables en memoria NVRAM \\
+            - Servicios de reloj de hardware y alarmas de tiempo real (RTC) \\
+            - Gestión de reinicio, estados de energía ACPI y apagado \\
+            - Permanecen residentes en memoria compartida con el SO
+        \end{localsubgroup}
+    \end{localsubgroup}
+\end{localsubgroup}%
+}
+\caption{Clasificación funcional de las interfaces y servicios del estándar UEFI.}
+\label{fig:cuadroArquitecturaUefi}
+\end{figure}
+
+El diseño de UEFI descansa en dos categorías fundamentales de interfaces de programación de aplicaciones (\textit{Application Programming Interface}, API) que transforman la interacción entre la máquina y el sistema operativo \parencite{uefi2024specification}:
+\begin{enumerate}[noitemsep, topsep=2pt]
+    \item \textbf{Servicios de tiempo de arranque (\textit{Boot Services}):} Proporcionan funciones de asignación dinámica de memoria física, control de eventos y temporizadores, carga de imágenes binarias y controladores para acceso a periféricos de bloques formateados en FAT32. Los servicios de arranque están activos exclusivamente mientras el gestor de arranque toma el control. En el instante preciso en que el cargador ha cargado el núcleo Linux en la memoria principal y configurado las tablas de páginas, invoca la función canónica \texttt{ExitBootServices()}. Esta llamada notifica al firmware que el control de la máquina ha sido asumido plenamente por el núcleo del sistema operativo, liberando la totalidad de la memoria reservada por los servicios de arranque para que sea reclamada por el subsistema de memoria virtual de Linux.
+    \item \textbf{Servicios de tiempo de ejecución (\textit{Runtime Services}):} A diferencia de los anteriores, estos servicios permanecen mapeados y residentes en la memoria física protegida a lo largo de toda la sesión de trabajo del sistema operativo. Entre ellos destacan la lectura y modificación de variables de firmware en la memoria de acceso aleatorio no volátil (\textit{Non-Volatile Random-Access Memory}, NVRAM), el control de reinicio y apagado del hardware, y la sincronización del reloj de tiempo real (RTC).
+\end{enumerate}
+
+La innovación más trascendental de UEFI radica en la gestión del arranque mediante el Gestor de Arranque UEFI (\textit{UEFI Boot Manager}). En lugar de depender de código binario depositado en sectores físicos ciegos, el firmware incorpora su propio controlador de lectura de sistemas de archivos FAT y examina una serie de registros persistentes almacenados en la memoria NVRAM de la placa base \parencite{uefi2024specification}:
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item \textbf{Variables de orden de arranque (\texttt{BootOrder} y \texttt{BootNext}):} Arreglos de enteros de 16 bits que determinan la secuencia de prioridad con la que el firmware intentará ejecutar los cargadores de sistema disponibles (p.~ej., \texttt{0001, 0000, 0002}).
+    \item \textbf{Descriptores de entrada (\texttt{Boot\#\#\#\#}):} Cada entrada individual en la NVRAM asocia una etiqueta de texto legible para el usuario (p.~ej., \texttt{Windows Boot Manager} o \texttt{GRUB}) con una ruta de dispositivo UEFI (\textit{device path}) que apunta de forma unívoca al identificador PARTUUID de la partición ESP y a la ubicación del archivo ejecutable correspondiente (p.~ej., \texttt{\textbackslash EFI\textbackslash Microsoft\textbackslash Boot\textbackslash bootmgfw.efi} o \texttt{\textbackslash EFI\textbackslash GRUB\textbackslash grubx64.efi}).
+\end{itemize}
+
+En los sistemas operativos modernos como Arch Linux, el núcleo expone la memoria NVRAM al espacio de usuario a través del pseudo-sistema de archivos \texttt{efivarfs}, montado de manera estándar bajo la jerarquía \texttt{/sys/firmware/efi/efivars/}. Esto permite a los administradores de sistemas y scripts de instalación consultar, crear, reordenar y eliminar entradas de arranque de la placa base directamente desde la línea de comandos sin necesidad de reiniciar e ingresar manualmente a la interfaz de configuración del firmware (Tabla~\ref{tab:comparativaBiosUefi}).
+
+\begin{table}[H]
+\centering
+\small
+\caption{Diferencias técnicas fundamentales entre las arquitecturas BIOS tradicional y UEFI.}
+\label{tab:comparativaBiosUefi}
+\begin{tabularx}{\textwidth}{@{} l p{5.5cm} X @{}}
+\toprule
+\textbf{Parámetro técnico} & \textbf{BIOS heredado (Legacy BIOS)} & \textbf{Interfaz UEFI} \\
+\midrule
+Modo de CPU en arranque & Modo real de 16 bits & Modo protegido (32 bits) o modo largo (64 bits). \\
+Memoria direccionable & Limitado a 1 MiB (640 KiB convencionales) & Acceso transparente a toda la RAM física (terabytes). \\
+Lectura de almacenamiento & Sectores ciegos en MBR (LBA 0 en \texttt{0x7C00}) & Lectura nativa de archivos en partición ESP (FAT32). \\
+Esquema de particiones & Master Boot Record (MBR) & GUID Partition Table (GPT) estandarizado. \\
+Drivers del firmware & Rutinas monolíticas en ROM (interrupciones) & Módulos en C o EFI Byte Code (independientes de CPU). \\
+Gestión de arranque & Orden estático de discos físicos & Entradas \texttt{Boot\#\#\#\#} y variable \texttt{BootOrder} en NVRAM. \\
+Verificación de integridad & Ninguna; susceptible a códigos maliciosos & Protocolo Secure Boot basado en certificados X.509. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Mecanismos de arranque múltiple: Windows Boot Manager y GNU GRUB}
+\label{sec:mecanismosArranqueMultiple}
+
+En una configuración de arranque múltiple (\textit{dual boot}), conviven dos filosofías diametralmente opuestas para la administración de la fase inicial de ejecución. La arquitectura de arranque de la plataforma Microsoft Windows se apoya en tres elementos interconectados \parencite{microsoft2024boot}:
+\begin{enumerate}[noitemsep, topsep=2pt]
+    \item \textbf{Windows Boot Manager (\texttt{bootmgfw.efi}):} Aplicación en formato ejecutable portátil (Portable Executable, PE32+) ubicada en la partición ESP bajo la ruta \texttt{\textbackslash EFI\textbackslash\allowbreak Microsoft\textbackslash\allowbreak Boot\textbackslash}. Es el binario que el firmware UEFI invoca según la variable \texttt{BootOrder}.
+    \item \textbf{Almacén de datos de configuración de arranque (BCD):} Una base de datos estructurada en formato binario tipo registro (ubicada en \texttt{\textbackslash EFI\textbackslash Microsoft\textbackslash Boot\textbackslash BCD}) que sustituyó al histórico archivo de texto \texttt{boot.ini}. El BCD almacena las entradas de arranque, descriptores de dispositivos y parámetros del núcleo para los entornos de Windows.
+    \item \textbf{Cargador del sistema operativo (\texttt{winload.efi}):} Invocado por Windows Boot Manager para inicializar la capa de abstracción de hardware (\textit{Hardware Abstraction Layer}, HAL), cargar los controladores de inicio temprano y transferir la ejecución al núcleo ejecutivo de Windows (\texttt{ntoskrnl.exe}).
+\end{enumerate}
+
+Aunque el almacén BCD de Windows puede manipularse mediante la herramienta de línea de comandos \texttt{bcdedit.exe} para registrar entradas personalizadas, el gestor de arranque de Microsoft fue diseñado bajo un enfoque estrictamente monoplataforma. No cuenta con controladores para interpretar sistemas de archivos de Linux (ext4, Btrfs, XFS) ni provee mecanismos amigables para detectar de forma automatizada núcleos basados en UNIX. Además, las actualizaciones mayores acumulativas de Windows con frecuencia reescriben de forma unilateral la variable \texttt{BootOrder} de la memoria NVRAM, autodesignando a \texttt{bootmgfw.efi} como la primera opción de inicio y ocultando el acceso a otros cargadores instalados.
+
+Por consiguiente, el estándar de ingeniería para gobernar estaciones con arranque dual radica en delegar la prioridad principal del arranque a GNU GRUB (\textit{Grand Unified Bootloader}, versión 2) \parencite{gnugrub2024manual}. En plataformas UEFI, la instalación de GRUB genera una imagen ejecutable propia (\texttt{grubx64.efi}) en el directorio \texttt{\textbackslash EFI\textbackslash GRUB\textbackslash} de la partición ESP y registra una nueva entrada en la NVRAM de la placa base.
+
+La arquitectura de GRUB 2 se articula como un micromicroentorno modular. Al arrancar, el binario carga dinámicamente los controladores de sistemas de archivos necesarios y procesa el archivo de configuración declarativo \texttt{/boot/grub/grub.cfg}. En distribuciones avanzadas como Arch Linux, este archivo se compila de manera reproducible ejecutando la utilidad \texttt{grub-mkconfig}, la cual evalúa las variables de \texttt{/etc/default/grub} e integra los scripts modulares del directorio \texttt{/etc/grub.d/}:
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item \texttt{10\_linux}: Escanea el directorio \texttt{/boot} en busca de imágenes del núcleo (\texttt{vmlinuz-linux}) e imágenes de disco de memoria inicial (\texttt{initramfs-linux.img}), generando las entradas de inicio nativas de Linux con sus respectivos identificadores de volumen UUID.
+    \item \texttt{30\_os-prober}: Invoca la utilidad \texttt{os-prober}, la cual sondea exhaustivamente todas las particiones de almacenamiento del equipo. Al identificar la presencia del cargador de Windows en la partición ESP compartida, genera automáticamente una entrada de menú que aplica el mecanismo de carga encadenada (\textit{chainloading}). Mediante esta técnica, GRUB no intenta descifrar las estructuras internas de Windows; en su lugar, transfiere la ejecución limpia de la UEFI hacia \texttt{\textbackslash EFI\textbackslash Microsoft\textbackslash Boot\textbackslash bootmgfw.efi}, permitiendo al usuario seleccionar indistintamente entre Linux y Windows desde una única interfaz unificada.
+\end{itemize}
+
+Es indispensable enfatizar que, a partir de la versión 2.06 de GNU GRUB, los desarrolladores deshabilitaron la ejecución automática de \texttt{os-prober} por razones de seguridad, con el objetivo de prevenir la ejecución no supervisada de scripts sobre sistemas de archivos ajenos potencialmente comprometidos. Para que GRUB reconozca la instalación de Windows y genere su correspondiente entrada de menú, el usuario debe habilitar explícitamente la directiva \texttt{GRUB\_DISABLE\_OS\_PROBER=false} en el archivo \texttt{/etc/default/grub} antes de invocar \texttt{grub-mkconfig}.
+
+El siguiente bloque de terminal ilustra la secuencia de comandos ejecutada desde el entorno de administración para verificar las variables de firmware mediante \texttt{efibootmgr}, habilitar el sondeo de sistemas alternos y regenerar la configuración de GNU GRUB:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# Inspeccionar el orden de arranque y las entradas en la memoria NVRAM \\
+efibootmgr -v \\
+\\
+\# Habilitar la detección de Windows en el archivo de configuración de GRUB \\
+echo "GRUB\_DISABLE\_OS\_PROBER=false" >> /etc/default/grub \\
+\\
+\# Instalar el binario UEFI de GRUB en la partición ESP compartida (/boot) \\
+grub-install --target=x86\_64-efi --efi-directory=/boot --bootloader-id=GRUB \\
+\\
+\# Generar el archivo de configuración detectando Windows Boot Manager \\
+grub-mkconfig -o /boot/grub/grub.cfg
+\end{mdframed}
+
+\subsection{Factores críticos de coexistencia: Secure Boot, Fast Startup e hibernación NTFS}
+\label{sec:factoresCriticosCoexistencia}
+
+La convivencia armónica y no destructiva entre Windows y Arch Linux en un mismo disco duro físico requiere neutralizar tres fuentes críticas de colisión a nivel de firmware, sistema de archivos y sincronización de hardware.
+
+\subsubsection{El protocolo Secure Boot y la cadena de confianza criptográfica}
+
+Implementado como una extensión del estándar UEFI, el arranque seguro (\textit{Secure Boot}) tiene como finalidad impedir la inyección de código malicioso en las fases más tempranas del encendido mediante la validación de una cadena criptográfica de confianza (\textit{chain of trust}) respaldada por firmas digitales y certificados X.509 \parencite{uefi2024specification}. El firmware solo consiente la ejecución de controladores o cargadores UEFI si su firma digital coincide con un certificado verificado en la jerarquía de llaves almacenada en la memoria NVRAM protegida:
+\begin{enumerate}[noitemsep, topsep=2pt]
+    \item \textbf{Llave de plataforma (PK, \textit{Platform Key}):} Es la cúspide de la jerarquía de confianza, normalmente instalada por el fabricante del equipo original (\textit{Original Equipment Manufacturer}, OEM). Establece la propiedad administrativa de la máquina y controla las autorizaciones para modificar la llave KEK.
+    \item \textbf{Llave de intercambio de llaves (KEK, \textit{Key Exchange Key}):} Gestionada por los proveedores de sistemas operativos autorizados; intermedia entre la PK y las bases de datos de firmas.
+    \item \textbf{Base de datos autorizada (\texttt{db}):} Almacena las firmas, certificados y sumas criptográficas SHA256 de los ejecutables EFI válidos para arrancar. Prácticamente la totalidad de los fabricantes integran de fábrica en la base de datos \texttt{db} el certificado de la Autoridad Certificadora de Microsoft (\textit{Microsoft Corporation UEFI CA}).
+    \item \textbf{Base de datos revocada (\texttt{dbx}):} Lista de certificados y ejecutables comprometidos, vulnerables o sospechosos, cuya ejecución es denegada irrevocablemente por el firmware.
+\end{enumerate}
+
+Debido a que el modelo de desarrollo de Arch Linux prioriza la transparencia, el autoservicio y la entrega continua (\textit{rolling release}), sus binarios compilados de núcleo y de GRUB no vienen pre-firmados por las autoridades comerciales de Microsoft. Ante este escenario se abren dos vías de ingeniería:
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item \textbf{Desactivación de Secure Boot:} Constituye el procedimiento estándar y universalmente documentado para la instalación de Arch Linux en equipos personales. Al desactivar Secure Boot desde la interfaz de configuración del firmware UEFI, el hardware ejecuta con normalidad los binarios de GRUB y de Linux sin alterar en absoluto la capacidad de arranque ni la estabilidad del sistema Windows.
+    \item \textbf{Uso de cargadores de primera etapa (Shim / PreLoader):} Si las políticas corporativas del equipo impiden desactivar Secure Boot, es viable intercalar un binario firmado oficialmente por Microsoft denominado \textit{Shim} (\texttt{shimx64.efi}). Este cargador inicial actúa como pasarela, administrando una base de datos local de Llaves del Propietario de la Máquina (MOK, \textit{Machine Owner Key}) mediante la herramienta \texttt{mokutil}, permitiendo al usuario firmar sus propios núcleos y módulos de GRUB con claves privadas generadas en su instalación local.
+\end{itemize}
+
+\subsubsection{Riesgo de corrupción por Windows Fast Startup e hibernación de NTFS}
+
+La amenaza técnica más severa para la integridad de los datos en un esquema de arranque dual reside en la función de inicio rápido (\textit{Fast Startup}) de Windows. Introducida a partir de Windows 8 y activa de manera predeterminada en Windows 10 y Windows 11, esta característica implementa un apagado híbrido: al ordenar el apagado del equipo, Windows no descarga sus subsistemas ni desmonta formalmente los volúmenes NTFS. En su lugar, cierra las sesiones de los usuarios pero vuelca el estado de memoria del núcleo NT, los servicios del sistema y los controladores de dispositivo en el archivo \texttt{C:\textbackslash hiberfil.sys}, congelando las estructuras de disco.
+
+Como consecuencia de este congelamiento, los sistemas de archivos NTFS permanecen técnicamente en estado abierto o montado, con el indicador de volumen sucio (\textit{dirty bit}) activo y transacciones de registro en diario (journaling) pendientes de confirmación. Si el usuario arranca posteriormente Arch Linux y monta las particiones de Windows para acceder a sus archivos personales en modo lectura y escritura (utilizando el controlador nativo \texttt{ntfs3} del núcleo o la biblioteca \texttt{ntfs-3g}), Linux no tiene forma de conocer las estructuras que Windows mantiene congeladas en memoria RAM dentro de \texttt{hiberfil.sys}. Cualquier escritura efectuada por Linux en la tabla maestra de archivos (MFT, \textit{Master File Table}) o en la asignación de clusters corromperá irreversiblemente la coherencia del disco. Cuando el equipo se reinicie en Windows, este restaurará su estado de memoria congelado sobreescribiendo ciegamente el disco físico, destruyendo los datos modificados por Linux y pudiendo ocasionar fallos catastróficos de arranque en ambos sistemas.
+
+Por tanto, es una regla técnica estricta y mandatoria desactivar por completo la hibernación y el inicio rápido de Windows antes de proceder con el particionamiento e instalación de Linux. Esto se lleva a cabo abriendo una consola con privilegios de administrador en Windows y ejecutando:
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+rem Desactivar de forma definitiva la hibernación y el Fast Startup en Windows \\
+powercfg /h off
+\end{mdframed}
+
+\subsubsection{Sincronización del reloj de hardware en tiempo real (RTC)}
+
+La tercera causa habitual de fricción técnica proviene de la discrepancia de diseño en el manejo del reloj de tiempo real (RTC, \textit{Real-Time Clock}) de la placa base \parencite[\S 2.4.2, p.\ 76]{deitel2004operating}. El RTC es un circuito alimentado por una batería de botón (típicamente tipo CR2032) que mantiene el conteo de tiempo incluso cuando la computadora carece de suministro eléctrico:
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item Por tradición heredada de MS-DOS, Windows asume por omisión que el RTC almacena la hora local (\textit{local time}), aplicando directamente sobre el reloj del hardware los desfases provocados por las zonas horarias y los cambios de horario estacional.
+    \item Por el contrario, los sistemas conformes al estándar POSIX, como Linux y la totalidad de distribuciones UNIX, configuran y leen el RTC asumiendo tiempo universal coordinado (UTC, \textit{Coordinated Universal Time}). El núcleo calcula la hora local visualizada por el usuario en espacio de usuario a partir de las bases de datos de zonas horarias (\texttt{/usr/share/zoneinfo/}).
+\end{itemize}
+
+Cuando ambos sistemas alternan su ejecución sin una configuración coordinada, se produce un conflicto recurrente: al iniciar Windows, este lee la hora UTC del reloj creyendo que es hora local; al notar una discrepancia, la ajusta según su huso horario (p.~ej., restando 6 horas para la zona centro de México, UTC-6). Cuando el usuario reinicia en Linux, el núcleo asume que el RTC sigue en UTC, volviendo a restar 6 horas al presentar la hora local. Este desajuste cíclico corrompe las marcas de tiempo de los archivos (\textit{timestamps}), invalida certificados SSL/TLS con comprobaciones de expiración y altera los registros del sistema.
+
+Para resolver de manera definitiva este conflicto, la solución de ingeniería recomendada consiste en forzar a Windows a operar su reloj de hardware en estándar UTC, garantizando paridad total con Linux sin comprometer la sincronización horaria. Esto se implementa agregando el valor \texttt{RealTimeIsUniversal} en el Registro de Windows:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+rem Configurar Windows para interpretar el reloj de hardware (RTC) en UTC \\
+reg add "HKLM\textbackslash SYSTEM\textbackslash CurrentControlSet\textbackslash Control\textbackslash TimeZoneInformation" \string^ \\
+\hspace*{4ex}/v RealTimeIsUniversal /t REG\_DWORD /d 1 /f
+\end{mdframed}
+
+En Linux, la verificación del estado de sincronización del reloj de hardware y del demonio de tiempo en red se realiza mediante la utilidad \texttt{timedatectl}:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# Verificar que el reloj del sistema opere con el RTC en tiempo UTC \\
+timedatectl status
+\end{mdframed}
+
+\section{Requerimientos de hardware y preparación del entorno}
+\label{sec:requerimientosHardware}
+
+La instalación controlada de un sistema operativo en coexistencia con otra plataforma exige una evaluación rigurosa del hardware anfitrión y la implementación de protocolos de mitigación de riesgos. A diferencia de las distribuciones orientadas al usuario final que integran instaladores automáticos con detección heurística de recursos, Arch Linux delega la totalidad de las decisiones operativas en el ingeniero o administrador de sistemas \parencite{arch2024install}. En este esquema de responsabilidad compartida, el desconocimiento de las capacidades de la máquina o la omisión de respaldos preventivos puede derivar en la inaccesibilidad irreversible de los volúmenes preexistentes.
+
+\subsection{Especificaciones técnicas mínimas y arquitectura de soporte en Arch Linux}
+\label{sec:especificacionesTecnicas}
+
+La viabilidad técnica de una instalación moderna descansa en la concordancia entre los requerimientos del núcleo Linux, los subsistemas de gestión de memoria y el conjunto de instrucciones implementado por el procesador \parencite[\S 1.2, pp.\ 4--6]{mchoes2011sistemas}. Arch Linux opera bajo un modelo de desarrollo de liberación continua (rolling release) enfocado exclusivamente en la arquitectura x86\_64 (Intel 64 y AMD64). El soporte para la arquitectura heredada i686 (32 bits) fue descontinuado formalmente en 2017, consolidando un estándar operativo optimizado para registros de 64 bits y direccionamiento de memoria física extendido.
+
+A nivel de microarquitectura, las compilaciones de paquetes oficiales de Arch Linux establecen como línea base el nivel de conjunto de instrucciones x86-64-v1, lo que asegura compatibilidad universal con procesadores comercializados a partir de mediados de la década de 2000 (incorporando extensiones SSE, SSE2, SSE3 y la instrucción \texttt{CMPXCHG16B} para operaciones atómicas de sincronización en memoria). No obstante, para cargas de trabajo científicas o entornos interactivos exigentes, el núcleo explota de forma dinámica los niveles x86-64-v2 y x86-64-v3 presentes en microprocesadores contemporáneos (añadiendo instrucciones AVX, AVX2, FMA y POPCNT), optimizando el rendimiento de librerías criptográficas y algoritmos de compresión.
+
+En lo relativo al subsistema de memoria principal (RAM), es necesario distinguir entre los requerimientos para inicializar el medio de instalación en vivo (\textit{live environment}) y los requerimientos funcionales para el sistema operativo en régimen de producción:
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item \textbf{Memoria en el medio de instalación:} La imagen viva de Arch Linux requiere un umbral mínimo de 512~MiB de memoria física disponible para inicializar el núcleo y descomprimir el sistema de archivos raíz en memoria RAM (\textit{ramfs} o \texttt{zram}). Sin embargo, para ejecutar con solvencia el gestor de paquetes Pacman y compilar dinámicamente las imágenes de memoria inicial (\texttt{initramfs}) durante la instalación, se requiere disponer de al menos 1~GiB a 2~GiB de memoria RAM libre. Con memorias inferiores a 1~GiB, la concurrencia entre los demonios de red y los procesos de extracción puede detonar el mecanismo asesino por falta de memoria del núcleo (\textit{Out-Of-Memory Killer}, OOM Killer), abortando la transacción y dejando el sistema de archivos de destino en un estado inconsistente.
+    \item \textbf{Memoria para estación de trabajo con arranque dual:} En un equipo destinado a propósitos de ingeniería, desarrollo de software o soporte a servidores, se recomienda una asignación mínima de 8~GiB a 16~GiB de memoria RAM. Esta capacidad garantiza la ejecución simultánea de entornos de escritorio modernos (KDE Plasma, GNOME o gestores de ventanas bajo el protocolo Wayland), herramientas de contenedorización (Docker, Podman) y compiladores, mitigando la necesidad de incurrir en paginación intensiva hacia el dispositivo de almacenamiento masivo.
+\end{itemize}
+
+En el ámbito del almacenamiento secundario, las especificaciones dependen directamente de la compartimentación de volúmenes analizada en la Sección~\ref{sec:tipologiasParticiones}. Aunque una instalación elemental de Arch Linux en modo consola consume únicamente entre 2~GiB y 3~GiB en disco, la asignación de espacio útil debe contemplar el crecimiento operativo del sistema:
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item \textbf{Partición raíz (\texttt{/}):} Se recomienda dimensionar la partición raíz en un rango de 40~GiB a 80~GiB. Este espacio alberga los binarios ejecutables (\texttt{/usr/bin}), las librerías compartidas (\texttt{/usr/lib}), los registros persistentes del sistema gestionados por \textit{systemd-journald} (\texttt{/var/log}) y la caché de paquetes de Pacman (\texttt{/var/\allowbreak cache/\allowbreak pacman/\allowbreak pkg/}). Dado que Arch Linux no elimina de forma automática los paquetes descargados tras cada actualización, una partición raíz constreñida a 15~GiB o 20~GiB puede saturarse prematuramente si el usuario no instrumenta rutinas periódicas de limpieza de caché.
+    \item \textbf{Partición de usuarios (\texttt{/home}):} Debe acaparar el espacio remanente disponible en la cuota asignada a Linux en el disco (idealmente 50~GiB o más), proveyendo aislamiento para código fuente, entornos virtuales y documentos personales.
+    \item \textbf{Partición del sistema EFI (ESP):} Cuando se comparte la partición ESP preexistente generada por Windows (típicamente de 100~MiB a 260~MiB), el usuario debe verificar que disponga de al menos 50~MiB a 100~MiB de espacio libre para alojar los binarios de GRUB y, opcionalmente, las imágenes del núcleo Linux si se opta por un esquema de montaje directo en \texttt{/boot}.
+\end{itemize}
+
+Respecto a la placa base y el firmware, la instalación de arranque dual exige soporte nativo para UEFI de 64 bits. Es imperativo ingresar a la interfaz de configuración del firmware (Setup UEFI) previo a la instalación y desactivar el módulo de soporte de compatibilidad (\textit{Compatibility Support Module}, CSM), el cual emula el comportamiento de una BIOS heredada. Mantener habilitado CSM puede inducir al medio de arranque USB a inicializarse en modo de 16 bits; si el instalador arranca bajo BIOS, el núcleo Linux no tendrá acceso al subsistema de variables de firmware \texttt{efivarfs}, impidiendo irrevocablemente la instalación del gestor de arranque UEFI y la configuración de entradas en la NVRAM.
+
+Finalmente, a diferencia de otras distribuciones de Linux que empaquetan instantáneas completas de paquetes en imágenes ISO de 4~GiB o más, el medio de instalación oficial de Arch Linux es estrictamente un instalador por red (\textit{net-install}) de volumen reducido (~1~GiB). La imagen viva contiene únicamente las herramientas esenciales de diagnóstico y particionamiento; los paquetes definitivos del sistema operativo base (\texttt{base}, \texttt{linux}, \texttt{linux-firmware}) se descargan en tiempo real desde los servidores réplica (\textit{mirrors}) oficiales durante la ejecución del comando \texttt{pacstrap}. En consecuencia, el equipo de cómputo debe contar con una interfaz de red operativa reconocida por el núcleo: ya sea una conexión cableada Ethernet (gestionada de forma automática vía DHCP) o una interfaz inalámbrica Wi-Fi operable mediante el demonio de red \texttt{iwd} (Tabla~\ref{tab:especificacionesHardware}).
+
+\begin{table}[H]
+\centering
+\small
+\caption{Matriz comparativa de especificaciones técnicas para Arch Linux en arranque dual.}
+\label{tab:especificacionesHardware}
+\begin{tabularx}{\textwidth}{@{} l p{5.5cm} X @{}}
+\toprule
+\textbf{Componente} & \textbf{Requerimiento mínimo absoluto} & \textbf{Configuración recomendada (Ingeniería)} \\
+\midrule
+Arquitectura CPU & x86\_64 (x86-64-v1, SSE3, \texttt{CMPXCHG16B}) & x86\_64 multinúcleo con extensiones x86-64-v3 (AVX2). \\
+Memoria RAM & 512 MiB (modo consola estricto) & 8 GiB a 16 GiB (entorno gráfico, compilación y Docker). \\
+Almacenamiento (Raíz) & 2 GiB (sistema base mínimo) & 40 GiB a 80 GiB (ext4/Btrfs, paquetes y registros). \\
+Almacenamiento (Home) & Espacio remanente en disco & 50 GiB a 200+ GiB (proyectos y datos de usuario). \\
+Espacio de intercambio & 2 GiB (sin hibernación) & $1\times$ a $1.5\times$ la RAM física (soporte de ACPI S4). \\
+Firmware de placa base & UEFI nativo de 64 bits (CSM desactivado) & UEFI con firmware actualizado y Secure Boot gestionado. \\
+Conectividad a red & Conexión activa a Internet (Ethernet o Wi-Fi) & Conexión de banda ancha estable para descarga de réplicas. \\
+Unidad USB de arranque & Dispositivo USB de 2 GiB & Dispositivo USB 3.0/3.1 de 8 GiB de alta velocidad. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Diagnóstico, verificación de compatibilidad e integridad criptográfica de la ISO}
+\label{sec:integridadCriptografica}
+
+El proceso de obtención del medio de instalación de Arch Linux debe regirse por estrictos principios de seguridad de la información. Debido a que el software de arranque posee privilegios de ejecución sin restricciones sobre el hardware anfitrión (anillo 0 del procesador o modo supervisor), la ejecución inadvertida de una imagen adulterada, dañada durante la descarga o intervenida por un actor malicioso mediante un ataque de intermediario (\textit{man-in-the-middle}, MITM) comprometería la totalidad del equipo, incluyendo los datos del sistema Windows preexistente.
+
+Para mitigar esta vulnerabilidad, el consorcio de desarrollo de Arch Linux publica las imágenes de disco en una red mundial de réplicas acompañadas de dos mecanismos complementarios de verificación criptográfica \parencite{arch2024download}:
+\begin{enumerate}[noitemsep, topsep=2pt]
+    \item \textbf{Verificación de integridad mediante suma de comprobación (SHA-256):} Permite certificar que la imagen descargada es matemáticamente idéntica, bit a bit, a la compilada originalmente por los desarrolladores, descartando corrupciones accidentales derivadas de interrupciones de red, errores de paridad en el almacenamiento o descargas incompletas. La función hash criptográfica SHA-256 genera una huella unidireccional de 256 bits (representada como una cadena hexadecimal de 64 caracteres). Gracias a la propiedad del efecto avalancha (\textit{avalanche effect}), la modificación o inversión de un único bit en el archivo ISO de más de un gigabyte altera completamente el valor de la huella resultante.
+    \item \textbf{Verificación de autenticidad mediante OpenPGP (GNU Privacy Guard, GPG):} Aunque una suma SHA-256 valida la integridad del archivo frente a daños accidentales, no previene que un atacante suplante simultáneamente la imagen y el archivo de suma en un servidor réplica vulnerado. Para garantizar que la imagen proviene auténticamente del equipo oficial de ingeniería de Arch Linux, cada versión incluye un archivo de firma digital separada (\textit{detached signature}) con extensión \texttt{.iso.sig}. Mediante el protocolo OpenPGP (RFC 4880), el usuario valida la firma digital utilizando la llave pública del desarrollador responsable de la compilación de la imagen, cuya validez se encuentra respaldada por la red de confianza (\textit{web of trust}) y las llaves maestras de firma del proyecto.
+\end{enumerate}
+
+Para realizar estas comprobaciones en una estación de trabajo basada en Linux o en un entorno de consola compatible, se descargan tanto la imagen ISO como sus archivos auxiliares de firma y suma. El siguiente bloque ilustra la verificación de integridad empleando la herramienta \texttt{sha256sum} y la comprobación de autenticidad mediante \texttt{gpg}:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# 1. Calcular la huella SHA-256 y compararla contra el registro oficial \\
+sha256sum -c archlinux-2026.09.01-x86\_64.iso.sha256 \\
+\# Salida esperada: archlinux-2026.09.01-x86\_64.iso: OK \\
+\\
+\# 2. Recuperar la llave pública del desarrollador y verificar la firma PGP \\
+gpg --keyserver-options auto-key-retrieve --verify \string^ \\
+\hspace*{4ex}archlinux-2026.09.01-x86\_64.iso.sig archlinux-2026.09.01-x86\_64.iso
+\end{mdframed}
+
+En la salida de \texttt{gpg}, la presencia de la frase \texttt{Firma correcta} (\textit{Good signature}) confirma que el binario no ha sido manipulado con posterioridad a su firma por el desarrollador. La advertencia complementaria relativa a la ausencia de una firma de confianza certificada simplemente denota que la clave del desarrollador no ha sido validada localmente por el usuario dentro de su propio anillo de llaves (\textit{keyring}), lo cual resulta natural y seguro siempre que la huella digital (\textit{key fingerprint}) coincida con las huellas de publicación oficiales documentadas en el portal institucional del proyecto.
+
+Una vez creado el medio USB de arranque e inicializada la computadora con él, el usuario accede al intérprete de comandos interactivo de la consola de Arch Linux (identificado con el usuario privilegiado \texttt{root@archiso}). Antes de proceder con la modificación de la tabla de particiones, es un deber técnico ineludible ejecutar un protocolo de diagnóstico sobre los subsistemas de la máquina para validar la compatibilidad del entorno:
+\begin{enumerate}[noitemsep, topsep=2pt]
+    \item \textbf{Verificación del modo de inicio del firmware:} Se comprueba la disponibilidad del pseudo-sistema de archivos \texttt{efivarfs}. Si el comando de verificación lista los descriptores de variables, la máquina arrancó con éxito en modo UEFI nativo de 64 bits. Si el directorio no existe o el sistema devuelve un error, la máquina arrancó bajo BIOS heredado, debiendo reiniciarse inmediatamente para corregir el orden de arranque en el firmware antes de realizar cualquier cambio en el disco:
+    \begin{mdframed}[style=terminal]
+    \ttfamily\upshape\color{bashLetterColor}\footnotesize
+    \# Verificar si el kernel cargó las interfaces UEFI de 64 bits \\
+    ls /sys/firmware/efi/efivars
+    \end{mdframed}
+    \item \textbf{Auditoría de arquitectura del procesador:} Mediante la herramienta \texttt{lscpu}, se constata que la CPU soporte el modo de operación de 64 bits (\texttt{CPU op-mode(s): 32-bit, 64-bit}) y se inspeccionan las banderas de virtualización por hardware (\texttt{VT-x} para Intel o \texttt{AMD-V} para AMD), indispensables para herramientas de virtualización y seguridad en ingeniería.
+    \item \textbf{Inspección de memoria física:} Se invoca \texttt{free -h} para verificar que el núcleo reconozca la totalidad de los módulos de RAM instalados y evaluar el uso de memoria en el entorno temporal en vivo.
+    \item \textbf{Reconocimiento de topología de almacenamiento:} Mediante la utilidad \texttt{lsblk -f}, se inventarían todos los dispositivos de almacenamiento no volátiles reconocidos por el subsistema de bloques del núcleo (tales como unidades de estado sólido NVMe en \texttt{/dev/\allowbreak nvme0n1} o discos SATA en \texttt{/dev/\allowbreak sda}), sus particiones existentes, los sistemas de archivos detectados (NTFS, FAT32) y sus identificadores de volumen UUID.
+\end{enumerate}
+
+\subsection{Estrategias de respaldo y mitigación de riesgos de pérdida de datos}
+\label{sec:estrategiasRespaldo}
+
+La coexistencia de dos sistemas operativos en un mismo disco rígido físico introduce una frontera compartida de alta sensibilidad operativa. El procedimiento de habilitar espacio no asignado para Arch Linux exige reducir el tamaño de la partición de Windows (C:) y alterar los registros de la tabla GPT del disco. En este proceso, fallos transitorios en el suministro eléctrico, errores humanos en la selección de índices de partición o corrupciones de metadatos en el sistema de archivos NTFS pueden desencadenar la destrucción total de las particiones preexistentes \parencite[\S 12.7, pp.\ 424--426]{silberschatz2006fundamentos}. Por tanto, la disciplina de ingeniería exige diseñar e instrumentar una jerarquía defensiva de mitigación y respaldo previa a cualquier operación de escritura (Imagen~\ref{fig:jerarquiaRespaldo}).
+
+\begin{figure}[H]
+\centering
+\resizebox{0.95\textwidth}{!}{%
+\begin{localsubgroup}
+    Jerarquía de mitigación de riesgos
+    \begin{localsubgroup}
+        Capa 1: Respaldo de configuración de arranque
+        \begin{localsubgroup}
+            - Exportación binaria del almacén BCD de Windows \\
+            - Respaldo de la partición ESP compartida (/dev/nvme0n1p1) \\
+            - Registro de variables de orden de arranque en NVRAM
+        \end{localsubgroup} \\[1.2em]
+        Capa 2: Respaldo de metadatos de almacenamiento
+        \begin{localsubgroup}
+            - Volcado de la cabecera GPT primaria y secundaria \\
+            - Copia de seguridad del arreglo de 128 particiones con sgdisk \\
+            - Almacenamiento externo del mapa de bloques
+        \end{localsubgroup} \\[1.2em]
+        Capa 3: Integridad del sistema de archivos NTFS
+        \begin{localsubgroup}
+            - Desactivación estricta de Fast Startup y archivo hiberfil.sys \\
+            - Ejecución de comprobación de integridad con chkdsk /f \\
+            - Reducción de partición desde utilidades nativas de Windows
+        \end{localsubgroup}
+    \end{localsubgroup}
+\end{localsubgroup}%
+}
+\caption{Protocolo estructurado en tres capas para la mitigación de riesgos y respaldo previo a la instalación.}
+\label{fig:jerarquiaRespaldo}
+\end{figure}
+
+El protocolo de seguridad se articula secuencialmente a través de tres niveles defensivos:
+
+\subsubsection{Capa 1: Respaldo del almacén BCD y de la partición ESP}
+
+El almacén BCD (\textit{Boot Configuration Data}) contiene la definición de todas las rutas de arranque que gobiernan el inicio de Windows \parencite{microsoft2024bcdedit}. Si durante la instalación de GRUB se sobrescribiera por error la configuración de la ESP o se dañara el directorio \texttt{\textbackslash EFI\textbackslash Microsoft\textbackslash}, Windows quedará imposibilitado para iniciar. Para salvaguardar esta configuración, se abre una consola de comandos con privilegios elevados en Windows previo a iniciar la instalación y se ejecuta la exportación del BCD hacia un medio de almacenamiento externo:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+rem Exportar el almacén BCD de Windows hacia una unidad de almacenamiento externa \\
+bcdedit /export D:\textbackslash Windows\_BCD\_Backup\textbackslash BCD\_Original
+\end{mdframed}
+
+Adicionalmente, desde el medio en vivo de Arch Linux, se puede generar una imagen forense exacta a nivel de bloques de la partición ESP compartida utilizando la utilidad clásica \texttt{dd} \parencite[\S 11.7, pp.\ 532--535]{stallings2018operating}. Este comando captura tanto el sistema de archivos FAT32 como los ejecutables binarios de Windows Boot Manager en un archivo de imagen recuperable:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# Crear una imagen cruda de la partición ESP (suponiendo que es nvme0n1p1) \\
+dd if=/dev/nvme0n1p1 of=/mnt/externo/esp\_backup.img bs=64K status=progress
+\end{mdframed}
+
+\subsubsection{Capa 2: Respaldo de metadatos de particionamiento con sgdisk}
+
+La manipulación interactiva de herramientas de particionamiento encierra el riesgo latente de cometer una errata tipográfica y eliminar inadvertidamente una partición protegida de Windows o la partición de recuperación del fabricante. Para garantizar una restitución instantánea de la geometría de disco ante cualquier contingencia, la utilidad \texttt{sgdisk} (componente de \textit{GPT fdisk}) permite crear una copia de seguridad binaria que abarca la cabecera GPT primaria, la cabecera secundaria de respaldo y el arreglo completo de 128 descriptores de partición:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# Realizar un respaldo binario exhaustivo de la tabla de particiones GPT \\
+sgdisk --backup=/mnt/externo/gpt\_nvme0n1\_backup.bin /dev/nvme0n1
+\end{mdframed}
+
+En el hipotético escenario de una destrucción accidental de la tabla de particiones, la restauración atómica se efectúa de manera inmediata invocando:
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# Restaurar la estructura GPT completa a partir de la copia binaria \\
+sgdisk --load-backup=/mnt/externo/gpt\_nvme0n1\_backup.bin /dev/nvme0n1
+\end{mdframed}
+
+\subsubsection{Capa 3: Integridad de NTFS y reducción del volumen desde Windows}
+
+Una de las decisiones arquitectónicas más críticas en la preparación del entorno consiste en definir desde qué sistema operativo debe ejecutarse la reducción del volumen de Windows para liberar el espacio donde se instalará Arch Linux. 
+
+Aunque herramientas de particionamiento ejecutadas desde Linux (como GParted o parted) poseen capacidades teóricas para redimensionar sistemas de archivos NTFS apoyándose en la librería \texttt{ntfs-3g}, recurrir a utilidades externas para contraer un volumen de Windows activo entraña un riesgo severo de corrupción estructural. El sistema de archivos NTFS es un sistema propietario altamente complejo que aloja estructuras internas de metadatos fijas, tales como la tabla maestra de archivos (MFT), archivos de paginación (\texttt{pagefile.sys}), volcados de memoria y copias de seguridad de instantáneas de volumen (\textit{Volume Shadow Copies}). Estas estructuras son marcadas frecuentemente como archivos inamovibles (\textit{unmovable files}) por el controlador del núcleo de Windows.
+
+Si una utilidad externa intenta reubicar estos sectores ciegos sin el concurso del subsistema de E/S de Windows, puede corromper los punteros de registro en diario (journaling) o provocar que el sistema de archivos sea declarado inconsistente durante el siguiente inicio, obligando a Windows a ejecutar una reparación destructiva (\texttt{chkdsk}) que suele truncar o eliminar los datos de usuario desplazados.
+
+Por consiguiente, la mejor práctica de ingeniería estipula que la reducción del volumen de disco C: debe ejecutarse obligatoriamente desde el entorno interactivo del propio Windows, empleando el Administrador de Discos gráfico (\texttt{diskmgmt.msc}) o la consola \texttt{diskpart.exe}. El controlador de almacenamiento de Windows es la única entidad que conoce con precisión matemática los límites físicos donde residen los metadatos inamovibles, garantizando que el límite de compresión no sobrepase los límites de seguridad y dejando un espacio libre no asignado (\textit{unallocated space}) limpio y continuo sobre el cual las utilidades de particionamiento de Linux podrán operar posteriormente de forma segura y sin riesgo de colisión.
+
+\section{Herramientas de particionamiento y gestión de almacenamiento}
+\label{sec:herramientasParticionamiento}
+
+La manipulación de estructuras de almacenamiento secundario representa una de las tareas de mayor trascendencia en la administración de sistemas operativos. Una modificación defectuosa en la tabla de particiones o un cálculo erróneo en los desplazamientos de sectores puede ocasionar la superposición de volúmenes o la pérdida total de sistemas de archivos enteros \parencite[\S 12.5.2, pp.\ 419--420]{silberschatz2006fundamentos}. Por ello, el ingeniero debe dominar el funcionamiento interno, las limitaciones de seguridad y los modelos de confirmación de las herramientas de gestión de almacenamiento, tanto en el ecosistema Windows como en las utilidades de bajo nivel de GNU/Linux.
+
+\subsection{Herramientas nativas de Windows: Administrador de discos y DiskPart}
+\label{sec:herramientasWindows}
+
+Dentro del sistema operativo Microsoft Windows, la administración del almacenamiento secundario está gobernada por la arquitectura del Servicio de Discos Virtuales (\textit{Virtual Disk Service}, VDS), el cual expone interfaces unificadas de administración para discos básicos, discos dinámicos y volúmenes montados. El sistema provee dos interfaces operativas complementarias:
+
+\subsubsection{El Administrador de discos gráfico (diskmgmt.msc)}
+
+El Administrador de discos (\textit{Disk Management}) es un complemento de la Consola de Administración de Microsoft (\textit{Microsoft Management Console}, MMC). Proporciona una representación gráfica bidimensional de las unidades físicas detectadas, mostrando de forma visual la correlación entre discos físicos, particiones primarias, volúmenes con letra de unidad asignada y espacios no asignados.
+
+A través de su menú contextual, la herramienta ofrece la función \enquote{Reducir volumen} (\textit{Shrink Volume}). Al invocar esta acción, el Administrador de discos interactúa directamente con el controlador del sistema de archivos NTFS para determinar el tamaño máximo que puede liberarse de forma segura. Sin embargo, esta interfaz gráfica adolece de una limitación arquitectónica severa: no permite al usuario indicar qué estructuras reubicar. Si un archivo inamovible (como un registro de eventos del sistema, el archivo de intercambio \texttt{pagefile.sys} o un punto de restauración de instantáneas de volumen) reside en la mitad física del volumen, la utilidad truncará el límite máximo de reducción a dicha frontera, impidiendo liberar el espacio contiguo necesario a menos que se recurra a utilidades de línea de comandos avanzadas.
+
+\subsubsection{La utilidad de línea de comandos DiskPart}
+
+Para superar las restricciones de la interfaz gráfica y permitir la automatización determinista mediante scripts de consola, Windows incorpora la utilidad de bajo nivel \texttt{diskpart.exe} \parencite{microsoft2024diskpart}. A diferencia de los comandos convencionales de Windows, \texttt{diskpart} implementa un intérprete interactivo propio estructurado bajo una jerarquía estricta de objetos de almacenamiento:
+\begin{equation}
+    \text{DISCO} \longrightarrow \text{PARTICIÓN} \longrightarrow \text{VOLUMEN}
+\end{equation}
+
+El modelo operativo de DiskPart exige enfocar (\textit{focus}) explícitamente el objeto sobre el cual se ejecutarán las instrucciones. Cualquier comando destructivo o de modificación afectará de manera irrevocable al objeto actualmente seleccionado. 
+
+Para ejecutar una contracción controlada del volumen de Windows sin arriesgar la consistencia del sistema de archivos, el protocolo técnico en consola exige inspeccionar los límites de compresión mediante la consulta \texttt{shrink querymax} antes de ordenar la reducción del tamaño del volumen. El siguiente bloque de terminal documenta la secuencia completa de comandos ejecutada desde una consola de comandos con privilegios administrativos en Windows:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+rem Iniciar el intérprete interactivo de bajo nivel \\
+diskpart \\
+\\
+DISKPART\textgreater\ list disk \\
+DISKPART\textgreater\ select disk 0 \\
+DISKPART\textgreater\ list partition \\
+DISKPART\textgreater\ select partition 3 \\
+\\
+rem Consultar la cantidad máxima de bytes que pueden reducirse con seguridad \\
+DISKPART\textgreater\ shrink querymax \\
+\\
+rem Reducir el volumen en 100 GiB (102400 MiB), exigiendo al menos 50 GiB libres \\
+DISKPART\textgreater\ shrink desired=102400 minimum=51200 \\
+\\
+rem Verificar la creación del espacio no asignado contiguo \\
+DISKPART\textgreater\ list partition \\
+DISKPART\textgreater\ exit
+\end{mdframed}
+
+El parámetro \texttt{desired} especifica la cantidad objetivo de espacio a liberar en megabytes, mientras que \texttt{minimum} fija un umbral de tolerancia por si la fragmentación del volumen impide alcanzar la cuota deseada. La gran ventaja técnica de ejecutar esta operación mediante DiskPart radica en que el subsistema NTFS se encarga de reubicar internamente los bloques de datos ordinarios hacia los primeros sectores del volumen, actualizando la tabla maestra de archivos (MFT) de forma atómica y dejando un segmento de espacio no asignado (unallocated space) perfectamente alineado al final de la partición.
+
+\subsection{Utilidades de línea de comandos en Linux: fdisk, gdisk y parted}
+\label{sec:utilidadesLinux}
+
+Al arrancar el entorno en vivo de Arch Linux, el núcleo registra las unidades de almacenamiento como nodos de dispositivo de bloques bajo el directorio \texttt{/dev/}. En este punto, el administrador dispone de una gama de utilidades de terminal para manipular la tabla GPT \parencite[\S 11.5, pp.\ 525--527]{stallings2018operating}. Aunque todas interactúan en última instancia con las estructuras de disco mediante llamadas al sistema del núcleo (tales como \texttt{ioctl(fd, BLKRRPART)} para forzar al núcleo a releer la tabla de particiones), difieren sustancialmente en su filosofía de diseño, su modelo de confirmación en memoria y su compatibilidad con estándares modernos.
+
+\subsubsection{util-linux fdisk}
+
+La utilidad \texttt{fdisk} constituye la herramienta de particionamiento más emblemática y tradicional del entorno UNIX/Linux. Históricamente concebida para la gestión de tablas MBR, las versiones contemporáneas integradas en el paquete \texttt{util-linux} incorporan soporte completo para tablas de particiones GPT.
+
+\texttt{fdisk} opera mediante un menú interactivo conducido por letras mnemotécnicas simples (p.~ej., \texttt{m} para mostrar la ayuda, \texttt{p} para imprimir el estado actual de las particiones, \texttt{n} para crear una partición nueva, \texttt{t} para alterar el código de tipo, \texttt{d} para eliminar un registro y \texttt{w} para escribir los cambios a disco). Su mayor virtud radica en la automatización de la alineación de sectores: por defecto, calcula los sectores iniciales de cada nueva partición en múltiplos de 2048 sectores (1~MiB), previniendo desalineaciones con las páginas físicas de las unidades de estado sólido (SSD). 
+
+No obstante, su manejo de los tipos de partición bajo GPT puede resultar engorroso, pues requiere seleccionar los identificadores a partir de listas extensas o cadenas GUID completas en lugar de códigos abreviados optimizados.
+
+\subsubsection{GPT fdisk (gdisk)}
+
+Desarrollada por Roderick W. Smith específicamente para solventar las deficiencias de \texttt{fdisk} frente al estándar UEFI, \texttt{gdisk} (GPT fdisk) es la herramienta de referencia técnica recomendada para la administración de tablas GPT en estaciones de trabajo modernas \parencite{smith2022gdisk}.
+
+La arquitectura de \texttt{gdisk} se distingue por tres propiedades fundamentales:
+\begin{enumerate}[noitemsep, topsep=2pt]
+    \item \textbf{Modelo de confirmación en memoria volátil:} Al abrir un dispositivo (p.~ej., \texttt{gdisk /dev/\allowbreak nvme0n1}), la utilidad lee las cabeceras GPT primaria y secundaria del disco y carga una réplica exacta de las estructuras en la memoria RAM del proceso. Todas las operaciones de particionamiento subsecuentes (creación, ajuste de límites, cambio de nombres y asignación de atributos) se ejecutan exclusivamente sobre la memoria volátil. El medio de almacenamiento físico no experimenta alteración alguna hasta que el usuario emite deliberadamente la instrucción \texttt{w} (\textit{write}). Si se detecta un error o se desea abortar el procedimiento, basta con ingresar \texttt{q} (\textit{quit}) para salir sin modificar el soporte físico.
+    \item \textbf{Códigos de tipo hexadecimales de cuatro dígitos:} Para simplificar la especificación de los engorrosos identificadores GUID de 128 bits estandarizados por UEFI, \texttt{gdisk} implementa un mapa de traducción transparente. Así, el tipo de sistema de archivos raíz de Linux en x86\_64 (\texttt{4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709}) se especifica de forma compacta mediante el código \texttt{8304}; la partición del sistema EFI (\texttt{C12A7328-F81F-11D2-BA4B-00A0C93EC93B}) se invoca con \texttt{ef00}; la partición de swap con \texttt{8200}; y la partición de datos de usuario (\texttt{/home}) con \texttt{8302}.
+    \item \textbf{Menú de recuperación y transformación estructural:} A través de su submenú de recuperación y transformación (invocado mediante la tecla \texttt{r}), \texttt{gdisk} permite reconstruir una cabecera primaria dañada a partir del respaldo secundario ubicado al final del disco, verificar la paridad CRC32 y sintetizar un MBR de protección (PMBR) higiénico sin perturbar los datos de usuario.
+\end{enumerate}
+
+El siguiente bloque de terminal documenta la sintaxis interactiva de creación de la partición raíz de Linux empleando \texttt{gdisk}:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# Invocar gdisk sobre la unidad de estado sólido NVMe \\
+gdisk /dev/nvme0n1 \\
+\\
+Command (? for help): n \\
+Partition number (4-128, default 4): 4 \\
+First sector (34-1000215182, default = 800215040) or \{+-\}size\{KMGTP\}: [Enter] \\
+Last sector or \{+-\}size\{KMGTP\}: +60G \\
+Current type is 8300 (Linux filesystem) \\
+Hex code or GUID (L to show codes, Enter = 8300): 8304 \\
+Changed type of partition to 'Linux x86-64 root (/)' \\
+\\
+Command (? for help): p \\
+Command (? for help): w \\
+Do you want to proceed? (Y/N): Y
+\end{mdframed}
+
+\subsubsection{GNU Parted}
+
+A diferencia de \texttt{fdisk} y \texttt{gdisk}, concebidas bajo paradigmas de menús interactivos, GNU Parted (\texttt{parted}) es una herramienta diseñada con capacidades avanzadas de scripting y manipulación directa desde la línea de órdenes \parencite{gnuparted2024manual}. 
+
+Parted se apoya en la biblioteca compartida \texttt{libparted}, la cual implementa controladores para reconocer tanto etiquetas de disco (GPT, MS-DOS, Sun, Mac) como parámetros internos de sistemas de archivos. Su característica distintiva es la admisión de unidades de medida explícitas en sus argumentos: el usuario puede definir desplazamientos en sectores (\texttt{s}), bytes (\texttt{B}), kibibytes (\texttt{kiB}), mebibytes (\texttt{MiB}), gibibytes (\texttt{GiB}) o porcentajes del disco (\texttt{\%}).
+
+Sin embargo, GNU Parted demanda una cautela extrema por parte del operador debido a su modelo de confirmación: \textbf{Parted no retiene las modificaciones en un búfer de memoria volátil}. Cualquier orden ejecutada (como \texttt{mkpart} o \texttt{rm}) se escribe de forma instantánea sobre la tabla de particiones del disco físico, sin confirmación posterior ni posibilidad de revertir la acción con un comando de cancelación. Por esta razón, su empleo en modo interactivo suele ser desaconsejado para operadores noveles, reservándose predominantemente para scripts desatendidos de aprovisionamiento automatizado (Tabla~\ref{tab:comparativaHerramientasParticionado}).
+
+\begin{table}[H]
+\centering
+\small
+\caption{Matriz comparativa de herramientas de particionamiento en línea de comandos.}
+\label{tab:comparativaHerramientasParticionado}
+\begin{tabularx}{\textwidth}{@{} l >{\raggedright\arraybackslash}p{2.6cm} >{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{2.8cm} X @{}}
+\toprule
+\textbf{Herramienta} & \textbf{Esquemas soportados} & \textbf{Modelo de confirmación} & \textbf{Alineación de sectores} & \textbf{Ámbito de aplicación idóneo} \\
+\midrule
+DiskPart & MBR, GPT & Inmediato en disco & Automática por VDS & Reducción segura de NTFS en entorno Windows. \\
+util-linux fdisk & MBR, GPT & En memoria (escritura final con \texttt{w}) & Automática a 2048 sectores (1 MiB) & Edición rápida e interactiva en consola Linux. \\
+GPT fdisk (gdisk) & GPT exclusivo & En memoria (escritura final con \texttt{w}) & Automática a 1 MiB con tipos hexadecimales & Estándar para UEFI/GPT, diagnóstico y recuperación. \\
+GNU Parted & MBR, GPT y otros & Inmediato en disco (sin confirmación) & Configurable (\texttt{optimal} o explícita) & Automatización mediante scripts e instaladores desatendidos. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Entornos gráficos y herramientas en vivo: GParted}
+\label{sec:entornosGraficosGparted}
+
+En la administración de estaciones de trabajo, el Editor de Particiones de GNOME (\textit{GNOME Partition Editor}, GParted) constituye la herramienta gráfica más ampliamente extendida para la reestructuración de almacenamiento en entornos GNU/Linux \parencite{gparted2024manual}. Aunque en la instalación estándar de Arch Linux su uso se encuentra restringido debido a que la imagen oficial prescinde de entorno gráfico, su estudio resulta esencial para comprender los mecanismos visuales y transaccionales de manipulación de volúmenes.
+
+\subsubsection{Arquitectura modular de GParted}
+
+GParted no implementa de forma nativa los algoritmos de bajo nivel para formatear o alterar cada sistema de archivos en particular. En su lugar, opera como un front-end gráfico en GTK que se articula modularmente sobre la infraestructura del sistema operativo anfitrión (Imagen~\ref{fig:arquitecturaGparted}):
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item \textbf{Capa de presentación y transacciones (GTK / GParted Core):} Administra la interfaz visual con el usuario, coordina la cola de operaciones diferidas y verifica la consistencia de las solicitudes antes de transmitirlas a las capas inferiores.
+    \item \textbf{Capa de particionamiento (\texttt{libparted}):} Provee la biblioteca programática estandarizada de GNU Parted para consultar la geometría del disco, calcular sectores de inicio y fin, y reescribir los registros de la tabla GPT.
+    \item \textbf{Capa de utilidades de sistemas de archivos (\textit{userland utilities}):} Cada acción específica sobre los datos de un volumen delega su ejecución en las herramientas nativas del sistema de archivos correspondiente: \texttt{e2fsprogs} (\texttt{resize2fs}, \texttt{e2fsck}) para volúmenes ext2/ext3/ext4; \texttt{dosfstools} (\texttt{fatlabel}, \texttt{fsck.vfat}) para la partición ESP en FAT32; \texttt{ntfs-3g} y \texttt{ntfsprogs} (\texttt{ntfsresize}) para volúmenes de Windows; y \texttt{btrfs-progs} para sistemas avanzados Btrfs.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\resizebox{0.95\textwidth}{!}{%
+\begin{localsubgroup}
+    Arquitectura modular de GParted
+    \begin{localsubgroup}
+        Interfaz de usuario y motor transaccional
+        \begin{localsubgroup}
+            - Representación visual del mapa de sectores del disco \\
+            - Cola de operaciones diferidas en memoria (Pending Actions) \\
+            - Verificación estricta de solapamiento y validación de límites
+        \end{localsubgroup} \\[1.2em]
+        Capa de manipulación de tablas de particiones
+        \begin{localsubgroup}
+            - Biblioteca libparted (lectura y ajuste de estructuras GPT) \\
+            - Cálculo de alineación óptima a 1 MiB (2048 sectores) \\
+            - Actualización atómica de cabeceras mediante ioctl del núcleo
+        \end{localsubgroup} \\[1.2em]
+        Herramientas de espacio de usuario para sistemas de archivos
+        \begin{localsubgroup}
+            - e2fsprogs (resize2fs, tune2fs, fsck.ext4 para ext4) \\
+            - ntfs-3g / ntfsprogs (ntfsresize, ntfsclone para Windows NTFS) \\
+            - dosfstools (mkfs.fat, fsck.fat para partición ESP FAT32)
+        \end{localsubgroup}
+    \end{localsubgroup}
+\end{localsubgroup}%
+}
+\caption{Flujo arquitectónico de ejecución de operaciones de almacenamiento en GParted y su interacción modular.}
+\label{fig:arquitecturaGparted}
+\end{figure}
+
+\subsubsection{El modelo de transacciones en cola diferida}
+
+La propiedad arquitectónica más valiosa de GParted radica en su cola de operaciones pendientes (\textit{pending operations queue}). Cuando el usuario aplica una modificación en la interfaz gráfica (como reducir el tamaño de un volumen o crear una partición nueva), la herramienta no ejecuta la acción en el disco de manera inmediata. En su lugar, registra la instrucción en una cola de memoria secuencial y actualiza la representación visual de la unidad para reflejar cómo quedará el soporte tras la aplicación de los cambios.
+
+Este modelo confiere una salvaguarda de seguridad crítica: el usuario puede revisar minuciosamente la secuencia acumulada de pasos, verificar las dimensiones exactas resultantes y, si advierte un desajuste o riesgo imprevisto, retroceder paso a paso o vaciar por completo la cola sin que el hardware haya recibido una sola instrucción de escritura. Solo cuando se presiona el botón \enquote{Aplicar todas las operaciones} (\textit{Apply All Operations}), GParted adquiere bloqueos exclusivos sobre los dispositivos y ejecuta las transacciones en orden serializado.
+
+\subsubsection{Mecánica física de reubicación y redimensionamiento de volúmenes}
+
+Comprender la física del redimensionamiento de particiones es vital para prevenir desastres de almacenamiento. En GParted, como en cualquier herramienta de bajo nivel, existen dos modalidades operativas diametralmente distintas:
+\begin{enumerate}[noitemsep, topsep=2pt]
+    \item \textbf{Expansión o contracción sobre el extremo final:} Cuando se amplía o reduce una partición modificando únicamente su sector de finalización (\textit{Last LBA}), el sector inicial (\textit{First LBA}) permanece intacto. En este caso, la operación es casi instantánea: el software simplemente ajusta los metadatos del sistema de archivos mediante \texttt{resize2fs} o \texttt{ntfsresize} para declarar un nuevo conteo de bloques y actualiza el descriptor en la tabla GPT.
+    \item \textbf{Desplazamiento del sector inicial (reubicación de partición):} Cuando una partición es movida espacialmente o reducida desde su extremo izquierdo, su sector inicial cambia físicamente de posición. Esta operación exige que GParted lea y copie físicamente cada bloque de datos y metadato desde su ubicación original hacia las nuevas coordenadas de sector. En volúmenes de cientos de gigabytes, este proceso puede demorar varias horas de I/O intensiva. Si durante esta copia masiva ocurre una interrupción de energía eléctrica, un reinicio inesperado o un fallo de hardware, la partición quedará bifurcada entre sectores antiguos y nuevos con estructuras truncadas, destruyendo el sistema de archivos de forma prácticamente irrecuperable.
+\end{enumerate}
+
+Por esta razón técnica, en un esquema de arranque dual nunca debe intentarse desplazar el sector inicial de las particiones reservadas o de sistema de Windows. La liberación de espacio debe limitarse estrictamente a contraer el extremo final del volumen C:, generando espacio contiguo libre hacia la derecha sin alterar el punto de montaje de inicio ni los metadatos de arranque preexistentes.
+
+\section{Protocolo técnico de instalación y configuración paso a paso}
+\label{sec:protocoloInstalacion}
+
+La instalación manual de Arch Linux en una máquina física con Windows preinstalado constituye un ejercicio de ingeniería de sistemas riguroso. Al carecer de un asistente automatizado con interfaz gráfica, cada fase del despliegue requiere la ejecución consciente de comandos de bajo nivel que enlazan el hardware anfitrión, las estructuras de particionamiento, el subsistema de memoria virtual y la configuración de arranque unificado \parencite{arch2024install}. En las siguientes subsecciones se detalla el protocolo técnico paso a paso para consumar la instalación de forma reproducible y segura.
+
+\subsection{Generación del medio de arranque y verificación del modo de inicio UEFI}
+\label{sec:generacionMedioArranque}
+
+El primer paso consiste en transferir la imagen ISO oficial de Arch Linux hacia un dispositivo de almacenamiento USB para convertirlo en un medio de arranque híbrido. Las imágenes de Arch Linux adoptan la especificación ISOHybrid, lo que significa que el archivo ISO contiene tanto una tabla de particiones MBR/GPT en sus primeros sectores como estructuras de sistema de archivos ISO 9660 y particiones de arranque EFI (FAT).
+
+En sistemas tipo UNIX/Linux, la transferencia debe ejecutarse a nivel de bloques mediante la utilidad \texttt{dd}, escribiendo directamente sobre el nodo raíz del dispositivo USB (p.~ej., \texttt{/dev/sdb}) y nunca sobre una partición individual (como \texttt{/dev/sdb1}). En sistemas Windows, se recomienda emplear la utilidad de código abierto Rufus configurada estrictamente en modo \enquote{Imagen DD}; seleccionar el modo estándar de extracción ISO corrompe los cargadores híbridos de Arch Linux e impide el arranque correcto en placas base con firmware UEFI estricto:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# Escribir la imagen ISO en el dispositivo USB a nivel de bloques crudos \\
+dd if=archlinux-2026.09.01-x86\_64.iso of=/dev/sdb bs=4M status=progress oflag=sync
+\end{mdframed}
+
+Con el medio USB insertado en el equipo, se presiona la tecla de interrupción de arranque de la placa base durante el encendido (habitualmente F12, F11, Esc o F2) para acceder al menú de selección de dispositivos de inicio UEFI (\textit{UEFI Boot Menu}). En este menú es mandatorio seleccionar la entrada que incluya el prefijo \texttt{UEFI:} (p.~ej., \texttt{UEFI: Generic Flash Disk, Partition 1}).
+
+Tras completar la inicialización del núcleo en memoria y acceder a la consola interactiva (\texttt{root@archiso}), se ejecutan los comandos preliminares de preparación del entorno de trabajo:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# 1. Establecer la distribución de teclado en español para la consola \\
+loadkeys la-latin1 \\
+\\
+\# 2. Verificar de manera inequívoca que el sistema inició bajo UEFI nativo (64 bits) \\
+cat /sys/firmware/efi/fw\_platform\_size \\
+\# Salida esperada: 64 \\
+\\
+\# 3. Configurar la interfaz inalámbrica si no se dispone de conexión por cable \\
+iwctl --passphrase "clave\_red" station wlan0 connect "Nombre\_SSID" \\
+\\
+\# 4. Probar la conectividad a Internet mediante el protocolo ICMP \\
+ping -c 3 archlinux.org \\
+\\
+\# 5. Sincronizar el reloj del sistema mediante el protocolo NTP \\
+timedatectl set-ntp true
+\end{mdframed}
+
+La confirmación del valor \texttt{64} en el archivo \texttt{fw\_platform\_size} certifica que el núcleo Linux opera con acceso irrestricto a los servicios de tiempo de ejecución de UEFI en modo largo de 64 bits, habilitando la futura instalación del cargador de arranque en la memoria NVRAM.
+
+\subsection{Particionamiento manual y formateo de sistemas de archivos}
+\label{sec:particionamientoManualFormateo}
+
+Una vez verificado el espacio no asignado liberado previamente desde Windows (Sección~\ref{sec:herramientasWindows}), se procede al particionamiento manual del disco de estado sólido (en este protocolo, representado por la unidad NVMe \texttt{/dev/nvme0n1}).
+
+Mediante la herramienta especializada \texttt{gdisk}, se crean las tres particiones requeridas para el entorno Linux aprovechando el espacio remanente continuo:
+\begin{enumerate}[noitemsep, topsep=2pt]
+    \item \textbf{Partición de intercambio (\texttt{/dev/nvme0n1p4}):} Asignación de 8~GiB con código de tipo \texttt{8200} (\textit{Linux swap}).
+    \item \textbf{Partición raíz (\texttt{/dev/nvme0n1p5}):} Asignación de 60~GiB con código de tipo \texttt{8304} (\textit{Linux x86-64 root /}).
+    \item \textbf{Partición de usuario (\texttt{/dev/nvme0n1p6}):} Asignación del remanente del disco con código de tipo \texttt{8302} (\textit{Linux /home}).
+\end{enumerate}
+
+A continuación, se inspeccionan los descriptores de bloque y se procede al formateo de bajo nivel. Es una directiva de seguridad crítica recordar que la partición del sistema EFI compartida (\texttt{/dev/nvme0n1p1}) \textbf{jamás debe ser formateada}, ya que alberga los ejecutables de Windows Boot Manager; únicamente las particiones nuevas de Linux deben ser inicializadas:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# 1. Inspeccionar el mapa de particiones antes del formateo \\
+lsblk -f /dev/nvme0n1 \\
+\\
+\# 2. Inicializar la partición de paginación e intercambio (swap) \\
+mkswap -L LINUX\_SWAP /dev/nvme0n1p4 \\
+swapon /dev/nvme0n1p4 \\
+\\
+\# 3. Formatear la partición raíz en ext4 con bloques de 4096 bytes y registro en diario \\
+mkfs.ext4 -L LINUX\_ROOT /dev/nvme0n1p5 \\
+\\
+\# 4. Formatear la partición de datos de usuario en ext4 \\
+mkfs.ext4 -L LINUX\_HOME /dev/nvme0n1p6
+\end{mdframed}
+
+El formateo mediante \texttt{mkfs.ext4} genera de forma determinista el superbloque maestro, las tablas de inodos y el archivo de diario (\textit{journal}), asignando etiquetas legibles (\texttt{LINUX\_ROOT} y \texttt{LINUX\_HOME}) y generando identificadores universales únicos (UUID) que garantizarán la estabilidad del montaje posterior.
+
+\subsection{Jerarquía de montaje en /mnt y despliegue base (pacstrap)}
+\label{sec:jerarquiaMontajePacstrap}
+
+Para instalar los paquetes del sistema operativo en el disco de destino, Linux implementa el concepto de árbol de montaje provisional, anclado de forma estandarizada en el directorio \texttt{/mnt} del sistema en vivo \parencite[\S 12.1, p.\ 409]{silberschatz2006fundamentos}. El orden de montaje debe obedecer estrictamente la jerarquía del árbol de directorios del Estándar de Jerarquía del Sistema de Archivos (FHS): la raíz del sistema de archivos debe montarse primero, y los puntos de montaje subsidiarios deben crearse dentro de ella antes de recibir sus respectivos sistemas de archivos:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# 1. Montar la partición raíz de Linux en el punto base /mnt \\
+mount /dev/nvme0n1p5 /mnt \\
+\\
+\# 2. Crear los directorios secundarios para el cargador de arranque y usuarios \\
+mkdir -p /mnt/boot \\
+mkdir -p /mnt/home \\
+\\
+\# 3. Montar la partición ESP compartida de Windows en /mnt/boot \\
+mount /dev/nvme0n1p1 /mnt/boot \\
+\\
+\# 4. Montar la partición de usuario en /mnt/home \\
+mount /dev/nvme0n1p6 /mnt/home
+\end{mdframed}
+
+Con los volúmenes montados coherentemente bajo \texttt{/mnt}, se procede a optimizar la lista de servidores réplica con \texttt{reflector} para maximizar la velocidad de transferencia y se invoca la utilidad central \texttt{pacstrap} para descargar y desplegar dentro de \texttt{/mnt} la colección fundamental de software requerida para dotar a la máquina de autonomía operativa:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# 1. Filtrar y ordenar los 10 espejos HTTPS más veloces sincronizados recientemente \\
+reflector --country Mexico,US --protocol https --latest 10 --sort rate \string^ \\
+\hspace*{4ex}--save /etc/pacman.d/mirrorlist \\
+\\
+\# 2. Desplegar el sistema operativo base y herramientas esenciales en el disco \\
+pacstrap -K /mnt base linux linux-firmware base-devel nano networkmanager \string^ \\
+\hspace*{4ex}grub efibootmgr dosfstools os-prober
+\end{mdframed}
+
+La selección de paquetes responde a funciones técnicas específicas:
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item \textbf{Sistema base (\texttt{base}):} Meta-paquete que instala el árbol jerárquico FHS, librerías GNU C (\texttt{glibc}) y utilidades esenciales del sistema (\texttt{coreutils}, \texttt{systemd}, \texttt{iproute2}).
+    \item \textbf{Núcleo y microcódigo (\texttt{linux}, \texttt{linux-firmware}):} Binario ejecutable del núcleo Linux monolítico modular (\texttt{vmlinuz-linux}) y controladores propietarios en formato binario (\textit{blobs}) indispensables para interfaces Wi-Fi, audio y aceleración de gráficos.
+    \item \textbf{Herramientas de construcción (\texttt{base-devel}):} Herramientas de compilación (\texttt{gcc}, \texttt{make}, \texttt{binutils}, \texttt{fakeroot}) necesarias para la posterior construcción de módulos del núcleo y paquetes del repositorio de usuarios de Arch (AUR).
+    \item \textbf{Gestor de red (\texttt{networkmanager}):} Demonio del sistema operativo para la gestión integral de redes cableadas e inalámbricas.
+    \item \textbf{Pila de arranque (\texttt{grub}, \texttt{efibootmgr}, \texttt{dosfstools}, \texttt{os-prober}):} Colección de bajo nivel destinada a gobernar el arranque dual en plataformas UEFI.
+\end{itemize}
+
+Para concluir esta fase, se genera el archivo de definición estática de sistemas de archivos (\texttt{/etc/fstab}) empleando la herramienta \texttt{genfstab}:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# Generar la tabla fstab empleando identificadores universales únicos (UUID) \\
+genfstab -U /mnt >> /mnt/etc/fstab \\
+\\
+\# Inspeccionar el contenido generado para verificar la corrección de los montajes \\
+cat /mnt/etc/fstab
+\end{mdframed}
+
+El modificador \texttt{-U} resulta estrictamente mandatorio: instruye al generador a identificar cada volumen mediante su UUID de 128 bits en lugar de nombres de dispositivo dinámicos (como \texttt{/dev/sda} o \texttt{/dev/nvme0n1}). Debido a que los índices de hardware pueden reordenarse aleatoriamente durante el encendido si se conectan dispositivos periféricos o varían las secuencias de inicialización del bus PCIe, el empleo de UUID garantiza que el sistema operativo monte invariablemente el volumen correcto en su respectivo punto de anclaje, previniendo fallos catastróficos de montaje durante el arranque \parencite[\S 11.5, pp.\ 521--523]{stallings2018operating}.
+
+\subsection{Configuración del entorno en chroot}
+\label{sec:configuracionChroot}
+
+Para configurar las variables del nuevo sistema operativo (zonas horarias, cuentas de usuario, servicios de inicio e imágenes de memoria inicial), es necesario cambiar la raíz operativa del proceso hacia el sistema instalado. Esto se ejecuta mediante el comando \texttt{arch-chroot}:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# Ingresar en el entorno enjaulado del sistema instalado en disco \\
+arch-chroot /mnt
+\end{mdframed}
+
+El mecanismo \texttt{chroot} (\textit{change root}) redefine el directorio raíz \texttt{/} para el intérprete interactivo y sus subprocesos, montando automáticamente los pseudo-sistemas de archivos del núcleo (\texttt{/proc}, \texttt{/sys}, \texttt{/dev} y \texttt{/run}) dentro de la jaula. Una vez dentro de \texttt{arch-chroot}, se ejecutan secuencialmente los siguientes pasos de configuración:
+
+\subsubsection{Sincronización horaria y localización geográfica}
+
+Se configura la zona horaria enlazando el descriptor correspondiente de la base de datos de zonas horarias (\texttt{/usr/share/zoneinfo/}), se sincroniza el reloj de hardware en tiempo universal coordinado (UTC), se descomentan las líneas \texttt{es\_MX.UTF-8 UTF-8} y \texttt{en\_US.UTF-8 UTF-8} en \texttt{/etc/locale.gen}, y se declaran las variables persistentes de localización y distribución de teclado en consola:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# 1. Enlazar la zona horaria de Ciudad de México y sincronizar el RTC en UTC \\
+ln -sf /usr/share/zoneinfo/America/Mexico\_City /etc/localtime \\
+hwclock --systohc --utc \\
+\\
+\# 2. Generar los descriptores de localización y establecer variables de entorno \\
+locale-gen \\
+echo "LANG=es\_MX.UTF-8" > /etc/locale.conf \\
+echo "KEYMAP=la-latin1" > /etc/vconsole.conf
+\end{mdframed}
+
+\subsubsection{Identidad de red, seguridad y servicios del sistema}
+
+Se define el nombre de nodo de la máquina en la red local (\textit{hostname}) y se habilita el demonio de gestión de redes \texttt{NetworkManager}. Por estrictas razones de seguridad operacional, operar cotidianamente con el superusuario privilegiado \texttt{root} es una práctica desaconsejada; por ello, se fija una contraseña para \texttt{root} y se crea una cuenta de trabajo ordinaria incorporada al grupo suplementario \texttt{wheel}, habilitando la delegación controlada de privilegios administrativos mediante \texttt{sudo}:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# 1. Definir el nombre del equipo y habilitar el servicio de red en systemd \\
+echo "estacion-arch" > /etc/hostname \\
+systemctl enable NetworkManager.service \\
+\\
+\# 2. Asignar contraseña a root y crear usuario ordinario en el grupo wheel \\
+passwd \\
+useradd -m -g users -G wheel -s /bin/bash oscar \\
+passwd oscar \\
+\\
+\# 3. Autorizar la ejecución de privilegios administrativos mediante visudo \\
+echo "\%wheel ALL=(ALL:ALL) ALL" > /etc/sudoers.d/10-wheel-privileges
+\end{mdframed}
+
+\subsubsection{Generación de la imagen de disco en memoria inicial (initramfs)}
+
+El archivo \texttt{/etc/mkinitcpio.conf} define los módulos del núcleo y los ganchos (\textit{hooks}) que se empaquetarán en la imagen de memoria inicial (\texttt{initramfs-linux.img}). Durante el encendido temprano, el núcleo Linux monta esta imagen temporal en la memoria RAM para cargar los controladores del bus NVMe, controladores de sistemas de archivos ext4 y protocolos de teclado antes de transferir el control al sistema de archivos raíz definitivo \parencite[\S 2.4.3, pp.\ 76--77]{deitel2004operating}. Se compilan las imágenes del núcleo ejecutando:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# Generar las imágenes de memoria inicial (initramfs) para todos los núcleos \\
+mkinitcpio -P
+\end{mdframed}
+
+\subsection{Instalación de GNU GRUB con soporte para Windows Boot Manager (os-prober)}
+\label{sec:instalacionGrubOsProber}
+
+La fase culminante de la instalación consiste en desplegar el gestor de arranque GNU GRUB 2 en la partición ESP compartida y articular la detección automática del cargador de Windows \parencite{gnugrub2024manual}.
+
+En primer lugar, se activa el soporte de sondeo de sistemas alternos en el archivo de configuración declarativo de GRUB, eliminando la restricción de seguridad predeterminada de \texttt{os-prober}. Luego, se procede a la instalación física del binario UEFI en la partición ESP compartida (montada en \texttt{/boot}) y se genera el archivo de menú ejecutable:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# 1. Habilitar la directiva para que os-prober explore particiones foráneas \\
+echo "GRUB\_DISABLE\_OS\_PROBER=false" >> /etc/default/grub \\
+\\
+\# 2. Instalar el binario de GRUB en la partición EFI y registrar la entrada NVRAM \\
+grub-install --target=x86\_64-efi --efi-directory=/boot --bootloader-id=GRUB --recheck \\
+\\
+\# 3. Compilar la configuración de GRUB integrando Linux y Windows Boot Manager \\
+grub-mkconfig -o /boot/grub/grub.cfg
+\end{mdframed}
+
+Durante la ejecución de este comando, la consola debe reportar de manera explícita la detección del núcleo Linux y la detección del cargador de Windows:
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+Found linux image: /boot/vmlinuz-linux \\
+Found initrd image: /boot/initramfs-linux.img \\
+Found Windows Boot Manager on /boot/EFI/Microsoft/Boot/bootmgfw.efi@/dev/nvme0n1p1 \\
+done
+\end{mdframed}
+
+Esta salida confirma que el script modular \texttt{30\_os-prober} generó exitosamente la entrada de carga encadenada (\textit{chainloader}), asegurando que al encender el equipo el usuario podrá conmutar indistintamente entre Arch Linux y Microsoft Windows desde un único menú unificado.
+
+Concluida la configuración, se finaliza la sesión enjaulada, se desmontan de forma limpia todos los sistemas de archivos para vaciar los búferes de memoria hacia el almacenamiento no volátil y se reinicia la máquina:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# Salir del entorno chroot \\
+exit \\
+\\
+\# Desmontar recursivamente la jerarquía de directorios \\
+umount -R /mnt \\
+\\
+\# Reiniciar el equipo para ingresar al nuevo sistema operativo \\
+reboot
+\end{mdframed}
+
+\section{Postinstalación, configuración del sistema y resolución de fallos}
+\label{sec:postinstalacionConfiguracion}
+
+Tras concluir la secuencia de instalación y reiniciar el equipo, el sistema operativo ingresa en su fase de producción. En este punto, Arch Linux se presenta como una instalación base minimalista en modo consola. A diferencia de las distribuciones convencionales de propósito general que imponen un entorno gráfico homogéneo y servicios predeterminados, la arquitectura de Arch Linux delega enteramente en el usuario la responsabilidad de seleccionar y modularizar los componentes del espacio de usuario, optimizando el rendimiento de la máquina y garantizando una coexistencia armónica con Windows \parencite{arch2024install}.
+
+\subsection{Gestión de paquetes con Pacman y modularidad en la configuración del entorno}
+\label{sec:gestionPaquetesModularidad}
+
+La gestión del ciclo de vida del software en Arch Linux se articula a través de Pacman, un gestor de paquetes de alto rendimiento escrito en lenguaje C que combina un formato de compresión binario simple con un motor dinámico de resolución de dependencias \parencite{arch2024install}. A través de la invocación de flags mnemotécnicos en mayúsculas y minúsculas, Pacman administra la sincronización con los repositorios remotos oficiales (\texttt{core}, \texttt{extra}, \texttt{multilib}):
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# Sincronizar bases de datos y actualizar todos los paquetes del sistema \\
+sudo pacman -Syu \\
+\\
+\# Buscar un paquete en los repositorios remotos oficiales \\
+pacman -Ss nombre\_paquete \\
+\\
+\# Instalar un paquete resolviendo dependencias de forma automática \\
+sudo pacman -S nombre\_paquete \\
+\\
+\# Desinstalar un paquete eliminando sus dependencias huérfanas y configuraciones \\
+sudo pacman -Rns nombre\_paquete
+\end{mdframed}
+
+La principal fortaleza arquitectónica de Arch Linux radica en su versatilidad: no existe una configuración gráfica canónica u obligatoria. El ingeniero o administrador puede concebir su estación de trabajo eligiendo libremente entre múltiples paradigmas de interacción:
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item \textbf{Entornos de escritorio integrados (DE):} Soluciones completas que incorporan gestores de ventanas, barras de tareas, centros de control y pilas de aplicaciones coherentes. Entre ellos destacan \textbf{KDE Plasma} (basado en el framework Qt, altamente modular, eficiente en el uso de memoria RAM y con soporte nativo para Wayland), \textbf{GNOME} (construido sobre GTK, con una experiencia de usuario orientada a flujos de trabajo limpios) y \textbf{XFCE} (orientado a máxima ligereza y estabilidad tradicional).
+    \item \textbf{Compositores modernos e independientes de Wayland:} Para flujos de trabajo de ingeniería de software donde se prioriza la navegación por teclado y el aprovechamiento óptimo de los monitores de alta resolución, es posible prescindir de entornos de escritorio pesados y desplegar directamente compositores de ventanas en mosaico (\textit{tiling window managers}), tales como \textbf{Hyprland} (compositor dinámico con aceleración por hardware) o \textbf{Sway} (reemplazo moderno y conforme a Wayland del clásico \texttt{i3-wm}).
+    \item \textbf{Gestores de ventanas tradicionales sobre X11:} Alternativas altamente depuradas como \textbf{i3}, \textbf{bspwm} o \textbf{dwm}, que consumen menos de 100~MiB de memoria RAM en reposo.
+    \item \textbf{Estación de trabajo sin entorno gráfico (Headless / CLI):} En servidores de cálculo o entornos de investigación, la máquina puede mantenerse puramente en modo consola, explotando multiplexores de terminal como \texttt{tmux} o \texttt{zellij}, acceso remoto cifrado mediante \texttt{OpenSSH} y motores de contenedores (\texttt{podman} o \texttt{docker}), prescindiendo por completo de la sobrecarga del servidor gráfico.
+\end{itemize}
+
+Asimismo, el ecosistema de Arch Linux se complementa con el Repositorio de Usuarios de Arch (AUR, \textit{Arch User Repository}), una plataforma comunitaria que alberga más de 80\,000 recetas declarativas de compilación (\texttt{PKGBUILD}). Mediante utilidades auxiliares como \texttt{paru} o \texttt{yay}, los usuarios pueden compilar, validar firmas criptográficas e instalar controladores especializados, herramientas de desarrollo y software de terceros con la misma comodidad que los paquetes oficiales.
+
+\subsection{Ajuste del cargador de arranque y sincronización de reloj de hardware}
+\label{sec:ajusteCargadorReloj}
+
+Para perfeccionar la convivencia diaria en arranque dual, el archivo de configuración declarativo de GNU GRUB (\texttt{/etc/default/grub}) admite parámetros avanzados que elevan la ergonomía operativa \parencite{gnugrub2024manual}:
+\begin{enumerate}[noitemsep, topsep=2pt]
+    \item \textbf{Memoria del último sistema iniciado:} En lugar de fijar una opción predeterminada estática, se configuran las variables \texttt{GRUB\_DEFAULT=saved} y \texttt{GRUB\_SAVEDEFAULT=true}. Esta directiva instruye a GRUB a registrar en disco el último sistema booteado, evitando intervenciones manuales durante reinicios sucesivos.
+    \item \textbf{Temporizador de espera:} Se modula el parámetro \texttt{GRUB\_TIMEOUT=5} para fijar un intervalo de 5 segundos antes de disparar el arranque automático de la opción seleccionada.
+\end{enumerate}
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# Configurar GRUB para recordar automáticamente el último sistema operativo booteado \\
+sudo sed -i 's/\string^GRUB\_DEFAULT=.*/GRUB\_DEFAULT=saved/' /etc/default/grub \\
+sudo sed -i 's/\string^GRUB\_TIMEOUT=.*/GRUB\_TIMEOUT=5/' /etc/default/grub \\
+echo "GRUB\_SAVEDEFAULT=true" | sudo tee -a /etc/default/grub \\
+\\
+\# Regenerar el archivo grub.cfg en la partición ESP compartida \\
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+\end{mdframed}
+
+En paralelo, es imperativo certificar que la sincronización horaria opere de acuerdo con el estándar UTC. Mediante la utilidad \texttt{timedatectl status}, se verifica que el reloj de tiempo real (RTC) no se encuentre operando en hora local (\texttt{RTC in local TZ: no}) y que el servicio de sincronización por red mediante protocolo NTP se encuentre activo (\texttt{NTP service: active}), previniendo las derivas horarias entre Windows y Linux examinadas en la Sección~\ref{sec:factoresCriticosCoexistencia}.
+
+\subsection{Diagnóstico y resolución de incidencias habituales en arranque dual}
+\label{sec:resolucionIncidencias}
+
+En el ciclo de vida de una estación de trabajo con arranque múltiple, las actualizaciones del sistema operativo comercial o alteraciones en el firmware pueden desencadenar fallos de arranque conocidos. A continuación se documenta el tratamiento técnico de las dos incidencias más recurrentes:
+
+\subsubsection{Sobrescritura del orden de arranque por actualizaciones de Windows}
+
+Es habitual que las actualizaciones mayores acumulativas de Windows reescriban de forma unilateral las variables del firmware UEFI en la memoria NVRAM, asignando la prioridad máxima a \texttt{Windows Boot Manager} (\texttt{Boot0000}) y marginando al cargador GRUB. En consecuencia, la máquina reinicia directamente en Windows sin mostrar el menú de arranque unificado.
+
+Para restituir el orden correcto sin necesidad de reinstalar el sistema, se inicia el equipo desde el medio USB de Arch Linux o se accede a una consola administrativa y se invoca \texttt{efibootmgr} \parencite{uefi2024specification}:
+
+\begin{mdframed}[style=terminal]
+\ttfamily\upshape\color{bashLetterColor}\footnotesize
+\# 1. Listar las entradas UEFI registradas en la NVRAM y el orden actual \\
+sudo efibootmgr -v \\
+\\
+\# 2. Suponiendo que GRUB tiene el ID 0001 y Windows el ID 0000, restablecer prioridad \\
+sudo efibootmgr -o 0001,0000 \\
+\\
+\# 3. Recrear el descriptor si fue eliminado de la NVRAM (ESP en /dev/nvme0n1p1) \\
+sudo efibootmgr -c -d /dev/nvme0n1 -p 1 -L "GRUB" -l "\textbackslash EFI\textbackslash GRUB\textbackslash grubx64.efi"
+\end{mdframed}
+
+\subsubsection{Reactivación accidental de Fast Startup y volumen NTFS sucio}
+
+Si un usuario o actualización de Windows reactiva de forma desapercibida la función de inicio rápido (Fast Startup), los sistemas de archivos NTFS quedarán congelados en estado hibernado. Al arrancar Arch Linux e intentar montar una partición de datos de Windows, el núcleo emitirá un fallo de volumen sucio (\texttt{cannot mount read-write, volume is dirty / hibernated}).
+
+En esta contingencia, \textbf{jamás debe forzarse el montaje en modo lectura/escritura mediante utilidades de reparación como \texttt{ntfsfix}}, puesto que truncar el diario de transacciones provocará la corrupción irreversible del estado que Windows mantiene congelado en memoria RAM. El protocolo de remediación exige:
+\begin{enumerate}[noitemsep, topsep=2pt]
+    \item Montar provisionalmente la partición en modo estrictamente de solo lectura (\texttt{mount -o ro /dev/nvme0n1p3 /mnt/datos}) si se requiere consultar urgentemente un archivo.
+    \item Reiniciar el equipo en Windows, abrir una consola de comandos con privilegios elevados y desactivar definitivamente la hibernación invocando \texttt{powercfg /h off}.
+    \item Apagar la máquina por completo mediante la instrucción de consola \texttt{shutdown /s /f /t 0}, garantizando que todos los volúmenes NTFS se desmonten limpiamente en el disco físico antes de retornar a Linux.
+\end{enumerate}
+
+\section{Conclusiones personales}
+\label{sec:conclusionesPersonales}
+
+El desarrollo del presente manual técnico y el despliegue práctico de una estación con arranque dual entre Microsoft Windows y Arch Linux consolidan una comprensión integral y de bajo nivel sobre la interacción entre el firmware, el subsistema de almacenamiento masivo y los núcleos de los sistemas operativos contemporáneos. La instalación manual desasistida desmitifica las abstracciones que los instaladores automáticos ocultan, demostrando que el medio secundario no es un receptáculo homogéneo sino una jerarquía rigurosa: la transición de CHS a LBA48 y la alineación a 2048 sectores (1~MiB) resultan determinantes para optimizar la capa de traducción de memoria flash (FTL) en unidades de estado sólido. Asimismo, el estándar GPT demuestra su superioridad frente a MBR al superar la barrera de los 2~TiB, asignar GUID universales de 128 bits e integrar redundancia estructural con sumas CRC32 que erradican la corrupción catastrófica de particiones.
+
+En el ámbito del encendido, la adopción del estándar UEFI de 64 bits con controladores FAT nativos en la partición ESP compartida transforma cualitativamente la arquitectura de arranque múltiple. GNU GRUB prescinde de sectores ciegos y se articula como un ejecutable estandarizado que convive con Windows Boot Manager mediante carga encadenada (chainloading) y gestión determinista en la NVRAM con \texttt{efibootmgr}. Esta coexistencia evidencia la necesidad de anticipar riesgos en sistemas heterogéneos: la desactivación obligatoria del inicio rápido de Windows (Fast Startup) para evitar corrupciones en volúmenes NTFS congelados, la sincronización del reloj de hardware (RTC) en UTC y el respaldo atómico del almacén BCD y tablas GPT con \texttt{sgdisk}.
+
+Finalmente, la ejecución metódica de cada fase —desde la verificación criptográfica con SHA-256 y firmas OpenPGP hasta el despliegue del sistema base con \texttt{pacstrap}, la configuración en \texttt{chroot} y la generación de imágenes con \texttt{mkinitcpio}— ratifica el valor formativo de Arch Linux. Al delegar las decisiones arquitectónicas en el administrador sin esquemas prefabricados, se consolida una autonomía insustituible para el diagnóstico, la administración y el diseño de infraestructuras en el ejercicio profesional.
+
+\nocite{*}
+\begingroup
+\setlength\bibitemsep{3pt}
+\printbibliography[heading=bibintoc, title={Referencias}]
+\endgroup
+
+\end{document}
