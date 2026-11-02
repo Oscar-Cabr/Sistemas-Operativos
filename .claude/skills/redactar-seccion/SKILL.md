@@ -24,6 +24,8 @@ Público: el autor, sus compañeros y sus profesores de ingeniería en computaci
 
 **Sin metarreferencias:** Jamás aludas a indicaciones del profesor, rúbricas, directivas de la tarea o decisiones de maquetación y formato (p. ej., evitar «para cumplir con la indicación», «en apego a la directiva», o justificar elecciones visuales al lector). Toda afirmación se redacta como análisis técnico objetivo autónomo.
 
+**Conclusiones personales:** Naturaleza estrictamente monolítica. Se componen exclusivamente de redacción corrida en prosa (uno o varios párrafos continuos), sin ninguna subsección de por medio, viñetas (`itemize`), listas enumeradas ni títulos intermedios. Su extensión normativa está fijada en **1 cuartilla por cada 10 páginas de desarrollo** del entregable.
+
 ## Convenciones aplicadas en LaTeX
 
 ```latex

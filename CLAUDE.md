@@ -163,6 +163,7 @@ Cada paso tiene una skill. No improvises el procedimiento: invócala, respetando
 - **Comillas.** `\enquote{}` (csquotes): angulares «…» en primer nivel, inglesas "…" en el segundo, simples '…' en el tercero.
 - **Etiquetas (`tags`)** en camelCase, alusivas al contenido, nunca al origen, procedencia o autor.
 - **Trazabilidad:** todo contenido no original lleva cita con ubicación exacta.
+- **Conclusiones personales:** Naturaleza estrictamente monolítica. Consisten únicamente en redacción corrida en prosa (párrafos continuos), sin viñetas (`itemize`), listas, subsecciones ni títulos intermedios. Su extensión normativa es de exactamente **1 cuartilla por cada 10 páginas de desarrollo** del entregable.
 
 ### Formato de citas
 

@@ -45,6 +45,8 @@ Si el documento es extenso, audítalo por partes: lee una sección a la vez con 
 
 - [ ] Cada punto de las indicaciones del profesor está cubierto por alguna sección.
 - [ ] El documento incluye portada, índice, desarrollo, conclusiones personales y referencias.
+- [ ] Las **conclusiones personales** son estrictamente monolíticas: prosa corrida en párrafos continuos, sin subsecciones, listas (`itemize`), viñetas ni títulos intermedios.
+- [ ] La extensión de las conclusiones personales cumple la norma: **1 cuartilla por cada 10 páginas de desarrollo**.
 - [ ] Los estimados de páginas del índice aprobado se corresponden con el reparto real.
 
 ### Media

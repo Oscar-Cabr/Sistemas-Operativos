@@ -59,7 +59,7 @@ Criterios:
 - **Títulos concisos y directos.** Breves, directos y sin adjetivos (p. ej., «Naturaleza y clasificación del software», «Definición y arquitectura del SO»). Sin adornos retóricos.
 - **Presupuesto de páginas.** Asigna un estimado por sección y verifica que la suma caiga en el rango de `GEMINI.md` (18 a 40 páginas), cerca del objetivo de 27. Una sección de segundo nivel rinde entre 1 y 3 páginas.
 - **Profundidad de licenciatura en ingeniería.** Los conceptos complejos o no explorados en clase requieren extensión propia, no una mención superficial.
-- **Cierre obligatorio.** Toda entrega lleva una sección final de **Conclusiones personales** (requisito del profesor) y las Referencias, que la plantilla ya imprime.
+- **Cierre obligatorio.** Toda entrega lleva una sección final de **Conclusiones personales** (requisito del profesor) y las Referencias, que la plantilla ya imprime. Las conclusiones son de naturaleza estrictamente monolítica (párrafos continuos de prosa, sin subsecciones, viñetas ni títulos intermedios) con un presupuesto normativo de **1 cuartilla por cada 10 páginas de desarrollo**.
 - **Respaldo real.** No propongas una sección que las fuentes disponibles no puedan sostener con citas rastreables.
 
 Presenta el índice como lista jerárquica, con el estimado de páginas por sección y el total acumulado.
