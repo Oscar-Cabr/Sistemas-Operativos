@@ -15,7 +15,7 @@ Lee con `read_file` el `Makefile` vigente y ajusta mediante `edit_file` **solo**
 | Variable | Tarea | Proyecto |
 | --- | --- | --- |
 | `FILE` | `<NN>_<Titulo_Snake>` (sin ruta ni extensión) | `<NN>_<Titulo_Snake>` |
-| `OUTPUT` | `ENTREGABLES/TAREAS/$(FILE)` | `ENTREGABLES/PROYECTOS/$(FILE)` |
+| `OUTPUT` | `ENTREGABLES/TAREAS/T$(FILE)_CabreraRojasOscar` | `ENTREGABLES/PROYECTOS/P$(FILE)_CabreraRojasOscar` |
 
 Verifica que ambas apuntan al entregable en curso y al directorio de su tipo. El Makefile deduce de `OUTPUT` si el fuente está en `TAREAS/` o `PROYECTOS/`, y su target `check` rechaza una salida mal formada o un `.tex` inexistente. Si falla por otra causa, **detente y avísale al usuario**: adaptar el Makefile no es tarea de Antigravity.
 
@@ -31,7 +31,7 @@ Nunca el target por defecto si lanza un visor, y nunca `latexmk`, `pdflatex` ni 
 
 Ejecuta con `run_command`:
 ```bash
-pdfinfo ENTREGABLES/<TAREAS|PROYECTOS>/<NN>_<Titulo_Snake>.pdf | grep Pages
+pdfinfo ENTREGABLES/<TAREAS|PROYECTOS>/<T|P><NN>_<Titulo_Snake>_CabreraRojasOscar.pdf | grep Pages
 ```
 
 Compara contra el rango de extensión de `GEMINI.md` (mínimo 18, máximo 40, objetivo 27). Reporta siempre el número y su posición en el rango. Si está fuera:

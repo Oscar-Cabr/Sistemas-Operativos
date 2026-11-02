@@ -30,6 +30,7 @@ Lee el `Makefile`, el contenido de `config/` y el `template.tex` del tipo (`TARE
 | Archivo maestro | `TAREAS/<NN>_<Titulo_Snake>.tex` | `PROYECTOS/<NN>_<Titulo_Snake>.tex` | `TAREAS/03_Gestion_De_Procesos.tex` |
 | Bibliografía | `bibliography/t<NN>.bib` | `bibliography/p<NN>.bib` | `bibliography/t03.bib` |
 | Media | `media/t<NN>/` | `media/p<NN>/` | `media/t03/` |
+| PDF compilado | `ENTREGABLES/TAREAS/T<NN>_<Titulo_Snake>_CabreraRojasOscar.pdf` | `ENTREGABLES/PROYECTOS/P<NN>_<Titulo_Snake>_CabreraRojasOscar.pdf` | `ENTREGABLES/TAREAS/T03_Gestion_De_Procesos_CabreraRojasOscar.pdf` |
 
 Antes de crear nada, verifica que el número no esté ya en uso para ese tipo (archivo maestro, `.bib` y carpeta de media). Si colisiona, detente y pregunta.
 
@@ -54,6 +55,7 @@ Invoca `consulta-fuentes` en modo exploratorio para saber qué cubren realmente 
 Criterios:
 
 - **Cobertura total.** Cada punto de las indicaciones del profesor mapea a al menos una sección. Si algo del índice no responde a una indicación, justifícalo o quítalo.
+- **Títulos concisos y directos.** Breves, directos y sin adjetivos (p. ej., «Naturaleza y clasificación del software», «Definición y arquitectura del SO»). Sin adornos retóricos.
 - **Presupuesto de páginas.** Asigna un estimado por sección y verifica que la suma caiga en el rango de `CLAUDE.md`, cerca del objetivo. Una sección de segundo nivel rinde entre 1 y 3 páginas.
 - **Profundidad de licenciatura en ingeniería.** Los conceptos complejos o no explorados en clase requieren extensión propia, no una mención.
 - **Cierre obligatorio.** Toda entrega lleva una sección final de **Conclusiones personales** (requisito del profesor) y las Referencias, que la plantilla ya imprime.

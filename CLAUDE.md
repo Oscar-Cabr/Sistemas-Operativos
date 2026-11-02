@@ -64,10 +64,11 @@ Los libros de `.claude/sources/libros/` son **fuente confiable directa**: no req
 | Fuente LaTeX | `TAREAS/<NN>_<Titulo_Snake>.tex` | `PROYECTOS/<NN>_<Titulo_Snake>.tex` |
 | Bibliografía | `bibliography/t<NN>.bib` | `bibliography/p<NN>.bib` |
 | Media | `media/t<NN>/<tag>.<ext>` | `media/p<NN>/<tag>.<ext>` |
-| PDF compilado | `ENTREGABLES/TAREAS/<NN>_<Titulo_Snake>.pdf` | `ENTREGABLES/PROYECTOS/<NN>_<Titulo_Snake>.pdf` |
+| PDF compilado | `ENTREGABLES/TAREAS/T<NN>_<Titulo_Snake>_CabreraRojasOscar.pdf` | `ENTREGABLES/PROYECTOS/P<NN>_<Titulo_Snake>_CabreraRojasOscar.pdf` |
 
 - `<NN>`: número de trabajo a dos dígitos, con cero a la izquierda si aplica.
 - `<Titulo_Snake>`: iniciales mayúsculas y guiones bajos como separador, sin acentos ni signos, conforme a los existentes (`00_Registro_EDUCAFI`).
+- Formato reglamentario del entregable: `<T/P><#>_<NombreEntregable>_CabreraRojasOscar.pdf`, donde `<T/P>` es `T` para tareas y `P` para proyectos, y el sufijo fijo de autoría es `_CabreraRojasOscar.pdf`.
 - El prefijo `t`/`p` del `.bib` es obligatorio: sin él, una tarea y un proyecto con el mismo número colisionarían en `bibliography/`.
 - Esta convención es independiente del camelCase de los `tags` de media.
 
@@ -110,8 +111,8 @@ Cada paso tiene una skill. No improvises el procedimiento: invócala, respetando
 
 - **Solo mediante el Makefile de la raíz.** No se invoca `latexmk`, `pdflatex` ni `biber` directamente, ni se inventan comandos de compilación.
 - **Variables de cabecera.** Se modifican únicamente las dos primeras variables del Makefile, para dirigir qué entregable se compila y dónde queda el PDF:
-  - `FILE`: nombre del entregable sin extensión ni ruta (p. ej., `00_Registro_EDUCAFI`).
-  - `OUTPUT`: `ENTREGABLES/TAREAS/$(FILE)` para una tarea, `ENTREGABLES/PROYECTOS/$(FILE)` para un proyecto.
+  - `FILE`: nombre del entregable sin extensión ni ruta (p. ej., `00_Registro_EDUCAFI`, `01_Sistemas_Operativos`).
+  - `OUTPUT`: `ENTREGABLES/TAREAS/T$(FILE)_CabreraRojasOscar` para una tarea, `ENTREGABLES/PROYECTOS/P$(FILE)_CabreraRojasOscar` para un proyecto.
 
   Ninguna otra línea del Makefile se modifica. Antes de cada compilación se verifica que ambas variables apuntan al entregable en curso y al directorio de salida de su tipo.
 - La salida intermedia va a `build/` y los PDF finales a `ENTREGABLES/TAREAS/` o `ENTREGABLES/PROYECTOS/`. En ninguno se escribe manualmente; se consultan para leer el log y contar páginas.

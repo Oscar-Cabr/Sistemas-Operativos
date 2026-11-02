@@ -14,7 +14,7 @@ Lee el `Makefile` vigente y ajusta **solo** sus dos primeras variables:
 | Variable | Tarea | Proyecto |
 | --- | --- | --- |
 | `FILE` | `<NN>_<Titulo_Snake>` (sin ruta ni extensión) | `<NN>_<Titulo_Snake>` |
-| `OUTPUT` | `ENTREGABLES/TAREAS/$(FILE)` | `ENTREGABLES/PROYECTOS/$(FILE)` |
+| `OUTPUT` | `ENTREGABLES/TAREAS/T$(FILE)_CabreraRojasOscar` | `ENTREGABLES/PROYECTOS/P$(FILE)_CabreraRojasOscar` |
 
 Verifica que ambas apuntan al entregable en curso y al directorio de su tipo. El Makefile deduce de `OUTPUT` si el fuente está en `TAREAS/` o `PROYECTOS/`, y su target `check` rechaza una salida mal formada o un `.tex` inexistente. Si falla por otra causa, **detente y avísale al usuario**: adaptar el Makefile no es tarea de Claude.
 
@@ -25,7 +25,7 @@ Usa el target que compila sin abrir el visor (hoy, `make pdf`). Nunca el target 
 ## 3. Conteo de páginas
 
 ```bash
-pdfinfo ENTREGABLES/<TAREAS|PROYECTOS>/<NN>_<Titulo_Snake>.pdf | grep Pages
+pdfinfo ENTREGABLES/<TAREAS|PROYECTOS>/<T|P><NN>_<Titulo_Snake>_CabreraRojasOscar.pdf | grep Pages
 ```
 
 Compara contra el rango de extensión de `CLAUDE.md`. Reporta siempre el número y su posición en el rango. Si está fuera:

@@ -22,6 +22,8 @@ Las convenciones de estilo, el formato de citas y las reglas de manejo de archiv
 
 Público: el autor, sus compañeros y sus profesores de ingeniería en computación. Prosa expositiva sin relleno: cada párrafo aporta información nueva y respaldada.
 
+**Sin metarreferencias:** Jamás aludas a indicaciones del profesor, rúbricas, directivas de la tarea o decisiones de maquetación y formato (p. ej., evitar «para cumplir con la indicación», «en apego a la directiva», o justificar elecciones visuales al lector). Toda afirmación se redacta como análisis técnico objetivo autónomo.
+
 ## Convenciones aplicadas en LaTeX
 
 ```latex
