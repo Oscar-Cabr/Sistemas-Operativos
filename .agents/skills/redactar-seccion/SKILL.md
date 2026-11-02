@@ -21,7 +21,9 @@ Las convenciones de estilo, el formato de citas y las reglas de manejo de archiv
 
 ## Registro
 
-Público: el autor, sus compañeros y sus profesores de ingeniería en computación. Prosa expositiva sin relleno: cada párrafo aporta información nueva y respaldada.
+Público: el autor, sus compañeros y sus profesores de ingeniería en computación. Prosa expositiva sin relleno ni rimbombancia: cada párrafo aporta información útil y respaldada.
+
+**Tono y lenguaje:** Claro, natural y directo. Evitar la prosa pomposa, rebuscada o con adornos artificiales. Se usan tecnicismos solo para nombrar conceptos técnicos concretos; el resto de la redacción se apoya en jerga común y letrada, propia de un estudiante de ingeniería en computación.
 
 **Sin metarreferencias:** Jamás aludas a indicaciones del profesor, rúbricas, directivas de la tarea o decisiones de maquetación y formato (p. ej., evitar «para cumplir con la indicación», «en apego a la directiva», o justificar elecciones visuales al lector). Toda afirmación se redacta como análisis técnico objetivo autónomo.
 

@@ -19,7 +19,7 @@ Si el documento es extenso, audítalo por partes: lee una sección a la vez con 
 - [ ] Cada **sigla** se desarrolla en su primera aparición.
 - [ ] Ninguna sigla lleva plural en `-s` (`las CPU`, nunca `las CPUs`). Busca `s}` y patrones `[A-Z]{2,}s`.
 - [ ] Todas las comillas usan `\enquote{}`. Ninguna comilla recta `"`, ni `''`, ni `` `` ``.
-- [ ] Cada **tecnicismo** se aclara la primera vez que se usa.
+- [ ] Cada **tecnicismo** se aclara la primera vez que se usa y se reserva para conceptos específicos; el resto del texto usa jerga común y letrada sin rimbombancia ni adornos pomposos.
 - [ ] Ortografía, acentuación y puntuación conforme a la RAE.
 - [ ] En ningún punto se cita ni se justifica una regla RAE dentro del texto.
 

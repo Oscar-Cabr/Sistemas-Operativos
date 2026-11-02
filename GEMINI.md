@@ -163,6 +163,7 @@ Cada paso tiene una skill en `.agents/skills/`. No improvises el procedimiento: 
 ## Convenciones de estilo
 
 - Redacción de nivel licenciatura en ingeniería. Los tecnicismos se permiten, pero se aclaran en su primera aparición. Los conceptos complejos o no explorados se abordan con la extensión pertinente.
+- **Tono y registro:** Claro, directo, natural y sin rimbombancia. Queda estrictamente prohibida la prosa pomposa, rebuscada o con adornos retóricos artificiales. Los tecnicismos se emplean exclusivamente para nombrar y explicar conceptos técnicos específicos que lo requieran; para el resto de la redacción se utiliza jerga común, fluida y letrada, propia de un estudiante universitario de ingeniería en computación.
 - **Títulos de secciones e índices:** Breves, concisos, directos y sin adjetivos (p. ej., «Naturaleza y clasificación del software», «Definición y arquitectura del SO»).
 - **Sin metarreferencias:** Prosa técnica y académica autónoma. Queda estrictamente prohibido aludir a las indicaciones del profesor, la tarea, la rúbrica, directivas del curso o decisiones de formato y maquetación (p. ej., «para cumplir con la directiva», «en apego a las instrucciones», «como solicita el docente», o justificar al lector por qué se usa cierto número de columnas). Toda redacción se expone como análisis técnico de ingeniería objetivo.
 - **Normativa RAE** en ortografía, acentuación y puntuación de todo el texto, más los casos siguientes. No se cita ni se justifica la regla dentro del entregable.

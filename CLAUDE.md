@@ -158,6 +158,7 @@ Cada paso tiene una skill. No improvises el procedimiento: invócala, respetando
 ## Convenciones de estilo
 
 - Redacción de nivel licenciatura en ingeniería. Los tecnicismos se permiten, pero se aclaran en su primera aparición. Los conceptos complejos o no explorados se abordan con la extensión pertinente.
+- **Tono y registro:** Claro, directo, natural y sin rimbombancia. Queda estrictamente prohibida la prosa pomposa, rebuscada o con adornos retóricos artificiales. Los tecnicismos se emplean exclusivamente para nombrar y explicar conceptos técnicos específicos que lo requieran; para el resto de la redacción se utiliza jerga común, fluida y letrada, propia de un estudiante universitario de ingeniería en computación.
 - **Normativa RAE** en ortografía, acentuación y puntuación de todo el texto, más los casos siguientes. No se cita ni se justifica la regla dentro del entregable.
 - **Extranjerismos técnicos.** Siempre en inglés, sin traducción ni adaptación gráfica. En *cursiva* solo en su primera aparición en el entregable; después, en redonda.
 - **Siglas.** Se desarrollan en su primera aparición («unidad central de procesamiento, CPU») y no admiten plural con -s («las CPU», nunca «las CPUs»).
