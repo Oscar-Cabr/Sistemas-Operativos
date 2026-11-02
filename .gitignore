@@ -4,3 +4,4 @@
 *.toc
 build/*
 compile-report.txt
+samples/*
