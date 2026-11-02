@@ -1,0 +1,118 @@
+\documentclass[12pt]{article}
+\input{config/preamble}
+\addbibresource{bibliography/Resumen_Clase_Sistemas_Operativos_Tema_1.bib}
+
+\begin{comment}
+INDICACIONES DEL PROFESOR:
+Fecha de entrega: 05 de septiembre de 2026
+Título: Resumen clase sistemas operativos Tema 1
+Número: Sin número
+Tipo: Tarea
+
+Instrucciones del profesor:
+
+Subir el resumend e Sistemas operativos o lo que se entendio de la presentacion plantilla 22 al 50
+
+DIRECTIVAS ESPECÍFICAS DEL ALUMNO:
+- Ubicación de la presentación: samples/'Tema 1 Introducción a los Sistemas Operativos Completo.pdf' (diapositivas 22 a 50).
+- Formato monolítico: el resumen se concentra en una sola sección principal, estructurado mediante párrafos continuos o subsecciones no numeradas (\subsection*{...}).
+- Presupuesto de extensión: objetivos de media a una cuartilla (0.5 a 1.0 pág.), resumen de máximo dos cuartillas (1.5 a 2.0 págs.), conclusiones personales (0.5 a 1.0 pág.).
+- Extensión compacta sin sujeción al mínimo de 18 páginas (estimado total de 5 a 6 páginas incluyendo preliminares).
+- Redacción sin exceso de tecnicismos, con paráfrasis clara y pedagógica orientada a un estudiante de ingeniería en computación que cursa la asignatura.
+
+ÍNDICE APROBADO:
+1. Objetivos [~0.5 a 1.0 pág.]
+2. Resumen analítico de sistemas operativos [máximo ~2.0 págs.]
+   - Fundamentos y evolución de UNIX
+   - Ecosistema propietario de Apple y Mac OS
+   - Plataforma comercial y licenciamiento de Microsoft
+   - Filosofía de distribución libre y entorno GNU/Linux
+   - Generaciones de la computación y evolución del hardware
+   - Sistemas operativos móviles abiertos: Android
+   - Fundamentos de los sistemas distribuidos
+3. Conclusiones personales [~0.5 a 1.0 pág.]
+Referencias [~0.5 pág.]
+\end{comment}
+
+\begin{document}
+\pagenumbering{roman}
+
+\begin{titlepage}
+  \thispagestyle{empty}
+  \newgeometry{left = 1cm, right = 1cm, top = 1cm, bottom = 2cm}
+
+  \noindent
+  \begin{minipage}[c]{3.5cm}
+    \includegraphics[width=3.5cm]{media/titlepage/Escudo-UNAM.pdf}
+  \end{minipage}\hfill
+  \begin{minipage}[c][3.5cm][c]{\dimexpr\textwidth-7cm\relax}
+    \centering
+    {\large\textbf{Universidad Nacional Autónoma de México}\\[0.6em] 
+    \Large\textbf{Facultad de Ingeniería}\\[0.6em]
+    \large Sistemas Operativos}
+  \end{minipage}\hfill
+  \begin{minipage}[c]{3.5cm}
+    \raggedleft
+    \includegraphics[width=3.5cm]{media/titlepage/FI.png}
+  \end{minipage}
+\centering\huge
+  \vfill
+    Grupo 1 \\
+    Ing. Angel Isidro Mercado
+  \vfill
+    \textbf{Tarea Resumen clase sistemas operativos Tema 1}
+  \vfill\large
+    320304435 - Cabrera Rojas Oscar
+  \vfill
+
+  \noindent\footnotesize \hfill Ciudad Universitaria, CDMX a 05 de septiembre del 2026
+\end{titlepage}
+\restoregeometry
+
+\tableofcontents
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\section{Resumen de sistemas operativos}
+\label{sec:resumenSistemasOperativos}
+
+El sistema operativo es el software base que hace utilizable una computadora. Lejos de resolver tareas de usuario final, abstrae la complejidad física del \textit{hardware} para que múltiples programas compartan de forma segura y coordinada los procesadores, la memoria y los dispositivos periféricos \parencite[plantilla 22]{mercado2026tema1}. Comprender sus principios actuales requiere revisar los modelos históricos y arquitectónicos que forjaron la disciplina.
+
+\subsection*{Fundamentos y evolución de UNIX}
+
+Concebido a finales de los sesenta en los Laboratorios Bell de AT\&T por Ken Thompson, Dennis Ritchie y Douglas McIlroy, UNIX transformó la informática mediante un diseño modular y portable. Su núcleo (\textit{kernel}) centralizó el control de bajo nivel: despacho de interrupciones, planificación de la unidad central de procesamiento (\textit{central processing unit}, CPU), gestión de memoria y administración de dispositivos, introduciendo una jerarquía de archivos orientada a la seguridad multiusuario y multitarea. Al reescribirse en C, logró una portabilidad inédita que originó variantes industriales como BSD, HP-UX y Solaris, cimentando las bases del software moderno \parencite[plantillas 22--24]{mercado2026tema1}.
+
+\subsection*{Ecosistema propietario de Apple y Mac OS}
+
+En el cómputo personal, Apple transformó la interacción humana con las máquinas al popularizar la interfaz gráfica de usuario (\textit{graphical user interface}, GUI). Inspirados en las investigaciones de Xerox PARC, Steve Jobs y Steve Wozniak integraron ventanas, iconos, menús y ratón en el sistema operativo de Lisa (1983) y Macintosh 128K (1984), superando las consolas de texto. Más tarde, la plataforma evolucionó hacia Mac OS X combinando la solidez del micronúcleo Mach y subsistemas BSD. Esta arquitectura sirvió como base para iOS, lanzado en 2007 con el iPhone, adaptando este modelo cerrado y protegido a la computación táctil móvil \parencite[plantillas 25--34]{mercado2026tema1}.
+
+\subsection*{Plataforma comercial y licenciamiento de Microsoft}
+
+Microsoft, fundada por Bill Gates y Paul Allen en 1975, impulsó el mercado masivo de computadoras compatibles tras acordar con IBM el suministro del software base para su PC. Microsoft adquirió QDOS a Tim Paterson por cincuenta mil dólares y lo licenció como MS-DOS, reteniendo los derechos para comercializarlo a terceros fabricantes. Aunque MS-DOS era monousuario y monotarea en consola, facilitó el despegue de Windows. Posteriormente, Microsoft migró a la arquitectura NT y consolidó la familia Windows Server (versiones 2000 a 2022), cuyas ediciones Standard, Enterprise y Datacenter atienden redes corporativas y virtualización \parencite[plantillas 35--40]{mercado2026tema1}.
+
+\subsection*{Sistemas de distribución libre y GNU/Linux}
+
+En respuesta al software privativo, Richard Stallman fundó en 1983 el Proyecto GNU y la Free Software Foundation (FSF) para defender las cuatro libertades esenciales del usuario: usar, estudiar, modificar y distribuir el código fuente, distinguiendo la libertad ética de la gratuidad. En 1991, Linus Torvalds desarrolló un núcleo libre sobre procesadores Intel 80386 que, combinado con las herramientas GNU bajo licencia GPL, conformó GNU/Linux. Hoy se organiza en distribuciones según el perfil de uso: plataformas estables para servidores (Debian, Red Hat), sistemas de escritorio amigables (Ubuntu, Linux Mint), entornos para auditoría de seguridad (Kali Linux) y opciones ligeras para hardware modesto (Puppy Linux) \parencite[plantillas 41--46]{mercado2026tema1}.
+
+\subsection*{Generaciones de la computación y evolución del hardware}
+
+El desarrollo de los sistemas operativos acompaña cuatro generaciones de hardware. La primera (1940--1956), basada en válvulas de vacío y tambores magnéticos, carecía de sistema operativo y dependía de tarjetas perforadas en lenguaje máquina. La segunda (1956--1963) introdujo el transistor y memorias de ferrita, permitiendo monitores residentes y procesamiento por lotes (\textit{batch}). La tercera (1964--1971) adoptó circuitos integrados, habilitando multiprogramación y tiempo compartido para atender a varios usuarios alternando ráfagas de CPU \parencite[plantilla 47]{mercado2026tema1}. La cuarta (1971 al presente) incorporó microprocesadores e integración a muy gran escala (\textit{very large scale integration}, VLSI), masificando computadoras personales y redes.
+
+\subsection*{Plataforma móvil abierta: Android}
+
+Android nació para resolver la fragmentación en dispositivos móviles heterogéneos mediante código abierto. Iniciada por Android Inc. y adquirida por Google en 2005, se diseñó para terminales táctiles sobre un núcleo Linux adaptado a la gestión de energía y memoria portátil. Por encima del kernel, incluye bibliotecas nativas, una capa de abstracción de hardware, el entorno de ejecución Dalvik (posteriormente Android Runtime, ART) y un marco de aplicaciones. Su licenciamiento sin regalías permitió su adopción global por múltiples fabricantes, superando el ochenta por ciento de cuota de mercado en teléfonos y tabletas \parencite[plantilla 48]{mercado2026tema1}.
+
+\subsection*{Fundamentos de sistemas distribuidos}
+
+Al rebasar las demandas de cómputo la capacidad de un único equipo, emergieron los sistemas distribuidos. A diferencia de las máquinas multiprocesador con memoria compartida, un sistema distribuido consiste en procesadores autónomos enlazados en red, donde cada nodo posee memoria local privada exclusiva \parencite[plantillas 49--50]{mercado2026tema1}. Toda coordinación se realiza mediante paso de mensajes bajo modelos cliente-servidor o cómputo paralelo. Su propósito es brindar transparencia operativa, alta disponibilidad y tolerancia a fallos, permitiendo que el usuario perciba un conjunto heterogéneo de computadoras como un solo sistema integrado.
+
+\section{Conclusiones personales}
+\label{sec:conclusionesPersonales}
+
+El análisis de la evolución histórica y conceptual de los sistemas operativos permite comprender que las arquitecturas contemporáneas no surgieron de decisiones aisladas, sino de una constante adaptación frente a las limitaciones físicas del hardware y las crecientes demandas de los usuarios. Como estudiante de ingeniería, resulta revelador constatar cómo principios fundacionales concebidos hace más de cincuenta años en UNIX —como la modularidad, la abstracción jerárquica de archivos y el diseño de núcleos portables— siguen constituyendo la columna vertebral tanto de plataformas abiertas como GNU/Linux y Android, como de entornos comerciales robustos al estilo de macOS o Windows Server. Comprender la dialéctica entre el software propietario y el movimiento de código abierto, así como la transición desde el procesamiento por lotes elemental hasta la computación distribuida sobre redes heterogéneas, proporciona un criterio técnico indispensable para abordar el diseño, la optimización y la administración de sistemas en la práctica profesional moderna.
+
+\nocite{*}
+\printbibliography[heading=bibintoc, title={Referencias}]
+
+\end{document}
