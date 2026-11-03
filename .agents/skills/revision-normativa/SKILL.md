@@ -55,6 +55,9 @@ Si el documento es extenso, audítalo por partes: lee una sección a la vez con 
 - [ ] Cada `\includegraphics` del `.tex` tiene su fila en `media-manifest.md`, y ninguna fila del entregable sigue `pendiente`.
 - [ ] Los estados `pendiente` / `colocada` reflejan la realidad del disco (verifícalo con `ls`).
 - [ ] Ninguna imagen accesible en una fuente web quedó como `pendiente` sin motivo (descarga fallida o con autenticación).
+- [ ] **Bordes limpios:** Toda imagen colocada fue depurada con `clean_image.py` (fondo perimetral blanco, sin bordes oscuros de captura).
+- [ ] **Dimensionamiento:** Las figuras usan `width=\columnwidth` (o el máximo adaptativo posible sin desbordar a lo alto).
+- [ ] **Incrustación en PDF:** `pdfimages -list` confirma presencia efectiva en el PDF, sin omisiones ni escalas microscópicas (`x-ppi` entre 72 y 400 ppi).
 - [ ] Se le entrega al usuario la lista final de imágenes por colocar.
 
 ### Compilación

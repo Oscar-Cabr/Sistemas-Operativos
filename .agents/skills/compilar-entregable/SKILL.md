@@ -58,6 +58,18 @@ Ignora y **no le muestres al usuario**: `Overfull` menores, avisos de fuentes su
 
 Las imágenes pendientes no aparecen en el log: cuéntalas en el fuente con `grep -n "% PENDIENTE" <fuente>.tex` y repórtalas con su ruta destino.
 
+## 5. Verificación de imágenes en el PDF
+
+Para cada imagen colocada en el entregable, comprueba su correcta incrustación en el archivo compilado con `run_command`:
+```bash
+pdfimages -list ENTREGABLES/<TAREAS|PROYECTOS>/<T|P><NN>_<Titulo_Snake>_CabreraRojasOscar.pdf
+```
+
+Verifica:
+1. **Presencia:** Cada figura colocada debe figurar con sus dimensiones reales (`width`, `height`).
+2. **Escala y resolución:** El valor de `x-ppi` y `y-ppi` debe situarse en rangos normales de lectura (72 a 400 ppi). Si `x-ppi > 1000`, hay un error crítico de sintaxis en LaTeX (como `width=0.62pt` en vez de `width=0.62\columnwidth`), que hace la imagen microscópica.
+3. **Desborde vertical:** Comprueba en qué página quedó ubicada. Si la imagen a `\columnwidth` desbordó la página verticalmente o generó un float aislado indeseado por superar `\topfraction`, se ajusta en el `.tex` al máximo posible antes del desborde a lo alto (ver `registrar-media`).
+
 ## Dependencias faltantes
 
 Si la compilación falla porque falta un paquete LaTeX o cualquier otra dependencia:

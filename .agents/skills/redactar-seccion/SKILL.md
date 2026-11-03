@@ -64,6 +64,7 @@ El cambio de contexto obliga a salvar el bloque de control del proceso
 
 - Solo se referencian figuras registradas por `registrar-media`. No inventes rutas.
 - Una figura `pendiente` se redacta completa sobre el placeholder `media/example_figure.png`, con `% PENDIENTE: <ruta destino>` antes de su `\includegraphics` (ver `registrar-media`).
+- **Ancho máximo por defecto:** Toda figura se inicializa con `width=\columnwidth` (en documentos a una columna equivale a `\textwidth`) para mostrar los diagramas lo más grandes y claros posibles. Si tras compilar la figura desborda verticalmente la página o genera un float indeseado, se ajusta al máximo ancho posible que preserve la proporción sin desbordar verticalmente (`height=0.7\textheight, width=\columnwidth, keepaspectratio` o escala proporcional del ancho).
 - Replica el formato de la figura de ejemplo de la plantilla, con la cita de la fuente en el `\caption`, y menciónala en el texto con `Img.~\ref{fig:<tag>}`:
 
 ```latex
@@ -71,7 +72,7 @@ Las transiciones posibles se resumen en la Img.~\ref{fig:diagramaPlanificador}.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{media/t03/diagramaPlanificador.png}
+    \includegraphics[width=\columnwidth]{media/t03/diagramaPlanificador.png}
     \caption{Transiciones de estado de un proceso \parencite[\S 3.2, p.\ 128]{stallings2018operating}.}
     \label{fig:diagramaPlanificador}
 \end{figure}
