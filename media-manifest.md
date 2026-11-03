@@ -42,3 +42,12 @@ Convención de ruta: `media/[t|p]<NN>/<tag>.<ext>`, con `<tag>` en camelCase y a
 | `arquitecturaMobizenMirroring` | `rsupportMobizenWhitepaper` | Architecture Overview | Arquitectura de réplica móvil, captura por MediaProjection e inyección de eventos en Mobizen | `media/t07/arquitecturaMobizenMirroring.png` | pendiente |
 | `pruebasTeamviewerPcLaptop` | Entorno de laboratorio | Panel de sesión y telemetría de rendimiento | Flujo operativo de control remoto entre equipos PC/Laptop, sincronización de portapapeles y métricas de latencia RTT | `media/t07/pruebasTeamviewerPcLaptop.png` | pendiente |
 | `pruebasTeamviewerMovil` | TeamViewer Mobile Apps | Interfaces de control táctil e inyección de eventos | Topología de control interactivo con dispositivos móviles: control de PC desde smartphone y soporte remoto a Android | `media/t07/pruebasTeamviewerMovil.png` | pendiente |
+
+---
+
+## t08 — Herramientas de trabajo
+
+| Tag | Fuente | Ubicación exacta | Descripción | Ruta destino | Estado |
+| --- | --- | --- | --- | --- | --- |
+| `estructurasControlAcceso` | `stallings2018operating` | Cap. 15, §15.3, p. 671 (Figura 15.3) | Representación formal de la matriz de acceso y su descomposición en listas de control de acceso (ACL) y listas de capacidades | `media/t08/estructurasControlAcceso.png` | colocada |
+| `desbordamientoPilaMemoria` | `stallings2018operating` | Cap. 15, §15.2, p. 664 (Figura 15.2) | Estado del marco de pila antes y después de un desbordamiento de búfer con sobreescritura de la dirección de retorno | `media/t08/desbordamientoPilaMemoria.png` | colocada |
