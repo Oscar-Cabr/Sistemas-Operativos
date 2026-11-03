@@ -76,6 +76,31 @@ Las transiciones posibles se resumen en la Img.~\ref{fig:diagramaPlanificador}.
 \end{figure}
 ```
 
+## Tablas
+
+Toda tabla comparativa o matriz técnica se construye en `tabularx` sobre `\textwidth`, aplicando la convención normativa:
+- **Primera columna centrada a lo horizontal y a lo vertical:** `>{\centering\arraybackslash}m{<ancho>}`.
+- **Columnas interiores justificadas a lo horizontal y centradas a lo vertical:** `X` acompañado de `\renewcommand{\tabularxcolumn}[1]{m{#1}}`.
+- **Estructura base:**
+```latex
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\renewcommand{\tabularxcolumn}[1]{m{#1}}
+\setlength{\emergencystretch}{1.5em}
+\caption{Comparativa técnica de subsistemas del sistema operativo.}
+\label{tab:comparativaSubsistemas}
+\begin{tabularx}{\textwidth}{>{\centering\arraybackslash}m{2.5cm} X X}
+\toprule
+\textbf{Elemento} & \textbf{Mecanismo del núcleo} & \textbf{Impacto funcional} \\
+\midrule
+... & ... & ... \\
+\bottomrule
+\end{tabularx}
+\end{table}
+```
+
 ## Dimensionamiento y densidad técnica
 
 Respeta el presupuesto de páginas del índice aprobado. Aplica estrictamente los principios de densidad técnica fijados en `CLAUDE.md`:

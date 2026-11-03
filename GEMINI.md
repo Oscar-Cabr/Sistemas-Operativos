@@ -174,6 +174,7 @@ Cada paso tiene una skill en `.agents/skills/`. No improvises el procedimiento: 
 - **Etiquetas (`tags`)** en camelCase, alusivas al contenido, nunca al origen, procedencia o autor.
 - **Trazabilidad:** todo contenido no original lleva cita con ubicación exacta.
 - **Conclusiones personales:** Naturaleza estrictamente monolítica. Consisten únicamente en redacción corrida en prosa (párrafos continuos), sin viñetas (`itemize`), listas, subsecciones ni títulos intermedios. Su extensión normativa es de exactamente **1 cuartilla por cada 10 páginas de desarrollo** del entregable.
+- **Estilo y alineación de tablas:** Todo cuadro o tabla comparativa se construye con el entorno `tabularx` sobre `\textwidth`. La primera columna debe estar estrictamente centrada tanto en sentido horizontal como en sentido vertical (`>{\centering\arraybackslash}m{<ancho>}`). Todas las columnas interiores van con justificación de párrafo completa (tipo `X` combinado con `\renewcommand{\tabularxcolumn}[1]{m{#1}}` para preservar la alineación vertical uniforme al centro de la fila). Se acompaña siempre de `\centering`, `\small` (o `\scriptsize`), `\renewcommand{\arraystretch}{1.15}`, `\setlength{\emergencystretch}{1.5em}`, `\caption{...}`, `\label{...}`, `\toprule`, `\midrule` y `\bottomrule`.
 
 ### Principios de densidad técnica y control de extensión
 
