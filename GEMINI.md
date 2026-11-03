@@ -141,6 +141,7 @@ Cada paso tiene una skill en `.agents/skills/`. No improvises el procedimiento: 
 
 - Mínimo 18 páginas, máximo 40, objetivo 27.
 - Se verifica contando las páginas del PDF generado en `ENTREGABLES/` mediante `pdfinfo`, nunca por estimación.
+- **Pacing y presupuestación por sección:** En índices de 8 a 10 secciones, cada sección temática o de herramienta debe promediar entre 1.5 y 2.0 páginas reales de desarrollo. Las secciones de pruebas prácticas de laboratorio o análisis comparativo complejo disponen de hasta 2.5 a 3.0 páginas.
 
 ### Fuera de alcance
 
@@ -173,6 +174,15 @@ Cada paso tiene una skill en `.agents/skills/`. No improvises el procedimiento: 
 - **Etiquetas (`tags`)** en camelCase, alusivas al contenido, nunca al origen, procedencia o autor.
 - **Trazabilidad:** todo contenido no original lleva cita con ubicación exacta.
 - **Conclusiones personales:** Naturaleza estrictamente monolítica. Consisten únicamente en redacción corrida en prosa (párrafos continuos), sin viñetas (`itemize`), listas, subsecciones ni títulos intermedios. Su extensión normativa es de exactamente **1 cuartilla por cada 10 páginas de desarrollo** del entregable.
+
+### Principios de densidad técnica y control de extensión
+
+Para mantener el documento firmemente dentro del rango objetivo (~27 páginas) sin sacrificar rigor ni caer en hipertrofia textual:
+- **Prioridad de arquitectura y núcleo del SO sobre narrativa de interfaz:** Enfocar la redacción en la interacción con el kernel, controladores, APIs de bajo nivel, llamadas al sistema, estructuras en memoria y protocolos de red (descriptores, búferes, cifrado). Descartar la descripción paso a paso de clics, botones, menús de interfaz gráfica y flujos de usuario convencionales propios de un manual de usuario.
+- **Concisión histórica y contextual:** Los orígenes de una tecnología, empresa o protocolo se sintetizan en una o dos oraciones antes de abordar directamente el análisis técnico y estructural.
+- **Párrafos densos sin redundancia:** Cada párrafo debe aportar un hecho técnico concreto, una API o un mecanismo citable. Queda prohibido parafrasear la misma idea con distintas palabras o encadenar párrafos de transición retórica.
+- **Listas ortogonales y compactas:** Agrupar características o variantes en categorías funcionales medulares; evitar desgloses de más de 4 o 5 puntos cuando los elementos pueden resumirse conceptualmente en prosa.
+- **Preservación incondicional de fundamentos:** La síntesis nunca recorta ecuaciones matemáticas, modelos formales de comunicación, diagramas arquitectónicos, algoritmos criptográficos ni la trazabilidad de citas. Se corta la prosa accesoria, no el contenido de ingeniería.
 
 ### Formato de citas
 

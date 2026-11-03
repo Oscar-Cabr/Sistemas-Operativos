@@ -76,9 +76,13 @@ Las transiciones posibles se resumen en la Img.~\ref{fig:diagramaPlanificador}.
 \end{figure}
 ```
 
-## Dimensionamiento
+## Dimensionamiento y densidad técnica
 
-Respeta el presupuesto de páginas del índice aprobado. Si una sección se desvía mucho de su estimado, avísalo en el checkpoint: puede exigir reajustar el índice.
+Respeta el presupuesto de páginas del índice aprobado. Aplica estrictamente los principios de densidad técnica fijados en `CLAUDE.md`:
+- **Pacing objetivo:** 1.5 a 2.0 páginas reales de desarrollo por sección temática ordinaria; 2.5 a 3.0 páginas para pruebas prácticas o análisis comparativos complejos; y 1 cuartilla de conclusiones monolíticas por cada 10 páginas de desarrollo.
+- **Núcleo sobre interfaz:** Priorizar llamadas al sistema, estructuras del kernel, descriptores, protocolos y criptografía; omitir la narrativa de clics, botones y menús.
+- **Densidad sin redundancia:** Párrafos de 4 a 6 líneas con alta carga conceptual y citas exactas, sin reformulaciones.
+- Si una sección se desvía de su estimado, avísalo en el checkpoint: puede exigir reajustar el índice para cumplir con el rango final de 18 a 40 páginas (objetivo 27).
 
 ## Propagación de cambios
 
