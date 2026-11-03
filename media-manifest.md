@@ -24,3 +24,21 @@ Convención de ruta: `media/[t|p]<NN>/<tag>.<ext>`, con `<tag>` en camelCase y a
 | --- | --- | --- | --- | --- | --- |
 | `escudoUnam` | UNAM | Identidad institucional | Escudo de la Universidad Nacional Autónoma de México | `media/titlepage/Escudo-UNAM.pdf` | colocada |
 | `escudoFi` | Facultad de Ingeniería, UNAM | Identidad institucional | Escudo de la Facultad de Ingeniería | `media/titlepage/FI.png` | colocada |
+
+---
+
+## t07 — Herramientas de trabajo
+
+| Tag | Fuente | Ubicación exacta | Descripción | Ruta destino | Estado |
+| --- | --- | --- | --- | --- | --- |
+| `arquitecturaClienteServidor` | `stallings2018operating` | Cap. 18, §18.1, p. 18-4 (p. 828) | Arquitectura genérica cliente-servidor y separación de capas de presentación y aplicación | `media/t07/arquitecturaClienteServidor.png` | pendiente |
+| `taxonomiaProcesamiento` | `stallings2018operating` | Cap. 18, §18.1, p. 18-7 (p. 831) | Clasificación de esquemas de procesamiento cliente-servidor y modelo de cliente ligero | `media/t07/taxonomiaProcesamiento.png` | pendiente |
+| `capturaInyeccionEventosSo` | Arquitectura de SO | Subsistemas gráficos Win32k/Wayland y colas de eventos del SO | Flujo de intercepción de pantalla en el subsistema gráfico e inyección de eventos sintéticos | `media/t07/capturaInyeccionEventosSo.png` | pendiente |
+| `atravesamientoNatIce` | `rfc8445` | RFC 8445, §2, p. 9 (Figura 1) | Arquitectura de recolección de candidatos ICE y atravesamiento de NAT mediante STUN/TURN | `media/t07/atravesamientoNatIce.png` | pendiente |
+| `arquitecturaChromeRemoteDesktop` | `chromiumChromoting` | Chromium Source Tree, `remoting/docs/` | Arquitectura multiproceso del host Chromoting y separación de procesos vía Mojo IPC | `media/t07/arquitecturaChromeRemoteDesktop.png` | pendiente |
+| `arquitecturaPasarelasLogmein` | `anka2007logmein` | White Paper, p. 4 (Figura de pasarelas y brokers) | Arquitectura de pasarela de conexión y túnel saliente de tres entidades en LogMeIn | `media/t07/arquitecturaPasarelasLogmein.png` | pendiente |
+| `arquitecturaEnrutamientoTeamviewer` | `teamviewerSecurityWhitepaper` | Security Whitepaper, §3, p. 7 | Topología de la red de TeamViewer: Servidores maestros, routers y conmutación P2P/Relay | `media/t07/arquitecturaEnrutamientoTeamviewer.png` | pendiente |
+| `arquitecturaShowmypcTunnel` | `showmypcUserGuide` | Architecture Overview | Encapsulación de RFB en túnel inverso SSH y pasarela de retransmisión en ShowMyPC | `media/t07/arquitecturaShowmypcTunnel.png` | pendiente |
+| `arquitecturaMobizenMirroring` | `rsupportMobizenWhitepaper` | Architecture Overview | Arquitectura de réplica móvil, captura por MediaProjection e inyección de eventos en Mobizen | `media/t07/arquitecturaMobizenMirroring.png` | pendiente |
+| `pruebasTeamviewerPcLaptop` | Entorno de laboratorio | Panel de sesión y telemetría de rendimiento | Flujo operativo de control remoto entre equipos PC/Laptop, sincronización de portapapeles y métricas de latencia RTT | `media/t07/pruebasTeamviewerPcLaptop.png` | pendiente |
+| `pruebasTeamviewerMovil` | TeamViewer Mobile Apps | Interfaces de control táctil e inyección de eventos | Topología de control interactivo con dispositivos móviles: control de PC desde smartphone y soporte remoto a Android | `media/t07/pruebasTeamviewerMovil.png` | pendiente |

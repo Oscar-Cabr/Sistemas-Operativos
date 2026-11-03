@@ -1,5 +1,5 @@
-FILE    = Creacion_Curriculum_Vitae
-OUTPUT  = ENTREGABLES/TAREAS/T_$(FILE)_CabreraRojasOscar
+FILE    = 07_Herramientas_de_Trabajo
+OUTPUT  = ENTREGABLES/TAREAS/T$(FILE)_CabreraRojasOscar
 OUTDIR  = build
 TYPE    = $(notdir $(patsubst %/,%,$(dir $(OUTPUT))))
 SRC     = $(TYPE)/$(FILE).tex

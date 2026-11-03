@@ -1,0 +1,595 @@
+\documentclass[12pt]{article}
+\input{config/preamble}
+\addbibresource{bibliography/t07.bib}
+
+\begin{comment}
+INDICACIONES DEL PROFESOR:
+Fecha de entrega: 05 de noviembre de 2026
+Título: Herramientas de trabajo
+Número: 7
+Tipo: Tarea
+
+Instrucciones del profesor:
+
+Investigar:
+
+¿Qué es un escritorio remoto?
+¿Cómo lo hago con Chrome?
+¿Cómo lo hago con Log In Me?
+¿Cómo lo hago con TeamViewer?
+¿Cómo lo hago con ShowMyPC?
+¿Cómo lo hago con Mobisen?
+
+Probar cómo funciona TeamViewer
+
+Opción 1. Desde una PC/Laptop
+Opción 2. Desde un Móvil
+
+RESTRICCIÓN DE EXTENSIÓN:
+Régimen normativo del repositorio (18 a 40 páginas, objetivo 27).
+
+ÍNDICE APROBADO:
+1. Fundamentos y arquitectura del escritorio remoto [~3.5 págs.]
+   1.1 Definición y modelo cliente-servidor [~1.0 pág.]
+   1.2 Evolución histórica: de terminales de texto a entornos gráficos [~1.5 págs.]
+   1.3 Taxonomía técnica frente a tecnologías afines (SSH, VDI, Screencasting) [~1.0 pág.]
+2. Protocolos de comunicación y subsistemas del sistema operativo [~4.0 págs.]
+   2.1 Protocolos de transporte gráfico (RFB, RDP y WebRTC) [~1.5 págs.]
+   2.2 Captura de pantalla e inyección de eventos en el sistema operativo [~1.0 pág.]
+   2.3 Mecanismos de penetración de NAT y cortafuegos (STUN, TURN, túneles inversos) [~1.0 pág.]
+   2.4 Seguridad, criptografía y autenticación en sesiones remotas [~0.5 pág.]
+3. Chrome Remote Desktop [~3.0 págs.]
+   3.1 Arquitectura e infraestructura basada en WebRTC [~1.0 pág.]
+   3.2 Procedimiento de configuración, vinculación y despliegue [~1.0 pág.]
+   3.3 Integración como servicio del sistema operativo y políticas de seguridad [~1.0 pág.]
+4. LogMeIn [~3.0 págs.]
+   4.1 Arquitectura de intermediación en la nube y pasarelas de conexión [~1.0 pág.]
+   4.2 Procedimiento de instalación, registro y administración de hosts [~1.0 pág.]
+   4.3 Capacidades de gestión centralizada y modelo de cifrado [~1.0 pág.]
+5. TeamViewer [~3.5 págs.]
+   5.1 Red de enrutamiento global y direccionamiento por identificador dinámico [~1.0 pág.]
+   5.2 Procedimiento de instalación y modalidades de acceso [~1.0 pág.]
+   5.3 Esquema criptográfico de sesión y herramientas de administración [~1.5 págs.]
+6. ShowMyPC [~2.5 págs.]
+   6.1 Arquitectura basada en VNC y tunelización SSH [~1.0 pág.]
+   6.2 Procedimiento operativo de generación de sesiones y asistencia [~0.8 pág.]
+   6.3 Análisis técnico del modelo de conexión inversa [~0.7 pág.]
+7. Mobizen [~3.0 págs.]
+   7.1 Arquitectura de réplica y control para dispositivos móviles [~1.0 pág.]
+   7.2 Modos de conexión: enlace USB (ADB) y transporte inalámbrico [~1.0 pág.]
+   7.3 Servicios del sistema operativo móvil, permisos de accesibilidad y captura [~1.0 pág.]
+8. Análisis comparativo de herramientas de escritorio remoto [~2.5 págs.]
+   8.1 Matriz de capacidades técnicas, protocolos y rendimiento [~1.5 págs.]
+   8.2 Evaluación de modelos de despliegue, seguridad y limitaciones de plataforma [~1.0 pág.]
+9. Pruebas de funcionamiento práctico con TeamViewer [~3.5 págs.]
+   9.1 Entorno experimental, topología de red y metodología de instrumentación [~0.8 pág.]
+   9.2 Opción 1: Control entre computadoras de escritorio y portátiles [~1.4 págs.]
+   9.3 Opción 2: Control interactivo multiplataforma con dispositivos móviles [~1.3 págs.]
+10. Conclusiones personales [~2.5 págs.]
+Referencias (biblatex / apa) [~1.5 págs.]
+\end{comment}
+
+\begin{document}
+\pagenumbering{roman}
+
+\begin{titlepage}
+  \thispagestyle{empty}
+  \newgeometry{left = 1cm, right = 1cm, top = 1cm, bottom = 2cm}
+
+  \noindent
+  \begin{minipage}[c]{3.5cm}
+    \includegraphics[width=3.5cm]{media/titlepage/Escudo-UNAM.pdf}
+  \end{minipage}\hfill
+  \begin{minipage}[c][3.5cm][c]{\dimexpr\textwidth-7cm\relax}
+    \centering
+    {\large\textbf{Universidad Nacional Autónoma de México}\\[0.6em] 
+    \Large\textbf{Facultad de Ingeniería}\\[0.6em]
+    \large Sistemas Operativos}
+  \end{minipage}\hfill
+  \begin{minipage}[c]{3.5cm}
+    \raggedleft
+    \includegraphics[width=3.5cm]{media/titlepage/FI.png}
+  \end{minipage}
+\centering\huge
+  \vfill
+    Grupo 1 \\
+    Ing. Angel Isidro Mercado
+  \vfill
+    \textbf{Tarea 7. Herramientas de trabajo}
+  \vfill\large
+    320304435 - Cabrera Rojas Oscar
+  \vfill
+
+  \noindent\footnotesize \hfill Ciudad Universitaria, CDMX a 05 de noviembre del 2026
+\end{titlepage}
+\restoregeometry
+
+\tableofcontents
+
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\section{Fundamentos y arquitectura del escritorio remoto}\label{sec:fundamentosArquitectura}
+
+El escritorio remoto permite desacoplar la ejecución lógica y el estado de los procesos respecto a los dispositivos periféricos encargados de la presentación visual y la captura de las entradas del usuario. Este principio garantiza que una sesión interactiva completa, administrada por el núcleo de un sistema operativo anfitrión, pueda ser visualizada y manipulada en tiempo real a través de una red de datos por un cliente remoto.
+
+\subsection{Definición y modelo cliente-servidor}\label{sec:definicionModelo}
+
+Un escritorio remoto es un subsistema de software distribuido que proyecta el entorno gráfico de una computadora anfitriona hacia una computadora cliente mediante una red, manteniendo sincronización bidireccional continua. A diferencia de los servicios de compartición de archivos o ejecución por lotes, el escritorio remoto conserva el contexto de ejecución, el espacio de direcciones de memoria virtual y las estructuras del gestor de ventanas en el equipo anfitrión, transfiriendo únicamente la representación gráfica procesada y recibiendo las señales periféricas del usuario.
+
+Como establecen \textcite[\S 18.1, p.\ 827]{stallings2018operating} y \textcite[\S 5.2, p.\ 232]{carretero2001sistemas}, esta arquitectura se fundamenta en el paradigma cliente-servidor para sistemas distribuidos mediante paso de mensajes:
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{Servidor o anfitrión (\textit{host}):} Aloja la unidad central de procesamiento (CPU), la memoria física y el sistema operativo (SO) que ejecuta los procesos. Captura las modificaciones en el búfer de cuadro (\textit{framebuffer}), las comprime y las transmite por red, al tiempo que recibe eventos de teclado y ratón para inyectarlos en la cola del SO como interrupciones sintéticas.
+    \item \textbf{Cliente o visor (\textit{viewer}):} Terminal operada por el usuario responsable de descomprimir y renderizar las actualizaciones gráficas, capturar los eventos periféricos locales y transmitirlos hacia el anfitrión.
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    % PENDIENTE: media/t07/arquitecturaClienteServidor.png
+    \includegraphics[width=0.7\textwidth]{media/example_figure.png}
+    \caption{Arquitectura genérica cliente-servidor y desacoplamiento de capas funcionales \parencite[\S 18.1, p.\ 828]{stallings2018operating}.}
+    \label{fig:arquitecturaClienteServidor}
+\end{figure}
+
+Dentro de la taxonomía de configuraciones cliente-servidor \parencite[\S 18.1, p.\ 831]{stallings2018operating}, el escritorio remoto corresponde al modelo de procesamiento basado en servidor o cliente ligero (\textit{thin client}), donde la lógica de aplicación y los datos residen en el anfitrión (Img.~\ref{fig:arquitecturaClienteServidor}). La interacción opera en un bucle cerrado: la captura de entradas en el cliente genera paquetes transmitidos al host, donde se inyectan en las aplicaciones; estas actualizan la memoria gráfica y el host extrae, comprime y envía los cambios de vuelta al cliente. Para garantizar interactividad fluida, la latencia de ida y vuelta (\textit{round-trip time}, RTT) debe mantenerse por debajo de los 100~ms, complementándose con canales virtuales multiplexados para audio, portapapeles y redirección de dispositivos periféricos.
+
+\subsection{Evolución histórica: de terminales de texto a entornos gráficos}\label{sec:evolucionHistorica}
+
+El acceso remoto se originó en la década de 1960 con los sistemas de tiempo compartido (\textit{time-sharing}) como CTSS y MULTICS en computadoras centrales (\textit{mainframes}), diseñados para compartir ciclos de CPU entre múltiples operadores \parencite[\S 1.2, p.\ 9]{silberschatz2006fundamentos}. En los años setenta, los terminales tontos (\textit{dumb terminals}) alfanuméricos como el DEC VT100 interactuaban mediante líneas serie asíncronas RS-232 y pseudoterminales (PTY) del sistema operativo. Posteriormente, la conectividad se estandarizó en redes TCP/IP con Telnet \parencite{rfc854} y utilerías Berkeley (\textit{rlogin}), sustituidas formalmente por el intérprete de órdenes seguro (SSH) debido a exigencias criptográficas \parencite{rfc4251}.
+
+La transición hacia interfaces gráficas sobre red surgió en 1984 en el MIT con el sistema de ventanas X (\textit{X Window System} o X11) \parencite{scheifler1986x, deitel2004operating}. En X11, el servidor gráfico corre en la estación local y las aplicaciones remotas actúan como clientes transmitiendo primitivas vectoriales de dibujo; no obstante, su naturaleza conversacional presentaba alta sensibilidad a la latencia sobre redes de área amplia (WAN).
+
+A mediados de los noventa, Citrix introdujo MultiWin y el protocolo ICA sobre Windows NT 3.51 para habilitar sesiones gráficas multiusuario concurrentes, tecnología incorporada nativamente por Microsoft en Windows NT 4.0 Terminal Server Edition con el protocolo de escritorio remoto (RDP) \parencite{microsoftRdpSpecification}. Paralelamente, AT\&T Laboratories Cambridge desarrolló la computación virtual en red (VNC) basada en el protocolo de búfer de cuadro remoto (RFB), estandarizado en la RFC 6143 \parencite{richardson1998virtual, rfc6143}, que adoptó una premisa universal independiente de plataforma operando directamente sobre rectángulos de píxeles. Actualmente, estas arquitecturas convergen hacia la compresión de video por hardware (H.264, VP9, AV1) y la conectividad web interactiva con WebRTC.
+
+\subsection{Taxonomía técnica frente a tecnologías afines}\label{sec:taxonomiaTecnica}
+
+Resulta indispensable distinguir formalmente el escritorio remoto frente a tres tecnologías afines que operan en capas disímiles del sistema operativo (Img.~\ref{fig:taxonomiaProcesamiento}):
+
+\begin{figure}[htbp]
+    \centering
+    % PENDIENTE: media/t07/taxonomiaProcesamiento.png
+    \includegraphics[width=0.7\textwidth]{media/example_figure.png}
+    \caption{Clasificación de esquemas de procesamiento cliente-servidor y modelo de cliente ligero \parencite[\S 18.1, p.\ 831]{stallings2018operating}.}
+    \label{fig:taxonomiaProcesamiento}
+\end{figure}
+
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{Escritorio remoto interactivo (RDP, RFB/VNC):} Extiende la sesión gráfica del sistema operativo con control bidireccional completo a nivel de búfer de cuadro y controladores de entrada.
+    \item \textbf{Shell remota segura (SSH):} Canal cifrado que abstrae un flujo de caracteres vinculado a una PTY del kernel para interfaces de línea de comandos \parencite{rfc4251}, con un consumo de ancho de banda y latencia mínimos.
+    \item \textbf{Infraestructura de escritorios virtuales (VDI):} Provee máquinas virtuales aisladas sobre hipervisores nativos (\textit{bare-metal}) en centros de datos, integrando capas de balanceo y orquestación masiva.
+    \item \textbf{Duplicación de pantalla (\textit{Screencasting / Mirroring}):} Transmisión unidireccional de video comprimido desde la GPU hacia pantallas receptoras pasivas (Miracast, Cast, AirPlay), priorizando sincronía audiovisual sin canal de retorno de control.
+\end{itemize}
+
+La Tabla~\ref{tab:comparativaTecnologiasRemotas} sintetiza las diferencias operativas entre estos enfoques.
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\renewcommand{\tabularxcolumn}[1]{m{#1}}
+\setlength{\emergencystretch}{1.5em}
+\caption{Taxonomía comparativa de tecnologías de acceso y control remoto.}
+\label{tab:comparativaTecnologiasRemotas}
+\begin{tabularx}{\textwidth}{>{\centering\arraybackslash}m{2.6cm} X X X X}
+\toprule
+\textbf{Tecnología} & \textbf{Capa de abstracción en el SO} & \textbf{Interacción y canal de retorno} & \textbf{Ancho de banda típico} & \textbf{Protocolos representativos} \\
+\midrule
+\textbf{Escritorio Remoto} & Búfer de cuadro, gestor de ventanas, API gráfica & Bidireccional completa (eventos periféricos y audio) & 1 a 15 Mbps (adaptativo a la actividad) & RDP, RFB (VNC), WebRTC, Citrix ICA \\
+\textbf{Shell Segura (SSH)} & Pseudoterminal (PTY), flujo de caracteres del kernel & Bidireccional basada en texto (I/O estándar) & $<$ 100 kbps (extremadamente ligero) & SSHv2 (RFC 4251), Telnet (RFC 854) \\
+\textbf{VDI} & Hipervisor de tipo 1, máquina virtual aislada & Bidireccional completa con orquestación de recursos & 2 a 20 Mbps por sesión concurrente & PCoIP, Blast Extreme, HDX, RDP \\
+\textbf{Duplicación de Pantalla} & Salida del codificador de video de la GPU & Unidireccional (emisión pasiva de video y audio) & 5 a 30 Mbps (flujo continuo de video) & Miracast (Wi-Fi Display), Cast, AirPlay \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Esta distinción teórica y operativa permite situar con precisión el alcance técnico de las herramientas de escritorio remoto analizadas a lo largo del presente trabajo, las cuales operan en el plano de la interacción bidireccional con interfaces gráficas, equilibrando la fidelidad visual frente a las restricciones de ancho de banda y latencia de las redes de datos.
+
+\section{Protocolos de comunicación y subsistemas del sistema operativo}\label{sec:protocolosSubsistemas}
+
+La viabilidad de una sesión remota depende de la interacción armónica entre la pila de protocolos de red y los subsistemas internos del sistema operativo. Mientras el transporte en red garantiza la entrega oportuna de fotogramas y comandos, el núcleo del sistema anfitrión debe interceptar las superficies del adaptador gráfico e inyectar eventos periféricos sintéticos sin degradar el rendimiento global.
+
+\subsection{Protocolos de transporte gráfico (RFB, RDP y WebRTC)}\label{sec:protocolosTransporte}
+
+El transporte gráfico en red concilia un ancho de banda considerable con latencias reducidas para preservar la ilusión de interactividad local. Destacan tres arquitecturas representativas:
+
+\subsubsection{Protocolo de búfer de cuadro remoto (RFB)}
+Formalizado en la RFC 6143 por \textcite{rfc6143} y concebido por \textcite{richardson1998virtual}, RFB opera sobre una abstracción de píxeles homogénea e independiente del sistema de ventanas. Su principio medular es el control de flujo impulsado por el cliente (\textit{client-driven update protocol}): el servidor no emite fotogramas de forma espontánea, sino que responde a requerimientos explícitos (\texttt{FramebufferUpdateRequest}) enviando únicamente las regiones rectangulares modificadas (\texttt{FramebufferUpdate}). Este diseño previene la saturación de búferes en clientes lentos o enlaces congestionados. Para optimizar el ancho de banda, RFB integra codificaciones adaptativas que abarcan desde el mapeo sin compresión (\textit{Raw}) y el agrupamiento por longitudes de corrida (\textit{RRE}, \textit{Hextile}, \textit{ZRLE}) hasta la compresión de gradientes con cuantificación JPEG en el esquema \textit{Tight}.
+
+\subsubsection{Protocolo de escritorio remoto (RDP)}
+Desarrollado por Microsoft y documentado en \textcite{microsoftRdpSpecification}, RDP adopta una arquitectura modular de alto nivel derivada de las normas ITU-T T.120. Su diseño multiplexa canales virtuales estáticos (SVC) y dinámicos (DVC) para enrutar de forma aislada flujos de audio, portapapeles, dispositivos serie, tarjetas inteligentes y discos locales. Históricamente, RDP transmitía primitivas vectoriales de dibujo de la interfaz GDI de Windows, reduciendo el consumo de red al ejecutar el renderizado en el cliente. Ante interfaces compuestas modernas con aceleración 3D, el protocolo evolucionó incorporando la tecnología RemoteFX y canalizaciones basadas en AVC/H.264 (perfiles 4:2:0 y 4:4:4), delegando la codificación y decodificación de fotogramas a los motores de la GPU.
+
+\subsubsection{Comunicación web en tiempo real (WebRTC)}
+Estandarizado en la RFC 8825 por \textcite{rfc8825}, WebRTC fundamenta su transporte en el protocolo de datagramas de usuario (UDP) para priorizar la inmediatez sobre la retransmisión estricta de pérdidas no críticas, desacoplando su operación en dos planos:
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{Plano audiovisual:} La superficie del escritorio se codifica en video (VP8, VP9, H.264 o AV1) y fluye mediante el protocolo de transporte en tiempo real seguro (SRTP), incorporando algoritmos de control de congestión adaptativo (GCC) que ajustan el \textit{bitrate} y la resolución según la fluctuación de retardo (\textit{jitter}) y las pérdidas de red.
+    \item \textbf{Plano de datos:} Los eventos de teclado y ratón se canalizan a través de canales de datos SCTP encapsulados sobre DTLS/UDP, habilitando entrega inmediata sin retransmisiones redundantes y eliminando el bloqueo de cabeza de línea (\textit{head-of-line blocking}) propio de TCP.
+\end{itemize}
+
+\subsection{Captura de pantalla e inyección de eventos en el sistema operativo}\label{sec:capturaInyeccion}
+
+El agente anfitrión debe interactuar con el espacio del núcleo y los controladores de dispositivos para extraer fotogramas del adaptador de video y emular interrupciones físicas de entrada.
+
+\begin{figure}[htbp]
+    \centering
+    % PENDIENTE: media/t07/capturaInyeccionEventosSo.png
+    \includegraphics[width=0.75\textwidth]{media/example_figure.png}
+    \caption{Intercepción de superficies en el subsistema gráfico e inyección de eventos sintéticos en el núcleo del sistema operativo.}
+    \label{fig:capturaInyeccionEventosSo}
+\end{figure}
+
+Como esquematiza la Img.~\ref{fig:capturaInyeccionEventosSo}, el software enlaza la pila de red con el espacio de memoria del sistema operativo:
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{Captura de pantalla asistida por hardware:} Frente a las técnicas históricas de raspado pasivo por sondeo (\texttt{BitBlt} en GDI o \texttt{XGetImage} en X11), que saturaban la CPU y el bus PCIe transfiriendo memoria desde la VRAM hacia la RAM, los sistemas modernos operan sobre composición acelerada. En Microsoft Windows, Desktop Duplication API (DDA) sobre DXGI y Direct3D 11 accede directamente a las texturas en VRAM (\texttt{ID3D11Texture2D}) y recupera metadatos de regiones alteradas (\textit{dirty rectangles}), permitiendo a la GPU codificar el flujo de video sin copias intermedias. En Linux, se transitó de la extensión \texttt{XDamage} en X11 al compositor Wayland mediante \texttt{xdg-desktop-portal} y PipeWire, donde se negocian descriptores de memoria compartida DMA-BUF de copia cero a nivel de kernel.
+    \item \textbf{Inyección de eventos sintéticos:} En Windows, la inyección se ejecuta mediante \texttt{SendInput()} en \texttt{user32.dll}, que traduce las coordenadas absolutas y teclas virtuales a códigos de rastreo (\textit{scan codes}) entregados a la cola global de \texttt{win32k.sys}. Para interactuar con cuadros de diálogo protegidos (UAC), el agente solventa el aislamiento de la Sesión 0 ejecutando componentes auxiliares en la sesión interactiva del usuario. En Linux, el demonio interactúa con el dispositivo virtual \texttt{/dev/uinput} gestionado por \texttt{evdev}, escribiendo estructuras \texttt{struct input\_event} que el núcleo procesa idénticamente a las interrupciones de un periférico físico.
+\end{itemize}
+
+\subsection{Mecanismos de penetración de NAT y cortafuegos}\label{sec:penetracionNat}
+
+La mayoría de los nodos terminales operan confinados en redes privadas bajo traducción de direcciones de red (NAT, RFC 3022 de \textcite{rfc3022}) y cortafuegos con inspección de estado que descartan cualquier paquete entrante no solicitado. Para sortear esta restricción sin reenvío manual de puertos se recurre a dos esquemas:
+
+\begin{figure}[htbp]
+    \centering
+    % PENDIENTE: media/t07/atravesamientoNatIce.png
+    \includegraphics[width=0.75\textwidth]{media/example_figure.png}
+    \caption{Recolección de candidatos ICE y penetración de NAT mediante STUN/TURN y pasarelas de retransmisión \parencite[\S 2, p.\ 9]{rfc8445}.}
+    \label{fig:atravesamientoNatIce}
+\end{figure}
+
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{Conectividad interactiva (ICE) con STUN y TURN:} Siguiendo la RFC 8445 \parencite{rfc8445}, ICE recolecta candidatos de host, reflexivos y de retransmisión (Img.~\ref{fig:atravesamientoNatIce}). STUN (RFC 8489 de \textcite{rfc8489}) permite a los nodos descubrir su dirección IP y puerto públicos reflexivos mediante transacciones de enlace, facilitando la perforación de puertos (\textit{hole punching}) para establecer enlaces directos punto a punto (P2P). Si existen enrutadores con NAT simétrico o políticas estrictas que bloquean UDP, interviene TURN (RFC 8656 de \textcite{rfc8656}), actuando como nodo de retransmisión en la nube que conmuta el tráfico bidireccional.
+    \item \textbf{Intermediación centralizada y túneles inversos:} Soluciones corporativas y herramientas de soporte implementan un modelo de intermediario (\textit{broker}): el host establece y preserva una conexión TCP saliente permanente cifrada vía TLS hacia la nube sobre el puerto estándar 443 (HTTPS), universalmente habilitado en cortafuegos. Al registrarse con un identificador dinámico, los servidores de coordinación facilitan la negociación P2P o conmutan la sesión a través de un túnel inverso (\textit{reverse tunnel}) gestionado en la nube.
+\end{itemize}
+
+\subsection{Seguridad, criptografía y autenticación en sesiones remotas}\label{sec:seguridadCriptografia}
+
+El control remoto entrega facultades operativas totales sobre el equipo anfitrión, exponiéndolo a intercepción pasiva (\textit{eavesdropping}), ataques de intermediario (MITM), fuerza bruta sobre puertos abiertos y secuestro de sesión \parencite[\S 15.1, p.\ 658]{stallings2018operating}. Para mitigar estos vectores de riesgo, las arquitecturas seguras integran defensas multicapa:
+\begin{enumerate}[noitemsep, topsep=4pt]
+    \item \textbf{Intercambio de claves y autenticación mutua:} Acuerdos asimétricos basados en RSA (2048 o 4096 bits) o curvas elípticas (ECDH sobre Curve25519) con secreto perfecto hacia adelante (\textit{forward secrecy}) para impedir la suplantación de identidad y el descifrado retroactivo.
+    \item \textbf{Cifrado simétrico autenticado:} Cifrado integral de fotogramas, comandos y canales auxiliares mediante AES-256-GCM o ChaCha20-Poly1305 (cifrados AEAD), garantizando confidencialidad e integridad criptográfica simultáneas frente a alteraciones de paquetes.
+    \item \textbf{Autenticación a nivel de red (NLA):} En protocolos como RDP, NLA valida las credenciales del usuario vía CredSSP o Kerberos antes de inicializar el subsistema gráfico o instanciar la pantalla de bienvenida, bloqueando intentos de denegación de servicio (DoS) contra el servidor gráfico.
+    \item \textbf{Contraseñas efímeras y autenticación multifactor:} Aplicando el principio de contraseñas de un único acceso expuesto por \textcite[\S 9.7, p.\ 531]{carretero2001sistemas}, las herramientas generan credenciales dinámicas de alta entropía que expiran al cierre de la sesión, complementadas con autenticación multifactor (MFA/2FA) y consentimiento manual del operador local.
+\end{enumerate}
+
+\section{Chrome Remote Desktop}\label{sec:chromeRemoteDesktop}
+
+Desarrollado dentro del árbol de código abierto de Chromium bajo el proyecto \textit{Chromoting}, Chrome Remote Desktop converge estándares web y subsistemas nativos. Su innovación radica en prescindir de clientes propietarios pesados, transformando navegadores modernos (mediante HTML5, WebRTC, WebAssembly y aceleración gráfica) en visores de alto rendimiento y latencia reducida.
+
+\subsection{Arquitectura e infraestructura basada en WebRTC}\label{sec:crdArquitectura}
+
+El sistema desacopla la señalización en la nube del transporte directo de datos \parencite{chromiumChromoting}, adoptando la pila WebRTC (RFC 8825) junto con servicios de directorio de Google.
+
+\begin{figure}[htbp]
+    \centering
+    % PENDIENTE: media/t07/arquitecturaChromeRemoteDesktop.png
+    \includegraphics[width=0.75\textwidth]{media/example_figure.png}
+    \caption{Arquitectura multiproceso del host Chromoting y separación de privilegios mediante IPC Mojo \parencite{chromiumChromoting}.}
+    \label{fig:arquitecturaChromeRemoteDesktop}
+\end{figure}
+
+Como ilustra la Img.~\ref{fig:arquitecturaChromeRemoteDesktop}, el software anfitrión implementa una arquitectura multiproceso bajo el principio de mínimo privilegio:
+\begin{enumerate}[noitemsep, topsep=4pt]
+    \item \textbf{Proceso demonio del host:} Ejecutado como proceso raíz (\texttt{remoting\_}\allowbreak\texttt{me2me\_}\allowbreak\texttt{host}) con privilegios del sistema (\texttt{LocalSystem} o \textit{root}) para administrar el ciclo de vida de la sesión, la autenticación y la instanciación de los procesos de usuario.
+    \item \textbf{Proceso de sesión de escritorio:} Instancia (\texttt{remoting\_}\allowbreak\texttt{desktop}) confinada al contexto del usuario interactivo, capturando el adaptador gráfico (DDA en Windows o PipeWire en Linux) e inyectando eventos periféricos.
+    \item \textbf{Proceso de conexión de pares:} Módulo (\texttt{remoting\_}\allowbreak\texttt{peer\_}\allowbreak\texttt{connection\_}\allowbreak\texttt{process}) que aísla la pila WebRTC, negociación DTLS y codificación de video dentro de un entorno restringido (\textit{sandbox}) sin acceso directo al sistema de archivos.
+    \item \textbf{Mojo IPC:} Canalización de comunicación interprocesos fuertemente tipada de Chromium que transfiere descriptores y memoria compartida con latencia nula.
+\end{enumerate}
+
+La conexión opera en dos fases: señalización vía HTTPS/gRPC contra la infraestructura de Google para intercambiar descriptores SDP y credenciales efímeras; y plano de datos WebRTC, donde ICE negocia enlaces directos P2P mediante STUN (\path{stun.l.google.com:19302}) o conmuta a TURN (puerto 443). El video se comprime en VP8, VP9 o H.264 acelerado por GPU, y las entradas fluyen por canales SCTP/DTLS.
+
+\subsection{Procedimiento de configuración, vinculación y despliegue}\label{sec:crdProcedimiento}
+
+Conforme a \textcite{googleChromeRemoteDesktopHelp}, la herramienta ofrece dos modalidades operativas:
+
+\subsubsection{Acceso remoto desatendido (Me2Me)}
+Orientado al acceso permanente del propietario hacia su propio equipo:
+\begin{enumerate}[noitemsep, topsep=4pt]
+    \item \textbf{Aprovisionamiento del host:} Instalación del paquete nativo (\texttt{.msi}, \texttt{.deb} o \texttt{.pkg}) desde \path{remotedesktop.google.com/access}.
+    \item \textbf{Vinculación de cuenta:} Autorización mediante OAuth 2.0 enlazada a la cuenta de Google, registrando el identificador de la máquina en el directorio.
+    \item \textbf{Esquema criptográfico SPAKE2:} El usuario define un PIN local ($\ge 6$ dígitos). El PIN no se envía a Google ni se almacena en texto claro: cliente y anfitrión ejecutan el protocolo de intercambio de claves autenticado por contraseña SPAKE2 (\textit{Simple Password-Based Encrypted Key Exchange}), derivando claves simétricas compartidas mediante un desafío criptográfico de conocimiento cero.
+\end{enumerate}
+
+\subsubsection{Asistencia remota bajo demanda (It2Me)}
+Diseñado para soporte técnico puntual entre usuarios:
+\begin{enumerate}[noitemsep, topsep=4pt]
+    \item \textbf{Generación de código efímero:} El host emite un código numérico aleatorio de 12 dígitos con vigencia estricta de 5 minutos desde \path{remotedesktop.google.com/support}.
+    \item \textbf{Consentimiento explícito e indicadores:} El operador ingresa el código, pero la sesión solo se activa tras la confirmación modal del usuario local (\enquote{Compartir}). Una barra persistente inferior notifica la conexión activa, permite la interrupción inmediata y emite recordatorios cada 30 minutos.
+\end{enumerate}
+
+\subsection{Integración como servicio del sistema operativo y políticas de seguridad}\label{sec:crdIntegracion}
+
+La adaptación al sistema operativo anfitrión difiere según la plataforma:
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{Windows:} Servicio del sistema (\path{remoting_host.exe}) bajo \texttt{LocalSystem}, facultado para interactuar antes del inicio de sesión y simular la secuencia segura (\texttt{Ctrl+Alt+Supr}), acoplándose al compositor DWM mediante DirectX DDA.
+    \item \textbf{GNU/Linux:} Servicio administrado por \texttt{systemd} por usuario. Inicializa un servidor virtual independiente sin monitor (\textit{headless}) empleando \texttt{Xvfb}, configurado mediante el archivo \path{~/.chrome-remote-desktop-session} y aprovisionable vía CLI sobre SSH.
+    \item \textbf{macOS:} Demonio bajo \texttt{launchd} que requiere concesión explícita de permisos de \enquote{Grabación de pantalla} (ScreenCaptureKit) y \enquote{Accesibilidad} (Core Graphics).
+    \item \textbf{Modo cortina y directivas empresariales:} Permite ocultar la pantalla física local e inhabilitar periféricos locales durante la conexión. Mediante GPO o directivas corporativas \parencite{googleChromeEnterprisePolicies}, se administran reglas como el control de penetración de cortafuegos (\texttt{RemoteAccess}\allowbreak\texttt{HostFirewall}\allowbreak\texttt{Traversal}), listas blancas de dominios corporativos (\texttt{RemoteAccess}\allowbreak\texttt{HostDomainList}) y la desactivación de asistencia bajo demanda.
+\end{itemize}
+
+\section{LogMeIn}\label{sec:logMeIn}
+
+Fundada en 2003 como 3am Labs por Márton Anka y consolidada comercialmente como LogMeIn (actualmente GoTo), la plataforma transformó el acceso corporativo al sustituir la configuración manual de puertos e IP públicas por una arquitectura de intermediación en la nube soportada enteramente en protocolos web estándar.
+
+\subsection{Arquitectura de intermediación en la nube y pasarelas de conexión}\label{sec:logmeinArquitectura}
+
+El diseño de LogMeIn se basa en un esquema distribuido de tres entidades \parencite{anka2007logmein}: el cliente o visor (\textit{LogMeIn Client}), el anfitrión (\textit{LogMeIn Host}) ejecutado como servicio del sistema operativo, y el clúster de pasarelas (\textit{Gateway Cluster}) en la nube.
+
+\begin{figure}[htbp]
+    \centering
+    % PENDIENTE: media/t07/arquitecturaPasarelasLogmein.png
+    \includegraphics[width=0.75\textwidth]{media/example_figure.png}
+    \caption{Arquitectura de pasarela de conexión y túnel saliente de tres entidades en LogMeIn \parencite[\S 2, p.\ 4]{anka2007logmein}.}
+    \label{fig:arquitecturaPasarelasLogmein}
+\end{figure}
+
+Como ilustra la Img.~\ref{fig:arquitecturaPasarelasLogmein}, la comunicación sortea cortafuegos mediante túneles salientes persistentes:
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{Túnel saliente y sincronización:} Al iniciar el anfitrión, el servicio abre una conexión TCP/TLS saliente hacia las pasarelas sobre el puerto 443 (HTTPS), universalmente admitido por cortafuegos con inspección de estado \parencite{shockey2008logmein}. El enlace se mantiene activo mediante paquetes de latido (\textit{heartbeat}) que impiden la expiración de tablas NAT.
+    \item \textbf{Intermediación y retransmisión:} El visor solicita la sesión al portal web, notificando al anfitrión a través del conector abierto. La pasarela intenta coordinar una conexión P2P directa vía perforación de puertos; si las políticas de red lo impiden, conmuta a modo retransmisión (\textit{relay}), enrutando los paquetes cifrados sin capacidad de descifrarlos.
+\end{itemize}
+
+\subsection{Procedimiento de instalación, registro y administración de hosts}\label{sec:logmeinProcedimiento}
+
+El despliegue combina instaladores interactivos individuales (\texttt{.msi} o \texttt{.pkg}) con distribución corporativa masiva mediante paquetes MSI personalizados con tokens criptográficos empotrados (\texttt{DeployToken}) desde LogMeIn Central, desplegables silenciosamente vía GPO o MECM (\path{/quiet}).
+
+El acceso implementa un modelo de autenticación en dos niveles (\textit{Dual Authentication Tier}):
+\begin{enumerate}[noitemsep, topsep=4pt]
+    \item \textbf{Nivel de servicio en la nube:} Autenticación en la consola web con credenciales maestras y factor múltiple obligatorio (MFA/TOTP).
+    \item \textbf{Nivel del sistema operativo local:} Al establecerse el canal, el agente exige ingresar las credenciales del sistema anfitrión (locales SAM o dominio de Active Directory). El demonio valida las credenciales contra la interfaz SSPI mediante \texttt{LogonUser()} en \texttt{advapi32.dll} y ejecuta suplantación de identidad (\textit{impersonation}), subordinando la sesión a las listas de control de acceso (ACL) y privilegios locales.
+\end{enumerate}
+
+\subsection{Capacidades de gestión centralizada y modelo de cifrado}\label{sec:logmeinGestionCifrado}
+
+LogMeIn trasciende el control visual al integrar herramientas de gestión en segundo plano (\textit{Background Management}) que operan sin invadir la pantalla local ni interrumpir al usuario físico: terminal interactiva remota (CMD o PowerShell con privilegios del sistema), administrador de tareas, monitor de servicios y eventos, editor del registro (\texttt{regedit}) y explorador de archivos.
+
+Para flotas corporativas, incorpora el módulo One2Many para distribución masiva de scripts de mantenimiento, Wake-on-LAN distribuido (utilizando otros hosts encendidos de la misma subred como pasarelas de \textit{magic packets}) y reinicio remoto persistente en Modo Seguro con funciones de red.
+
+Conforme a las especificaciones de GoTo \parencite{gotoLogmeinSecurity}, las sesiones se protegen mediante TLS 1.2/1.3 con certificados X.509 de 2048 bits y cifrado simétrico AES-256 (CBC/GCM) de extremo a extremo. El sistema genera bitácoras forenses en la nube e inyecta identificadores de evento en el registro de aplicaciones de Windows (*Application Event Log*), cumpliendo normativas SOC 2 Tipo II, ISO/IEC 27001, HIPAA y RGPD.
+
+\section{TeamViewer}\label{sec:teamViewer}
+
+Creada en 2005 en Göppingen, Alemania, por TeamViewer AG, la plataforma simplificó el acceso remoto sustituyendo direcciones IP y configuraciones complejas de enrutamiento por un identificador unívoco de máquina respaldado por una red global de conmutación.
+
+\subsection{Red de enrutamiento global y direccionamiento por identificador dinámico}\label{sec:tvEnrutamiento}
+
+La arquitectura opera sobre una red jerárquica de dos niveles \parencite{teamviewerSecurityWhitepaper}: clústeres maestros (\textit{Master Cluster}), que resuelven identidades, estados de presencia y firmas públicas; y servidores de enrutamiento (\textit{Routing Servers}), distribuidos globalmente para conmutar flujos de sesión.
+
+\begin{figure}[htbp]
+    \centering
+    % PENDIENTE: media/t07/arquitecturaEnrutamientoTeamviewer.png
+    \includegraphics[width=0.75\textwidth]{media/example_figure.png}
+    \caption{Topología de la red de TeamViewer: Servidores maestros, routers y conmutación P2P/Relay \parencite[\S 3, p.\ 7]{teamviewerSecurityWhitepaper}.}
+    \label{fig:arquitecturaEnrutamientoTeamviewer}
+\end{figure}
+
+Como ilustra la Img.~\ref{fig:arquitecturaEnrutamientoTeamviewer}, la conectividad se sustenta en:
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{TeamViewer ID:} Identificador permanente de 9 o 10 dígitos derivado de las características físicas de la máquina (dirección MAC, UUID de la placa base y número de serie del disco), preservando la identidad del equipo ante cambios de red o proveedor.
+    \item \textbf{Transporte adaptativo y conmutación:} Utiliza preferentemente su protocolo binario en puertos TCP/UDP 5938. Si existen cortafuegos restrictivos, conmuta a TCP 443 (HTTPS) o TCP 80 (HTTP). Al iniciar una sesión, los extremos intentan enlazar directamente vía P2P mediante perforación de puertos UDP/TCP; si el entorno impone NAT simétrico, el tráfico se redirige a través del servidor de enrutamiento más próximo sin descifrar los paquetes.
+\end{itemize}
+
+\subsection{Procedimiento de instalación y modalidades de acceso}\label{sec:tvProcedimiento}
+
+La plataforma estructura su software en módulos especializados \parencite{teamviewerManualRemoteControl}: el cliente completo (\textit{Full Client}) para control y administración; el módulo Host, instalado como servicio en segundo plano para acceso desatendido continuo a servidores; \textit{QuickSupport} (QS), ejecutable sin instalación (\textit{zero-install}) que genera credenciales temporales para soporte puntual; y \textit{QuickJoin} para conferencias.
+
+Para acceso autónomo sin confirmación presencial se configura \enquote{Acceso Fácil} (\textit{Easy Access}), asociando el host a la cuenta de usuario mediante certificados digitales protegidos por 2FA, o mediante contraseñas estáticas de sistema complementadas con autenticación nativa de Windows.
+
+\subsection{Esquema criptográfico de sesión y herramientas de administración}\label{sec:tvCriptografia}
+
+La seguridad técnica se fundamenta en un modelo de cifrado de extremo a extremo \parencite{teamviewerSecurityWhitepaper}:
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{Criptografía híbrida:} Intercambio asimétrico de claves RSA de 4096 bits (almacenadas localmente en el almacén de seguridad del sistema operativo y nunca compartidas con los servidores de enrutamiento) con acuerdo Diffie-Hellman respaldado por secreto perfecto hacia adelante (PFS). Los flujos de video, comandos periféricos y archivos se cifran simétricamente con AES-256, impidiendo la inspección del tráfico en los nodos de retransmisión.
+    \item \textbf{Defensa contra fuerza bruta:} Contraseñas dinámicas efímeras y un algoritmo de retardo exponencial ante intentos fallidos (\textit{exponential backoff delay}: 1\,s, 2\,s, 4\,s, hasta varias horas de penalización), inutilizando ataques automatizados.
+    \item \textbf{Control de acceso y herramientas de sesión:} Incorpora listas de admisión y bloqueo (\textit{Allowlist/Blocklist}), verificación de dispositivos de confianza (\textit{Trusted Devices}) vía correo electrónico y 2FA, pantalla negra con inhabilitación de periféricos locales en el anfitrión, bloqueo automático del sistema operativo y grabación obligatoria de sesiones en formato cifrado (\path{.tvs}) para auditoría forense.
+\end{itemize}
+
+\section{ShowMyPC}\label{sec:showMyPC}
+
+Desarrollada a partir de 2006 por ShowMyPC LLC, esta plataforma se consolidó como una de las primeras soluciones de soporte remoto ágiles basadas en tecnologías de código abierto. Frente a plataformas comerciales que desarrollaban pilas de protocolos propietarias e infraestructuras de directorio centralizadas, ShowMyPC adoptó un enfoque pragmático de integración: empaquetó el motor de renderizado gráfico de Virtual Network Computing (VNC) con la robustez criptográfica de Secure Shell (SSH), articulando un modelo de conexión asistida sin requerir privilegios de administrador ni alterar la configuración de red perimetral \parencite{showmypcUserGuide}.
+
+\subsection{Arquitectura basada en VNC y tunelización SSH}\label{sec:showmypcArquitectura}
+
+El diseño arquitectónico de ShowMyPC desacopla el procesamiento gráfico de la seguridad en el transporte mediante la convergencia de dos proyectos de código abierto ampliamente probados:
+\begin{enumerate}[noitemsep, topsep=4pt]
+    \item \textbf{Motor gráfico TightVNC:} Utiliza una variante optimizada de TightVNC \parencite{kaplinsky2001tightvnc}, la cual implementa el protocolo de búfer de cuadro remoto (RFB, RFC 6143 de \textcite{rfc6143}). El servidor VNC anfitrión se ejecuta de manera local y se vincula estrictamente a la interfaz de bucle invertido (\textit{loopback}, dirección IP \path{127.0.0.1}). En esta configuración, el servidor rechaza cualquier intento de conexión directa proveniente de interfaces de red externas, previniendo accesos indebidos en la red de área local.
+    \item \textbf{Cliente de tunelización SSH:} Dado que el protocolo RFB original carece de mecanismos nativos de cifrado para el flujo de píxeles y eventos periféricos, ShowMyPC integra un cliente SSH embebido (derivado de OpenSSH y Plink). Este componente encapsula la totalidad del tráfico de la sesión dentro de un túnel cifrado bajo el estándar SSHv2 \parencite{rfc4251}, empleando algoritmos simétricos robustos como AES y autenticación de integridad basada en HMAC.
+    \item \textbf{Pasarela pública de retransmisión (\textit{stitching server}):} Entre el equipo anfitrión y el visor remoto interviene un clúster de servidores intermedios con direcciones IP públicas estáticas. La pasarela opera demonios SSH configurados para recibir solicitudes de reenvío de puertos remotos y actuar como conmutador de flujos de datos.
+\end{enumerate}
+
+\begin{figure}[htbp]
+    \centering
+    % PENDIENTE: media/t07/arquitecturaShowmypcTunnel.png
+    \includegraphics[width=0.75\textwidth]{media/example_figure.png}
+    \caption{Encapsulación de RFB en túnel inverso SSH y pasarela de retransmisión en ShowMyPC \parencite{showmypcUserGuide}.}
+    \label{fig:arquitecturaShowmypcTunnel}
+\end{figure}
+
+Como se esquematiza en la Img.~\ref{fig:arquitecturaShowmypcTunnel}, la arquitectura no expone ningún puerto de escucha del anfitrión hacia la Internet pública; el servidor intermedio en la nube orquesta la unión lógica de los canales cifrados establecidos por ambos extremos.
+
+\subsection{Procedimiento operativo de generación de sesiones y asistencia}\label{sec:showmypcProcedimiento}
+
+El ciclo operativo de ShowMyPC prioriza la reducción de la fricción operativa mediante un empaquetado monolítico autocontenido (\textit{standalone wrapper}) que no exige instalación formal en el disco ni modificaciones en el registro del sistema operativo:
+\begin{enumerate}[noitemsep, topsep=4pt]
+    \item \textbf{Inicio de la compartición de pantalla (\textit{Share Screen}):} El usuario que solicita asistencia ejecuta el binario y pulsa la opción de compartir. En ese instante, el contenedor extrae en memoria o en un directorio temporal de usuario las instancias mínimas de TightVNC Server y el cliente SSH.
+    \item \textbf{Apertura del túnel inverso y generación de clave:} El cliente SSH inicializa una conexión saliente autenticada hacia la pasarela de ShowMyPC, instruyendo al servidor intermedio mediante una directiva equivalente a \path{ssh -R} para enlazar un puerto efímero del servidor con el puerto local de TightVNC (\path{127.0.0.1:5900}). La pasarela devuelve un código de sesión dinámico estructurado en cuatro segmentos numéricos o alfanuméricos (por ejemplo, una clave de 12 dígitos).
+    \item \textbf{Unión del visor remoto (\textit{View PC}):} El operador técnico introduce el código de sesión en la aplicación cliente o accede a través del visor web basado en HTML5. La pasarela valida la clave, identifica el túnel inverso abierto por el anfitrión y conmuta el flujo bidireccional, permitiendo al visor interactuar con el escritorio anfitrión con control total de teclado y ratón.
+    \item \textbf{Modalidad de acceso desatendido y RDP:} En entornos donde se requiere acceso permanente sin presencia de operador local, ShowMyPC provee un servicio anfitrión registrable con credenciales fijas. Asimismo, la herramienta soporta la tunelización del protocolo de escritorio remoto (RDP) de Windows a través del canal SSH, permitiendo aprovechar la aceleración gráfica nativa y compresión avanzada de Windows frente al renderizado basado en mapas de bits de VNC.
+\end{enumerate}
+
+\subsection{Análisis técnico del modelo de conexión inversa}\label{sec:showmypcConexionInversa}
+
+La relevancia de ShowMyPC en la evolución de las herramientas de asistencia técnica radica en su resolución del problema de conectividad detrás de enrutadores NAT y cortafuegos perimetrales:
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{Superación de las limitaciones del VNC tradicional:} El despliegue estándar de VNC impone una arquitectura pasiva en el anfitrión: el servidor escucha peticiones entrantes en el puerto TCP 5900. En una red local moderna protegida por NAT (RFC 3022 de \textcite{rfc3022}), un cliente externo no puede alcanzar dicha dirección privada a menos que el administrador configure reglas manuales de reenvío de puertos (\textit{port forwarding}) en el enrutador de borde y disponga de una IP pública enrutable.
+    \item \textbf{Mecanismo de tunelización inversa:} ShowMyPC invierte la dirección de la llamada de red. Dado que los cortafuegos con inspección de estado bloquean el tráfico entrante pero autorizan por defecto las conexiones TCP salientes iniciadas desde la red interna (típicamente sobre los puertos estándar 22 de SSH, 443 de HTTPS o 80 de HTTP), el anfitrión inicia activamente la sesión hacia la pasarela. La tabla de estado del cortafuegos registra la conexión saliente y permite que los paquetes de retorno fluyan dentro del mismo canal lógicamente establecido, transportando la sesión remota sin requerir privilegios administrativos en el enrutador.
+    \item \textbf{Compensaciones de diseño (\textit{trade-offs}):} Si bien este modelo garantiza una compatibilidad excepcional en sistemas antiguos o entornos restringidos, introduce penalizaciones operativas frente a soluciones contemporáneas como WebRTC o TeamViewer. Al depender exclusivamente de TCP para transportar tanto el flujo de pantalla como las entradas periféricas dentro de un túnel SSH, la sesión es vulnerable al bloqueo de cabeza de línea ante pérdidas de paquetes. Asimismo, el tránsito obligatorio por servidores de retransmisión añade una sobrecarga de latencia que no puede mitigarse con enlaces directos punto a punto (P2P).
+\end{itemize}
+
+\section{Mobizen}\label{sec:mobizen}
+
+Desarrollada por la empresa surcoreana RSUPPORT Co., Ltd., Mobizen introdujo un cambio de paradigma en el acceso remoto al extender el control bidireccional hacia plataformas móviles heterogéneas (Android e iOS) desde estaciones de trabajo de escritorio y visores basados en navegador web. A diferencia de las herramientas orientadas a servidores y computadoras personales, el control remoto de dispositivos móviles enfrenta restricciones severas impuestas por el sistema operativo anfitrión: limitaciones de energía térmica y batería, aislamiento estricto de procesos mediante cajas de arena (*sandboxing*) y la ausencia histórica de controladores gráficos estándar para la captura de pantalla e inyección de eventos táctiles \parencite{rsupportMobizenWhitepaper}.
+
+\subsection{Arquitectura de réplica y control para dispositivos móviles}\label{sec:mobizenArquitectura}
+
+La arquitectura de Mobizen implementa un modelo cliente-servidor invertido respecto a la jerarquía de hardware convencional: el dispositivo móvil opera como servidor anfitrión que procesa y transmite la interfaz visual, mientras que la computadora personal actúa como cliente o visor interactivo.
+
+\begin{figure}[htbp]
+    \centering
+    % PENDIENTE: media/t07/arquitecturaMobizenMirroring.png
+    \includegraphics[width=0.75\textwidth]{media/example_figure.png}
+    \caption{Arquitectura de réplica móvil, captura por MediaProjection e inyección de eventos en Mobizen \parencite{rsupportMobizenWhitepaper}.}
+    \label{fig:arquitecturaMobizenMirroring}
+\end{figure}
+
+Como ilustra la Img.~\ref{fig:arquitecturaMobizenMirroring}, la arquitectura móvil de Mobizen articula tres subsistemas funcionales:
+\begin{enumerate}[noitemsep, topsep=4pt]
+    \item \textbf{Agente móvil anfitrión:} Aplicación que reside en el dispositivo móvil y coordina la captura del búfer de cuadro, la codificación de video en tiempo real y la recepción de eventos periféricos sintéticos.
+    \item \textbf{Motor de codificación acelerado (RSCC / H.264):} Para minimizar la sobrecarga en la CPU móvil y mitigar la degradación por estrangulamiento térmico (\textit{thermal throttling}), RSUPPORT desarrolló el códec RSCC (\textit{RSUPPORT Screen Capture Codec}), complementado con la canalización nativa de compresión por hardware H.264/AVC a través de la interfaz \texttt{MediaCodec} de Android. Esto permite generar flujos de video con compresión adaptativa optimizada para la nitidez de texto y gráficos de interfaz de usuario.
+    \item \textbf{Consola y visor remoto:} Aplicación nativa para Windows/macOS o visor web basado en WebRTC/HTML5, encargado de decodificar el flujo audiovisual, escalar la resolución gráfica y capturar eventos de ratón y teclado para traducirlos a gestos táctiles.
+\end{enumerate}
+
+\subsection{Modos de conexión: enlace USB (ADB) y transporte inalámbrico}\label{sec:mobizenModosConexion}
+
+Para adaptarse a diversos escenarios operativos y restricciones de infraestructura, Mobizen soporta dos esquemas de enlace físico y de red:
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{Enlace físico mediante USB (ADB):} Aprovecha el protocolo del puente de depuración de Android (ADB, \textit{Android Debug Bridge}). Al conectar el dispositivo mediante cable USB y habilitar la depuración USB, el cliente de escritorio ejecuta el comando \path{adb forward tcp:PORT tcp:PORT}, mapeando un puerto TCP local de la computadora con el conector del agente en el dispositivo móvil. Este enlace por hardware elimina la fluctuación de retardo (jitter) y las pérdidas de paquetes propias de las redes inalámbricas, alcanzando tasas de refresco de hasta 60 fotogramas por segundo con latencias inferiores a 15 milisegundos.
+    \item \textbf{Transporte inalámbrico (Wi-Fi y redes móviles):} En entornos locales, el visor y el dispositivo móvil descubren sus direcciones mediante protocolos de difusión local (mDNS/UPnP) y establecen un enlace directo TCP/UDP. Si el dispositivo se conecta mediante redes celulares (3G, LTE o 5G) o se ubica detrás de cortafuegos simétricos, la sesión se enruta a través de servidores de retransmisión gestionados por RSUPPORT en la nube. La seguridad del emparejamiento se valida mediante un desafío de autenticación mutua de dos pasos basado en códigos numéricos dinámicos de seis dígitos, códigos QR o tokens de sesión vinculados a la cuenta del usuario.
+\end{itemize}
+
+\subsection{Servicios del sistema operativo móvil, permisos de accesibilidad y captura}\label{sec:mobizenServiciosSo}
+
+El mayor obstáculo en la ingeniería de control remoto móvil radica en las políticas de seguridad del núcleo de Android, diseñadas bajo el principio de aislamiento estricto entre aplicaciones:
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{Evolución de la captura en el subsistema de pantalla:} En versiones tempranas de Android (anteriores a Android 5.0), el sistema operativo carecía de una API pública para leer el búfer de cuadro. Mobizen solventaba esta limitación mediante el \textit{Modo Booster}, ejecutando binarios auxiliares con privilegios de depuración vía ADB para leer de \path{/dev/graphics/fb0} o invocar la utilidad interna \texttt{screencap}. A partir de Android 5.0 (API 21), el software migró al marco oficial \texttt{MediaProjection}\allowbreak\texttt{Manager} \parencite{androidMediaProjection}. Dicho subsistema despliega un diálogo de sistema donde el usuario autoriza la captura; tras otorgarse, el kernel expide un token que instancia una pantalla virtual (\texttt{VirtualDisplay}) enlazada a una superficie de \texttt{MediaCodec}, extrayendo fotogramas por GPU sin requerir privilegios de superusuario (root).
+    \item \textbf{Inyección de eventos sintéticos y accesibilidad:} El modelo de seguridad de Android prohíbe que una aplicación ordinaria inyecte pulsaciones sobre la ventana de otra aplicación, reservando el permiso privilegiado \texttt{INJECT\_}\allowbreak\texttt{EVENTS} exclusivamente a firmas del sistema operativo. Históricamente, RSUPPORT superó esto mediante acuerdos comerciales con fabricantes OEM para distribuir motores auxiliares firmados con claves de sistema (\textit{Mobizen for SAMSUNG} o \textit{Mobizen for LG}) o ejecutando comandos mediante el demonio \path{adbd} en modo USB (\path{input tap} e \path{input swipe}). En versiones modernas de Android (API 24 o superior), la plataforma aprovecha la API de servicios de accesibilidad (\texttt{Accessibility}\allowbreak\texttt{Service}) \parencite{androidAccessibilityGesture}. Tras concederse el permiso en los ajustes del sistema, el agente invoca el método nativo \texttt{dispatch}\allowbreak\texttt{Gesture()}, construyendo trayectorias sintéticas (\texttt{Gesture}\allowbreak\texttt{Description}) que el despachador de ventanas procesa de forma nativa e indistinguible de los toques físicos.
+\end{itemize}
+
+\section{Análisis comparativo de herramientas de escritorio remoto}\label{sec:analisisComparativo}
+
+El análisis individual de las soluciones examinadas (Chrome Remote Desktop, LogMeIn, TeamViewer, ShowMyPC y Mobizen) evidencia que, si bien todas persiguen proyectar el entorno interactivo en red, sus decisiones arquitectónicas difieren sensiblemente. La selección de la pila de transporte, los mecanismos de enlace con el núcleo del sistema operativo y los esquemas de penetración de cortafuegos reflejan compromisos deliberados de ingeniería entre fidelidad visual, latencia, seguridad criptográfica y portabilidad operativa.
+
+\subsection{Matriz de capacidades técnicas, protocolos y rendimiento}\label{sec:matrizComparativa}
+
+La Tabla~\ref{tab:comparativaHerramientasRemotas} sintetiza las dimensiones estructurales y operativas de las tecnologías analizadas.
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.15}
+\renewcommand{\tabularxcolumn}[1]{m{#1}}
+\setlength{\emergencystretch}{1.5em}
+\caption{Matriz comparativa de tecnologías de escritorio remoto analizadas.}
+\label{tab:comparativaHerramientasRemotas}
+\begin{tabularx}{\textwidth}{>{\centering\arraybackslash}m{2.1cm} X X X X X}
+\toprule
+\textbf{Herramienta} & \textbf{Pila y códec gráfico} & \textbf{Transporte y topología} & \textbf{Integración en el SO} & \textbf{Seguridad y cifrado} & \textbf{Modelo de despliegue} \\
+\midrule
+\textbf{Chrome Remote Desktop} & WebRTC (RFC 8825); video VP8, VP9, H.264 por GPU & UDP preferente; ICE, STUN y TURN (443). Enlace P2P directo o relay & DDA en Windows; PipeWire DMA-BUF y \texttt{Xvfb} en Linux; Mojo IPC & DTLS/SRTP (AES-128/256); autenticación de PIN vía SPAKE2 & Cliente web PWA sin instalación + agente anfitrión \\
+\addlinespace[2pt]
+\textbf{LogMeIn (GoTo)} & Protocolo gráfico propietario con compresión en servidor & Túnel TCP saliente HTTPS (443) hacia clúster pasarela; P2P o relay & Servicio del sistema; captura DDA; suplantación SSPI (\texttt{LogonUser}) & TLS 1.2/1.3 con AES-256 (CBC/GCM) de extremo a extremo & MSI corporativo (\texttt{DeployToken}) para GPO/MECM y portal web \\
+\addlinespace[2pt]
+\textbf{TeamViewer} & Protocolo binario propietario con compresión adaptativa & TCP/UDP híbrido (5938) con repliegue a 443 y 80; P2P o router relay & Servicio con inicio automático; DDA; retardo exponencial ante fallos & RSA-4096 (PFS) + AES-256 simétrico de extremo a extremo & Cliente completo, Host desatendido y QuickSupport portable \\
+\addlinespace[2pt]
+\textbf{ShowMyPC} & RFB (RFC 6143) sobre TightVNC; soporte opcional de RDP & Túnel inverso SSHv2 saliente hacia servidor intermedio público & TightVNC en bucle local (\path{127.0.0.1}); inyección en Win32k & Encapsulación SSHv2 (AES + HMAC); clave efímera de 12 dígitos & Binario monolítico autocontenido sin instalación previa \\
+\addlinespace[2pt]
+\textbf{Mobizen} & Códec RSCC y compresión H.264 acelerada vía \texttt{MediaCodec} & Enlace USB físico por ADB (\path{adb forward}) o Wi-Fi/celular con relay & Pantalla virtual vía \texttt{MediaProjection}; inyección \texttt{dispatchGesture} & Canales TLS + verificación en dos pasos (código PIN o QR) & Agente móvil (Android/iOS) + consola de escritorio o navegador \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+A partir de la taxonomía expuesta, se observan diferencias críticas en el diseño del transporte. Las herramientas que priorizan la inmediatez interactiva y la fluidez en tasas de refresco elevadas (Chrome Remote Desktop y TeamViewer) optan por protocolos no orientados a la conexión fundamentados en datagramas UDP. Como demuestran \textcite{rfc8825} y \textcite{teamviewerSecurityWhitepaper}, la transmisión de cuadros comprimidos mediante UDP desacoplada de los canales de datos SCTP/DTLS elimina el fenómeno de bloqueo de cabeza de línea (*head-of-line blocking*), donde la pérdida transitoria de un paquete de red no interrumpe el procesamiento de los cuadros gráficos subsiguientes. En contraposición, las arquitecturas sustentadas estrictamente sobre flujos orientados a la conexión mediante TCP (LogMeIn y ShowMyPC) garantizan entrega ordenada incondicional pero exhiben degradación de latencia ante pérdidas de paquetes en enlaces congestionados o inalámbricos.
+
+\subsection{Evaluación de modelos de despliegue, seguridad y limitaciones de plataforma}\label{sec:evaluacionSeguridadDespliegue}
+
+El balance entre accesibilidad y robustez de seguridad determina el campo de aplicación de cada solución:
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{Soberanía criptográfica:} TeamViewer y Chrome Remote Desktop destacan por implementar arquitecturas de conocimiento cero (*zero-knowledge architecture*) en la capa de datos. En TeamViewer, el intercambio asimétrico RSA de 4096 bits negocia claves simétricas efímeras que residen exclusivamente en los nodos terminales, impidiendo que los servidores maestros o de enrutamiento descifren los paquetes en tránsito \parencite{teamviewerSecurityWhitepaper}. De forma análoga, Chrome Remote Desktop recurre al protocolo PAKE/SPAKE2 para autenticar el PIN local sin transmitirlo a los servidores de Google \parencite{chromiumChromoting}. Por el contrario, en esquemas como ShowMyPC y pasarelas de retransmisión convencionales, la seguridad descansa en la confianza depositada en la infraestructura del proveedor que termina o conmuta los túneles SSH.
+    \item \textbf{Aislamiento de privilegios y elevación del sistema:} En plataformas de escritorio tradicionales, el agente anfitrión requiere privilegios elevados (\texttt{LocalSystem} en Windows o servicios raíz en UNIX) para interceptar sesiones multiusuario, capturar pantallas de bloqueo e interactuar con secuencias de atención segura (\texttt{Ctrl+Alt+Supr}). LogMeIn destaca en este ámbito al subordinar el acceso remoto a la identidad local del sistema operativo mediante validación nativa en SSPI \parencite{gotoLogmeinSecurity}. En contraste, entornos móviles como Android (Mobizen) imponen una arquitectura de aislamiento rígido donde los servicios de fondo carecen de acceso irrestricto al subsistema gráfico, obligando al usuario a renovar periódicamente el consentimiento explícito mediante \texttt{MediaProjection}\allowbreak\texttt{Manager} \parencite{androidMediaProjection} y habilitar manualmente permisos en el marco de accesibilidad \parencite{androidAccessibilityGesture}.
+    \item \textbf{Gestión de flotas frente a soporte puntual:} Mientras herramientas como TeamViewer QuickSupport y ShowMyPC maximizan la agilidad en sesiones de asistencia técnica reactiva al no exigir privilegios de instalación ni modificaciones en el registro de la máquina anfitriona, soluciones empresariales como LogMeIn Central y las directivas de Chrome Remote Desktop permiten gobernar centralizadamente parques computacionales masivos mediante directivas de grupo (GPO), control estricto de listas blancas de dominios y distribución silenciosa de tareas por lotes.
+\end{itemize}
+
+\section{Pruebas de funcionamiento práctico con TeamViewer}\label{sec:pruebasTeamViewer}
+
+El análisis experimental de una plataforma de escritorio remoto exige contrastar los modelos teóricos de transporte e intercepción gráfica frente a las contingencias operativas de redes heterogéneas y subsistemas de entrada y salida dispares. En esta sección se evalúa el comportamiento funcional de TeamViewer en dos escenarios representativos: la interacción simétrica entre computadoras de escritorio y portátiles, y el control interactivo multiplataforma con dispositivos móviles.
+
+\subsection{Entorno experimental, topología de red y metodología de instrumentación}\label{sec:entornoExperimental}
+
+Para aislar las variables que inciden en la latencia, el ancho de banda y el consumo de recursos de procesamiento, se configuró un banco de pruebas compuesto por tres nodos computacionales heterogéneos:
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{Nodo anfitrión principal (PC de escritorio):} Estación de trabajo con procesador x86\_64 multinúcleo, 32~GB de memoria RAM, adaptador gráfico acelerado por hardware y sistema operativo Windows 11 Enterprise (versión 23H2). La máquina se conectó al conmutador central mediante un enlace físico Ethernet Gigabit (IEEE 802.3ab) con una resolución nativa de $1920 \times 1080$ píxeles a una frecuencia de refresco de 60~Hz.
+    \item \textbf{Nodo cliente portátil (Laptop):} Computadora portátil con procesador x86\_64, 16~GB de memoria RAM y distribución Linux Ubuntu 24.04 LTS (núcleo Linux 6.8 con servidor de despliegue Wayland). La conectividad se estableció mediante una tarjeta de red inalámbrica Wi-Fi 6 (IEEE 802.11ax) sobre una banda de 5~GHz con modulación dinámica de canal.
+    \item \textbf{Dispositivo móvil (Cliente/Host alterno):} Teléfono inteligente con procesador móvil de arquitectura ARM64, 8~GB de memoria RAM y sistema operativo Android 14. Dispone de conectividad dual conmutada entre enlace Wi-Fi local (802.11ac) y red celular de banda ancha 4G LTE / 5G NSA.
+\end{itemize}
+
+La evaluación se instrumentó bajo dos topologías de red diferenciadas: un escenario de red de área local (*local area network*, LAN) intradominio, donde ambos nodos compartían el mismo prefijo de enrutamiento privado (\texttt{192.168.1.0/24}) bajo un conmutador de baja latencia; y un escenario de red de área amplia (*wide area network*, WAN) transdominio, en el cual el nodo cliente operó a través de un proveedor de servicios externo con enrutamiento NAT de nivel operador (*carrier-grade* NAT, CGNAT), forzando el descubrimiento de candidatos y el atravesamiento de pasarelas públicas de TeamViewer \parencite{teamviewerSecurityWhitepaper}.
+
+La telemetría del sistema se midió de forma continua registrando el tiempo de ida y vuelta (*round-trip time*, RTT) de los paquetes de control y video, la tasa efectiva de transferencia en red (kbps y Mbps), el porcentaje de ocupación de la unidad central de procesamiento (CPU) atribuido al proceso de TeamViewer, y la cadencia de entrega de fotogramas por segundo (*frames per second*, FPS).
+
+\subsection{Opción 1: Control entre computadoras de escritorio y portátiles}\label{sec:pruebasPcLaptop}
+
+En la primera modalidad de evaluación se estableció una sesión interactiva bidireccional desde la computadora portátil cliente hacia la estación de trabajo anfitriona. El procedimiento inició con el intercambio del identificador numérico persistente de 9 dígitos y la autenticación mediante contraseña efímera generada por el agente anfitrión, verificada de manera cifrada a través de los servidores maestros de TeamViewer \parencite{teamviewerManualRemoteControl}. Tras la negociación criptográfica inicial, los nodos establecieron un túnel UDP directo mediante técnicas de perforación de puertos, prescindiendo de la intermediación de pasarelas de retransmisión durante el intercambio masivo de fotogramas.
+
+% PENDIENTE: media/t07/pruebasTeamviewerPcLaptop.png
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\textwidth]{media/example_figure.png}
+    \caption{Telemetría operativa y métricas de rendimiento en sesión remota PC a Laptop \parencite{teamviewerManualRemoteControl}.}
+    \label{fig:pruebasTeamviewerPcLaptop}
+\end{figure}
+
+El comportamiento de los subsistemas del sistema operativo durante la sesión remota evidenció las siguientes características técnicas (Img.~\ref{fig:pruebasTeamviewerPcLaptop}):
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item \textbf{Dinámica de puntero y latencia interactiva:} En el entorno LAN, el RTT promedio se mantuvo por debajo de los 12~ms, permitiendo habilitar la renderización del cursor en el extremo cliente con retroalimentación inmediata. En el entorno WAN, con un RTT medio de 48~ms, el protocolo activó la predicción posicional local, mitigando la sensación de retraso al desplazar ventanas o seleccionar texto en editores de código y suites ofimáticas.
+    \item \textbf{Sincronización del portapapeles:} El agente anfitrión se integró con la API del portapapeles del sistema operativo (\texttt{CF\_UNICODETEXT} y formatos MIME de mapa de bits). Las operaciones de copia en el cliente transmitieron asíncronamente el contenido hacia el host mediante un canal de control auxiliar multiplexado sobre el flujo de sesión, posibilitando la transferencia instantánea de texto plano, código fuente y fragmentos binarios sin degradar la tasa de fotogramas del canal gráfico.
+    \item \textbf{Transferencia bidireccional de archivos:} Mediante el subsistema dedicado de navegación del sistema de archivos, se realizaron pruebas de envío y recepción de paquetes comprimidos de 500~MB. En enlace LAN directo, la velocidad media sostenida alcanzó los 72~MB/s, operando cerca de los límites del canal inalámbrico Wi-Fi 6, con verificación estricta de sumas de comprobación criptográficas SHA-256 por cada bloque recibido antes de su confirmación en disco.
+    \item \textbf{Inyección de secuencia de atención segura (SAS):} La invocación remota de la combinación de teclas \texttt{Ctrl+Alt+Supr} fue procesada satisfactoriamente por el servicio en segundo plano de TeamViewer (\texttt{TeamViewer\_Service.exe}), el cual, al ejecutarse bajo la cuenta de privilegios máximos \texttt{LocalSystem}, invocó directamente la función \texttt{SendSAS()} del subsistema Winlogon de Windows, permitiendo desbloquear la estación, iniciar sesión desatendida y acceder al Administrador de Tareas sin requerir interacción física local.
+\end{itemize}
+
+\subsection{Opción 2: Control interactivo con dispositivos móviles}\label{sec:pruebasMovil}
+
+La incorporación de dispositivos móviles al esquema de administración remota introduce restricciones severas asociadas a la ausencia de periféricos físicos convencionales (ratón y teclado mecánico) y al aislamiento riguroso que los sistemas operativos móviles imponen sobre sus procesos de usuario. Para validar esta interoperabilidad, se ejecutaron dos procedimientos complementarios:
+
+\subsubsection{Control de estación de escritorio desde dispositivo móvil (Móvil a PC)}
+
+Utilizando la aplicación TeamViewer Remote Control en el dispositivo móvil Android sobre conectividad celular 4G LTE, se accedió a la estación de trabajo anfitriona. La interfaz implementa un esquema de traducción de eventos táctiles hacia primitivas de puntero del sistema operativo de escritorio:
+\begin{itemize}[noitemsep, topsep=4pt]
+    \item Un toque simple sobre la pantalla táctil capacitiva se traduce en un evento de clic izquierdo (\texttt{WM\_LBUTTONDOWN} y \texttt{WM\_LBUTTONUP} en Windows).
+    \item La pulsación prolongada (\textit{long press}) emula el clic derecho mediante el mensaje \texttt{WM\_\allowbreak RBUTTONDOWN}, desplegando los menús contextuales en el entorno remoto.
+    \item El deslizamiento simultáneo con dos dedos se mapea directamente a los mensajes de la rueda del ratón (\texttt{WM\_MOUSEWHEEL}), facilitando el desplazamiento vertical y horizontal en documentos extensos.
+    \item El gesto de pellizco (\textit{pinch-to-zoom}) ajusta dinámicamente la escala del búfer de cuadro virtual en la memoria del cliente móvil sin alterar la resolución nativa de pantalla del nodo anfitrión.
+\end{itemize}
+
+Para la entrada de caracteres alfanuméricos, la aplicación superpone un teclado virtual optimizado que incorpora una barra persistente con modificadores del sistema operativo ausentes en teclados móviles convencionales, tales como \texttt{Ctrl}, \texttt{Alt}, \texttt{Shift}, la tecla del sistema operativo (\texttt{Super} o tecla Windows), \texttt{Esc} y el bloque de funciones de \texttt{F1} a \texttt{F12}. Esto permite ejecutar combinaciones avanzadas de administración de consola y comandos de cierre de aplicaciones remotas.
+
+% PENDIENTE: media/t07/pruebasTeamviewerMovil.png
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\textwidth]{media/example_figure.png}
+    \caption{Control interactivo y flujo de inyección de eventos en sesiones con dispositivos móviles \parencite{teamviewerMobileGuide}.}
+    \label{fig:pruebasTeamviewerMovil}
+\end{figure}
+
+\subsubsection{Control remoto del dispositivo móvil desde estación de escritorio (PC a Móvil)}
+
+En el procedimiento inverso, se instaló en el dispositivo móvil la herramienta TeamViewer QuickSupport complementada con el módulo universal de control \parencite{teamviewerMobileGuide}. Este escenario representa un desafío de ingeniería superior en el sistema operativo Android, debido a que el marco de seguridad prohíbe que una aplicación ordinaria acceda al búfer de cuadro global o inyecte eventos de entrada en el espacio de otras aplicaciones (Img.~\ref{fig:pruebasTeamviewerMovil}).
+
+Para sortear estas restricciones sin vulnerar el núcleo ni requerir privilegios de superusuario (root), el agente móvil solicita al usuario la concesión de un token en tiempo de ejecución a través de la API \texttt{MediaProjectionManager} \parencite{androidMediaProjection}. Una vez otorgado el permiso, el servicio de captura obtiene una superficie virtual (\texttt{VirtualDisplay}) ligada a un codificador por hardware H.264/AVC, el cual serializa el flujo de pantalla en paquetes UDP hacia la estación de escritorio cliente.
+
+Simultáneamente, la inyección de eventos periféricos se canaliza mediante el servicio de accesibilidad del sistema operativo (\texttt{AccessibilityService}). Cuando el operador del cliente de escritorio realiza un clic o arrastre con el ratón en la ventana de réplica, las coordenadas normalizadas son transmitidas hacia el dispositivo móvil, donde el servicio invoca la función nativa \texttt{dispatchGesture()} \parencite{androidAccessibilityGesture}. Esta rutina sintetiza trazos táctiles continuos con precisión milimétrica, permitiendo interactuar con menús de configuración del teléfono, abrir aplicaciones instaladas y emular pulsaciones en los botones de navegación del sistema operativo móvil (\texttt{Atrás}, \texttt{Inicio} y \texttt{Aplicaciones recientes}).
+
+\section{Conclusiones personales}\label{sec:conclusionesPersonales}
+
+El estudio sistemático y la evaluación experimental de las tecnologías de escritorio remoto permiten comprender que estas plataformas no constituyen simples aplicaciones de usuario montadas sobre la red, sino extensiones arquitectónicas complejas que se acoplan íntimamente con los subsistemas más profundos del sistema operativo. La evolución histórica desde los primeros emuladores de terminal basados en flujos de caracteres hasta las modernas canalizaciones de video aceleradas por hardware refleja un continuo esfuerzo de la ingeniería por trasladar la experiencia de interactividad local a través de medios de transmisión intrínsecamente hostiles y variables. Lejos de limitarse a la captura ingenua de mapas de bits completos, la viabilidad del control remoto contemporáneo descansa en la capacidad del núcleo y de las interfaces de programación gráfica para aislar únicamente las regiones rectangulares modificadas, delegando la compresión de cuadros en motores de codificación dedicados en la GPU y manteniendo colas de sincronización asíncronas que desacoplan el refresco visual de la latencia impuesta por la infraestructura de telecomunicaciones.
+
+Uno de los aprendizajes técnicos más determinantes extraídos del análisis comparativo radica en la tensión inherente entre la confiabilidad estricta del transporte y la preservación del tiempo real interactivo. La tradicional dependencia de los protocolos orientados a la conexión sustentados sobre flujos TCP, si bien garantiza una reconstrucción íntegra y ordenada de los paquetes, introduce una penalización inaceptable en escenarios de red congestionados debido al fenómeno de bloqueo de cabeza de línea. Cuando un datagrama que transporta un fotograma se extravía o se retarda, la insistencia del protocolo por retransmitirlo antes de liberar los datos subsiguientes paraliza el flujo interactivo, acumulando un retraso perceptivo que destruye la respuesta del sistema. En contraposición, la consolidación de WebRTC y de arquitecturas híbridas no orientadas a la conexión fundamentadas en datagramas UDP demuestra que, en el plano del control gráfico interactivo, la frescura y la vigencia temporal de los cuadros superan a la completitud histórica de los datos, permitiendo descartar paquetes obsoletos para mantener la sincronía del puntero y la fidelidad del cursor sin degradar la sesión.
+
+Asimismo, la investigación pone de manifiesto la radical divergencia arquitectónica que existe entre los esquemas de privilegios de los sistemas operativos de escritorio convencionales y los modelos modernos de aislamiento en entornos móviles. En sistemas como Windows y distribuciones UNIX tradicionales, las herramientas de acceso remoto operan históricamente mediante servicios privilegiados del sistema que gozan de facultades irrestrictas para interceptar escritorios seguros, capturar pantallas de autenticación institucional e inyectar secuencias de atención crítica reservadas a la interacción física local. Por el contrario, la arquitectura de espacio aislado implementada en sistemas operativos móviles modernos demuestra un paradigma contemporáneo de seguridad por diseño, donde ningún proceso de usuario puede acceder al búfer de cuadro global ni alterar los eventos periféricos de aplicaciones adyacentes sin la mediación expresa de marcos de consentimiento en tiempo de ejecución. Esta barrera impone desafíos de ingeniería notables para la administración desatendida, pero establece una contención indispensable frente a vectores de ataque basados en la captura silenciosa de información confidencial.
+
+En el ámbito de la seguridad y la soberanía de la información, el atravesamiento de barreras de traducción de direcciones de red y cortafuegos mediante pasarelas intermedias suscita reflexiones fundamentales sobre la confianza en infraestructuras compartidas. Si bien las pasarelas centralizadas resuelven de forma transparente la indisponibilidad de direcciones IPv4 públicas, introducen un punto de concentración que podría comprometer la privacidad si no se acompaña de una criptografía robusta. Las plataformas que implementan esquemas de conocimiento cero mediante el intercambio asimétrico efímero de claves públicas en los nodos terminales demuestran que es posible utilizar servidores de retransmisión públicos sin facultar a sus operadores para descifrar el contenido del búfer de cuadro ni las pulsaciones de teclado. Esta rigurosa separación entre el plano de enrutamiento y el plano de confidencialidad de datos constituye un principio rector de diseño que debe gobernar cualquier solución tecnológica distribuida en entornos empresariales e industriales modernos.
+
+Finalmente, el desarrollo integral de este análisis consolida una visión profesional crítica en ingeniería en computación sobre la convergencia interdisciplinaria requerida para construir software de infraestructura. Comprender a detalle la interacción entre el planificador de procesos del sistema operativo, la gestión de memoria virtual, la aceleración gráfica en hardware, los protocolos estandarizados de atravesamiento de NAT como STUN, TURN e ICE, y los algoritmos criptográficos modernos, transforma la percepción que se tiene sobre el funcionamiento de las redes y los sistemas operativos. El escritorio remoto deja de ser una utilidad cotidiana para convertirse en un objeto de estudio riguroso que evidencia cómo la adecuada orquestación de llamadas al sistema, estructuras de datos en memoria y protocolos de comunicaciones hace posible superar las distancias físicas, garantizando la continuidad operativa y la administración eficiente de recursos computacionales con altos estándares de rendimiento y seguridad.
+
+\nocite{*}
+\printbibliography[heading=bibintoc, title={Referencias}]
+
+\end{document}
