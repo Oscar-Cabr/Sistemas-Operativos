@@ -49,3 +49,18 @@ Convención de ruta: `media/[t|p]<NN>/<tag>.<ext>`, con `<tag>` en camelCase y a
 | --- | --- | --- | --- | --- | --- |
 | `estructurasControlAcceso` | `stallings2018operating` | Cap. 15, §15.3, p. 671 (Figura 15.3) | Representación formal de la matriz de acceso y su descomposición en listas de control de acceso (ACL) y listas de capacidades | `media/t08/estructurasControlAcceso.png` | colocada |
 | `desbordamientoPilaMemoria` | `stallings2018operating` | Cap. 15, §15.2, p. 664 (Figura 15.2) | Estado del marco de pila antes y después de un desbordamiento de búfer con sobreescritura de la dirección de retorno | `media/t08/desbordamientoPilaMemoria.png` | colocada |
+
+---
+
+## t02 — Memoria y procesos
+
+| Tag | Fuente | Ubicación exacta | Descripción | Ruta destino | Estado |
+| --- | --- | --- | --- | --- | --- |
+| `jerarquiaMemoriaPiramide` | `stallings2018operating` | Cap. 1, §1.5, p. 47 (Figura 1.14) | Niveles jerárquicos de memoria, compensación costo-rendimiento y tiempos de acceso | `media/t02/jerarquiaMemoriaPiramide.png` | colocada |
+| `memoriaTubosWilliams` | Historia de la computación | Museo de Ciencia e Industria de Mánchester / ourplnt.com | Tubo Williams-Kilburn de almacenamiento electrostático de acceso aleatorio (1947) | `media/t02/memoriaTubosWilliams.png` | colocada |
+| `memoriaNucleosFerrita` | El Tamiz / `mchoes2011sistemas` | Cap. 2, §2.1, p. 32 (Figura 2.1) | Matriz de memoria de núcleos magnéticos toroidales con hilos coincidentes (1953) | `media/t02/memoriaNucleosFerrita.jpg` | colocada |
+| `chipDramIntel1103` | Intel Corporation / Wikipedia | Encapsulado cerámico DIP de 18 pines | Circuito integrado Intel 1103 en encapsulado DIP de 18 pines, primera DRAM comercial (1970) | `media/t02/chipDramIntel1103.jpg` | colocada |
+| `evolucionModulosDram` | Estándares JEDEC / History of Information | Especificaciones JESD79 de memoria SDRAM | Comparativa de formatos de módulos DIMM y muescas mecánicas de SDR a DDR5 | `media/t02/evolucionModulosDram.png` | colocada |
+| `discoIbmRamac` | HistoryBit / IBM Archives | IBM 305 RAMAC Historical Timeline | Sistema de almacenamiento en disco rígido IBM 305 RAMAC con 50 platos de 24 pulgadas (1956) | `media/t02/discoIbmRamac.jpg` | colocada |
+| `estructuraInternaHdd` | `silberschatz2006fundamentos` | Cap. 12, §12.1, p. 409 (Figura 12.1) | Anatomía interna de un disco rígido magnético (platos, cabezales, cilindros y actuador VCM) | `media/t02/estructuraInternaHdd.png` | colocada |
+| `arquitecturaSsdNvme` | Greenliant / Mouser / NVM Express | Diagrama de bloques de arquitectura de almacenamiento | Diagrama de bloques de un SSD NVMe M.2 (controlador FTL, DRAM caché, canales Flash 3D NAND y PCIe) | `media/t02/arquitecturaSsdNvme.png` | colocada |

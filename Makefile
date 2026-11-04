@@ -1,4 +1,4 @@
-FILE    = 07_Herramientas_de_Trabajo
+FILE    = 02_Memoria_y_Procesos
 OUTPUT  = ENTREGABLES/TAREAS/T$(FILE)_CabreraRojasOscar
 OUTDIR  = build
 TYPE    = $(notdir $(patsubst %/,%,$(dir $(OUTPUT))))
