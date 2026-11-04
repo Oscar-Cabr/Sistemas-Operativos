@@ -3,5 +3,5 @@
 *.out
 *.toc
 build/*
-compile-report.txt
+compile-report*.txt
 samples/*

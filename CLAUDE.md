@@ -79,6 +79,7 @@ Los libros de `.claude/sources/libros/` son **fuente confiable directa**: no req
 2. Sustituir en la copia la referencia a `bibliography/[t|p]sample.bib` por el `.bib` propio del entregable.
 3. Eliminar el contenido de ejemplo (sección y figura con `media/example_figure.png`); la figura de ejemplo es el modelo de formato para toda figura real.
 4. Crear el `.bib` del entregable y el directorio `media/[t|p]<NN>/` si aún no existen.
+5. **Configuración única del Makefile:** Modificar en disco las dos variables de cabecera (`FILE` y `OUTPUT`) del `Makefile` para apuntar a este nuevo entregable. Este es el **único** momento en que se modifica el `Makefile` en disco, fijando el entregable activo para que el usuario pueda compilarlo directamente en su entorno (`make`, `make pdf`, `make view`) sin flags.
 
 ## Flujo de trabajo
 
@@ -111,11 +112,12 @@ Cada paso tiene una skill. No improvises el procedimiento: invócala, respetando
 ### Compilación
 
 - **Solo mediante el Makefile de la raíz.** No se invoca `latexmk`, `pdflatex` ni `biber` directamente, ni se inventan comandos de compilación.
-- **Variables de cabecera.** Se modifican únicamente las dos primeras variables del Makefile, para dirigir qué entregable se compila y dónde queda el PDF:
-  - `FILE`: nombre del entregable sin extensión ni ruta (p. ej., `00_Registro_EDUCAFI`, `01_Sistemas_Operativos`, `Resumen_Clase_Sistemas_Operativos_Tema_1`).
-  - `OUTPUT`: `ENTREGABLES/TAREAS/T$(FILE)_CabreraRojasOscar` (o `ENTREGABLES/PROYECTOS/P$(FILE)_CabreraRojasOscar`) para entregables con número; `ENTREGABLES/TAREAS/T_$(FILE)_CabreraRojasOscar` (o `ENTREGABLES/PROYECTOS/P_$(FILE)_CabreraRojasOscar`) para entregables sin número.
-
-  Ninguna otra línea del Makefile se modifica. Antes de cada compilación se verifica que ambas variables apuntan al entregable en curso y al directorio de salida de su tipo.
+- **Compilación automatizada por la LLM (siempre con flags):** En todo el flujo regular de trabajo (al cierre de secciones, verificaciones intermedias y auditorías), la LLM **nunca modifica el Makefile en disco**. En su lugar, compila pasando siempre las flags explícitas por línea de comandos:
+  - Entregables con número: `make pdf FILE=<NN>_<Titulo_Snake>`
+  - Entregables sin número: `make pdf FILE=<Titulo_Snake>`
+  Si se requiere sobreescribir la salida o pasar opciones adicionales, se pueden agregar `OUTPUT=...` o `EXTRA_FLAGS=...`.
+- **Modificación en disco del Makefile (exclusiva al iniciar un nuevo entregable):** Las variables de cabecera del `Makefile` (`FILE` y `OUTPUT`) solo se modifican en disco **una sola vez**, al momento de inicializar un nuevo trabajo en `entregable-nuevo`. Esto deja el entregable activo configurado por defecto para que el usuario pueda compilarlo directamente en su terminal sin flags.
+- **Limpieza en caso de estado sucio:** En caso de fallos intermedios (como `.bcf-SAVE-ERROR`), la LLM limpia únicamente los artefactos de ese entregable pasando su bandera: `make clean FILE=<NN>_<Titulo_Snake>`, evitando borrar artefactos de otros trabajos en `build/`.
 - La salida intermedia va a `build/` y los PDF finales a `ENTREGABLES/TAREAS/` o `ENTREGABLES/PROYECTOS/`. En ninguno se escribe manualmente; se consultan para leer el log y contar páginas.
 - Los artefactos intermedios (`.aux`, `.bbl`, `.bcf`, `.log`, `.out`, `.run.xml`, `.fdb_latexmk`, `.fls`, `.toc`) no se versionan ni se le muestran al usuario.
 
@@ -143,7 +145,7 @@ Cada paso tiene una skill. No improvises el procedimiento: invócala, respetando
 - **Generar imágenes** con modelos de generación.
 - **Instalar** paquetes LaTeX, distribuciones, dependencias o cualquier software. Si falta algo, se reporta el comando de instalación y se detiene. Jamás se ejecuta.
 - **Tocar el sistema** o su configuración fuera del directorio del proyecto.
-- Modificar el `Makefile` más allá de sus dos variables de cabecera.
+- Modificar el `Makefile` fuera del momento de creación del entregable en `entregable-nuevo` (la LLM siempre compila mediante flags de línea de comandos).
 - Modificar `config/` sin orden explícita.
 - Modificar `TAREAS/template.tex`, `PROYECTOS/template.tex`, `bibliography/tsample.bib` o `bibliography/psample.bib`.
 - Modificar o crear contenido en `media/titlepage/` o `media/example_figure.png`.

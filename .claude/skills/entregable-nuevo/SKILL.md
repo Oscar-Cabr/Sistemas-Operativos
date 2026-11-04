@@ -37,7 +37,7 @@ Lee el `Makefile`, el contenido de `config/` y el `template.tex` del tipo (`TARE
 
 Antes de crear nada, verifica que el identificador no esté ya en uso para ese tipo (archivo maestro, `.bib` y carpeta de media). Si colisiona, detente y pregunta.
 
-## Paso 3 — Crear el esqueleto
+## Paso 3 — Crear el esqueleto y apuntar el Makefile
 
 Copia el `template.tex` del tipo al archivo maestro. La plantilla no se toca. En la copia, estas sustituciones y **nada más**:
 
@@ -48,6 +48,15 @@ Copia el `template.tex` del tipo al archivo maestro. La plantilla no se toca. En
 - Elimina el contenido de ejemplo: la `\section` de ejemplo con su párrafo, su figura sobre `media/example_figure.png` y su `\subsection`. Deja el documento sin secciones de contenido.
 
 Crea también la `.bib` vacía y el directorio de media. El resto de la portada (institución, grupo, profesor, alumno) ya es correcto: no lo toques.
+
+### Apuntar el Makefile al nuevo entregable (única modificación en disco)
+
+Lee el `Makefile` y ajusta sus dos variables de cabecera (`FILE` y `OUTPUT` si aplica):
+
+- `FILE = <NN>_<Titulo_Snake>` (o `<Titulo_Snake>` si es sin número).
+- `OUTPUT = ENTREGABLES/<TIPO>/<T|P><NN>_<Titulo_Snake>_CabreraRojasOscar` (o `<T|P>_` si es sin número).
+
+**Este es el único momento en todo el flujo donde se modifica el Makefile en disco.** Esto garantiza que el usuario pueda compilar manualmente en su entorno mediante `make`, `make pdf` o `make view` sin requerir banderas. Todas las compilaciones posteriores de la LLM se realizarán pasando flags por CLI.
 
 ## Paso 4 — Barrido de relevancia
 

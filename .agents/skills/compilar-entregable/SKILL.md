@@ -6,28 +6,28 @@ description: >-
 
 # Compilación y verificación de extensión
 
-Las reglas de compilación (solo Makefile, solo variables de cabecera, nada escrito a mano en `build/` ni en `ENTREGABLES/`) están en `GEMINI.md`. Esta skill es el procedimiento.
+Las reglas de compilación (solo Makefile, compilación por LLM siempre con flags, nada escrito a mano en `build/` ni en `ENTREGABLES/`) están en `GEMINI.md`. Esta skill es el procedimiento.
 
-## 1. Apuntar el Makefile al entregable
+## 1. Compilar siempre con flags (sin modificar el Makefile)
 
-Lee con `read_file` el `Makefile` vigente y ajusta mediante `edit_file` **solo** sus dos primeras variables:
+La LLM **nunca modifica el Makefile en disco** durante el flujo de redacción o verificación recurrente. El Makefile solo se modificó una vez en disco al crear el entregable (`entregable-nuevo`) para que el usuario pueda compilarlo manualmente sin flags.
 
-| Variable | Tarea con número | Proyecto con número | Entregable sin número (Tarea / Proyecto) |
-| --- | --- | --- | --- |
-| `FILE` | `<NN>_<Titulo_Snake>` | `<NN>_<Titulo_Snake>` | `<Titulo_Snake>` |
-| `OUTPUT` | `ENTREGABLES/TAREAS/T$(FILE)_CabreraRojasOscar` | `ENTREGABLES/PROYECTOS/P$(FILE)_CabreraRojasOscar` | `ENTREGABLES/<TIPO>/<T|P>_$(FILE)_CabreraRojasOscar` |
+Todas las compilaciones ejecutadas por la LLM se realizan **siempre pasando las flags explícitas por línea de comandos** mediante `run_command`:
 
-Verifica que ambas apuntan al entregable en curso y al directorio de su tipo. En entregables sin número, `OUTPUT` conserva obligatoriamente la letra diferenciadora con guion bajo (`T_` o `P_`) y el sufijo fijo de autoría `_CabreraRojasOscar`. El Makefile deduce de `OUTPUT` si el fuente está en `TAREAS/` o `PROYECTOS/`, y su target `check` rechaza una salida mal formada o un `.tex` inexistente. Si falla por otra causa, **detente y avísale al usuario**: adaptar el Makefile no es tarea de Antigravity.
+- **Entregable con número (Tarea o Proyecto):**
+  ```bash
+  make pdf FILE=<NN>_<Titulo_Snake>
+  ```
+- **Entregable sin número (Tarea o Proyecto):**
+  ```bash
+  make pdf FILE=<Titulo_Snake>
+  ```
 
-## 2. Compilar
+El Makefile autodeduce el tipo (`TAREAS` o `PROYECTOS`), valida la existencia del fuente y genera el PDF con la nomenclatura reglamentaria en `ENTREGABLES/`. Si se requiere forzar una salida no estándar o banderas adicionales de compilador, se pueden pasar `OUTPUT=...` o `EXTRA_FLAGS=...`.
 
-Usa el target que compila sin abrir el visor (`make pdf`) mediante `run_command`:
-```bash
-make pdf
-```
-Nunca el target por defecto si lanza un visor, y nunca `latexmk`, `pdflatex` ni `biber` a mano: el Makefile ya encadena las pasadas necesarias.
+Nunca uses el target por defecto si lanza un visor (`make`), y nunca invoques `latexmk`, `pdflatex` ni `biber` directamente: el Makefile ya encadena las pasadas necesarias.
 
-## 3. Conteo de páginas
+## 2. Conteo de páginas
 
 Ejecuta con `run_command`:
 ```bash
@@ -41,9 +41,9 @@ Compara contra el rango de extensión de `GEMINI.md` (mínimo 18, máximo 40, ob
 
 Si el PDF no llegó a `ENTREGABLES/`, no lo copies a mano: repórtalo con la causa.
 
-## 4. Lectura del log
+## 3. Lectura del log
 
-Parte del resumen que genera el Makefile (`compile-report.txt`) y, si hace falta detalle, del log completo en `build/<FILE>.log` usando `read_file`. Reporta solo esto:
+Parte del resumen que genera el Makefile (`compile-report-<FILE>.txt` o `compile-report.txt`) y, si hace falta detalle, del log completo en `build/<FILE>.log` usando `read_file`. Reporta solo esto:
 
 | Señal | Qué significa | Acción |
 | --- | --- | --- |
@@ -58,7 +58,7 @@ Ignora y **no le muestres al usuario**: `Overfull` menores, avisos de fuentes su
 
 Las imágenes pendientes no aparecen en el log: cuéntalas en el fuente con `grep -n "% PENDIENTE" <fuente>.tex` y repórtalas con su ruta destino.
 
-## 5. Verificación de imágenes en el PDF
+## 4. Verificación de imágenes en el PDF
 
 Para cada imagen colocada en el entregable, comprueba su correcta incrustación en el archivo compilado con `run_command`:
 ```bash
@@ -80,7 +80,11 @@ Si la compilación falla porque falta un paquete LaTeX o cualquier otra dependen
 
 ## Estado sucio
 
-Si una compilación queda a medias (típicamente un `.bcf-SAVE-ERROR`), limpia con el target de limpieza del Makefile (`make clean`). Antes de invocarlo, lee qué borra: si alcanza a `ENTREGABLES/`, no lo ejecutes y avísale al usuario.
+Si una compilación queda a medias (típicamente un `.bcf-SAVE-ERROR`), limpia únicamente los artefactos de ese entregable pasando su bandera mediante `run_command`:
+```bash
+make clean FILE=<NN>_<Titulo_Snake>
+```
+Esto preserva intactos los artefactos de otros entregables en `build/`.
 
 ## Reporte
 
