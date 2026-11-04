@@ -64,3 +64,16 @@ Convención de ruta: `media/[t|p]<NN>/<tag>.<ext>`, con `<tag>` en camelCase y a
 | `discoIbmRamac` | HistoryBit / IBM Archives | IBM 305 RAMAC Historical Timeline | Sistema de almacenamiento en disco rígido IBM 305 RAMAC con 50 platos de 24 pulgadas (1956) | `media/t02/discoIbmRamac.jpg` | colocada |
 | `estructuraInternaHdd` | `silberschatz2006fundamentos` | Cap. 12, §12.1, p. 409 (Figura 12.1) | Anatomía interna de un disco rígido magnético (platos, cabezales, cilindros y actuador VCM) | `media/t02/estructuraInternaHdd.png` | colocada |
 | `arquitecturaSsdNvme` | Greenliant / Mouser / NVM Express | Diagrama de bloques de arquitectura de almacenamiento | Diagrama de bloques de un SSD NVMe M.2 (controlador FTL, DRAM caché, canales Flash 3D NAND y PCIe) | `media/t02/arquitecturaSsdNvme.png` | colocada |
+
+---
+
+## t03 — Atajos, Vi y comandos
+
+| Tag | Fuente | Ubicación exacta | Descripción | Ruta destino | Estado |
+| --- | --- | --- | --- | --- | --- |
+| `vimModoNormalInicio` | Captura propia | Terminal GNU/Linux | Interfaz inicial de Vim en modo Normal sobre un archivo nuevo de código fuente | `media/t03/vimModoNormalInicio.png` | colocada |
+| `vimModoInsercion` | Captura propia | Terminal GNU/Linux | Edición e ingreso de código en modo Inserción con indicador `-- INSERT --` | `media/t03/vimModoInsercion.png` | colocada |
+| `vimComandoOperador` | Captura propia | Terminal GNU/Linux | Aplicación de operadores gramaticales y movimientos estructurales en modo Normal | `media/t03/vimComandoOperador.png` | colocada |
+| `vimModoVisualBloque` | Captura propia | Terminal GNU/Linux | Selección matricial de columnas en modo Visual Bloque (`Ctrl + v`) | `media/t03/vimModoVisualBloque.png` | colocada |
+| `vimModoExGuardado` | Captura propia | Terminal GNU/Linux | Ejecución de órdenes de sustitución y persistencia en disco en modo Ex (`:wq`) | `media/t03/vimModoExGuardado.png` | colocada |
+
