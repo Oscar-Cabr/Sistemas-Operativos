@@ -1,8 +1,8 @@
 # ==============================================================================
 # Variables de cabecera / Flags de compilación
 # ==============================================================================
-FILE          ?= 03_Atajos_Vi_y_Comandos
-OUTPUT        ?=
+FILE          ?= 04_Sistemas_de_Archivos
+OUTPUT        ?= ENTREGABLES/TAREAS/T04_Sistemas_de_Archivos_CabreraRojasOscar
 OUTDIR        ?= build
 VIEWER        ?= zathura
 NOTIFY        ?= $(HOME)/.config/sh-scripts/latex-compile-notify.sh
@@ -78,7 +78,7 @@ pdf: check
 	cp $(OUTDIR)/$(FILE).pdf $(PDF)
 
 view: pdf
-	@pgrep -xa $(VIEWER) | grep -q "$(FILE).pdf" || setsid -f $(VIEWER) $(PDF) >/dev/null 2>&1
+	@pgrep -xa $(VIEWER) | grep -q "$(notdir $(PDF))" || setsid -f $(VIEWER) $(PDF) >/dev/null 2>&1
 
 report:
 	@$(NOTIFY) $(OUTDIR)/$(FILE).log $(REPORT) || true
