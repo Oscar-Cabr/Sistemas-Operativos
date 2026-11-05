@@ -77,3 +77,30 @@ Convención de ruta: `media/[t|p]<NN>/<tag>.<ext>`, con `<tag>` en camelCase y a
 | `vimModoVisualBloque` | Captura propia | Terminal GNU/Linux | Selección matricial de columnas en modo Visual Bloque (`Ctrl + v`) | `media/t03/vimModoVisualBloque.png` | colocada |
 | `vimModoExGuardado` | Captura propia | Terminal GNU/Linux | Ejecución de órdenes de sustitución y persistencia en disco en modo Ex (`:wq`) | `media/t03/vimModoExGuardado.png` | colocada |
 
+---
+
+## t04 — Sistemas de archivos
+
+| Tag | Fuente | Ubicación exacta | Descripción | Ruta destino | Estado |
+| --- | --- | --- | --- | --- | --- |
+| `estructurasArchivosAbiertos` | `silberschatz2006fundamentos` | Cap. 11, §11.2, p. 373 (Figura 11.3) | Estructuras en memoria del sistema operativo para la apertura y lectura de archivos: tablas por proceso, tabla global del sistema y FCB/inodos | `media/t04/estructurasArchivosAbiertos.png` | colocada |
+| `capasSistemaArchivos` | `silberschatz2006fundamentos` | Cap. 11, §11.1, p. 371 (Figura 11.1) | Arquitectura por capas de un sistema de archivos: sistema lógico, módulo de organización, sistema básico y controladores de E/S | `media/t04/capasSistemaArchivos.png` | colocada |
+
+---
+
+## t05 — Particionamiento de discos
+
+| Tag | Fuente | Ubicación exacta | Descripción | Ruta destino | Estado |
+| --- | --- | --- | --- | --- | --- |
+| — | — | — | Documento estructurado íntegramente mediante 10 cuadros y tablas técnicas comparativas normalizadas en LaTeX sin figuras externas | — | colocada |
+
+---
+
+## t06 — Sistemas distribuidos
+
+| Tag | Fuente | Ubicación exacta | Descripción | Ruta destino | Estado |
+| --- | --- | --- | --- | --- | --- |
+| `comparativaArquitecturaNosDos1` | `mchoes2011sistemas` | Cap. 10, p. 319 (Figura 10.1) | Modelo estructural desacoplado de un sistema operativo de red (NOS) | `media/t06/comparativaArquitecturaNosDos_1.png` | colocada |
+| `comparativaArquitecturaNosDos2` | `mchoes2011sistemas` | Cap. 10, p. 320 (Figura 10.2) | Modelo estructural integrado de un sistema operativo distribuido (DO/S) | `media/t06/comparativaArquitecturaNosDos_2.png` | colocada |
+
+
