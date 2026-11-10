@@ -1,8 +1,8 @@
 # ==============================================================================
 # Variables de cabecera / Flags de compilación
 # ==============================================================================
-FILE          ?= 06_Sistemas_Distribuidos
-OUTPUT        ?= ENTREGABLES/TAREAS/T06_Sistemas_Distribuidos_CabreraRojasOscar
+FILE          ?= 05_Windows_Server_IIS
+OUTPUT        ?= ENTREGABLES/PROYECTOS/P05_Windows_Server_IIS_CabreraRojasOscar
 OUTDIR        ?= build
 VIEWER        ?= zathura
 NOTIFY        ?= $(HOME)/.config/sh-scripts/latex-compile-notify.sh

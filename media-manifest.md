@@ -103,4 +103,16 @@ Convención de ruta: `media/[t|p]<NN>/<tag>.<ext>`, con `<tag>` en camelCase y a
 | `comparativaArquitecturaNosDos1` | `mchoes2011sistemas` | Cap. 10, p. 319 (Figura 10.1) | Modelo estructural desacoplado de un sistema operativo de red (NOS) | `media/t06/comparativaArquitecturaNosDos_1.png` | colocada |
 | `comparativaArquitecturaNosDos2` | `mchoes2011sistemas` | Cap. 10, p. 320 (Figura 10.2) | Modelo estructural integrado de un sistema operativo distribuido (DO/S) | `media/t06/comparativaArquitecturaNosDos_2.png` | colocada |
 
+---
+
+## p05 — Windows Server IIS
+
+| Tag | Fuente | Ubicación exacta | Descripción | Ruta destino | Estado |
+| --- | --- | --- | --- | --- | --- |
+| `puenteRedVmnet0` | `vmwareWorkstationPro26h1` | Doc. VMware Workstation Pro 26H1, p. 151 (Figura 2) | Conexión de la máquina virtual al adaptador de red físico del anfitrión a través del puente virtual y el conmutador VMnet0 | `media/p05/puenteRedVmnet0.png` | colocada |
+| `opcionServerCore` | `microsoftInstallWinServer2008` | «Install Windows Server 2008 and Windows Server 2008 R2», Figura 2 | Pantalla de selección de edición con las variantes de instalación completa y Server Core para las ediciones Standard, Enterprise y Datacenter | `media/p05/opcionServerCore.jpg` | colocada |
+| `jerarquiaEntidadesGp` | `microsoftGroupPolicyInfra` | «Group Policy Infrastructure», sección «Hierarchy of Managed Entities» | Jerarquía de entidades administradas por la infraestructura de Group Policy: motor de directivas, instalación de software, scripts y registro | `media/p05/jerarquiaEntidadesGp.png` | colocada |
+| `delegacionZonaDns` | `microsoftZoneDelegation` | «Understanding Zone Delegation», sección «Example: Delegating a subdomain to a new zone» | Delegación de una zona hija dentro de la zona matriz, con los registros de servidor de nombres y de enlace que la zona matriz debe escribir | `media/p05/delegacionZonaDns.png` | colocada |
+
+
 
